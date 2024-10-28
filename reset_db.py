@@ -1,13 +1,35 @@
 from app import app, db
-from models import User, Dream, DreamGroup, GroupMembership, ForumPost, ForumReply
+from models import User, Dream, DreamGroup, GroupMembership, ForumPost, ForumReply, Comment
 from werkzeug.security import generate_password_hash
 from datetime import datetime, timedelta
+from sqlalchemy import text
 
 def reset_database():
     with app.app_context():
-        # Drop and recreate all tables
-        db.drop_all()
+        # Drop tables in order respecting foreign key constraints
+        tables_to_drop = [
+            'forum_reply',
+            'forum_post', 
+            'comment',
+            'group_membership',
+            'dream',
+            'dream_group',
+            'user'
+        ]
+        
+        # Drop tables in correct order
+        for table in tables_to_drop:
+            try:
+                db.session.execute(text(f'DROP TABLE IF EXISTS {table} CASCADE'))
+                print(f"Dropped table {table}")
+            except Exception as e:
+                print(f"Error dropping {table}: {str(e)}")
+                
+        db.session.commit()
+        
+        # Create all tables
         db.create_all()
+        print("Created all tables")
         
         # Create test user
         test_user = User(
