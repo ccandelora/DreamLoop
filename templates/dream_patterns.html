@@ -52,8 +52,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const patternsContainer = document.getElementById('patterns-analysis');
     
     try {
-        // Use patternsData directly since it's already a JavaScript object
-        const data = patternsData;
+        const data = JSON.parse(patternsData);
+        if (!data || Object.keys(data).length === 0) {
+            throw new Error('No pattern data available');
+        }
         
         // Helper function to create a section
         function createSection(title, content) {
@@ -80,8 +82,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         patternsContainer.innerHTML = html || '<div class="alert alert-info">No pattern analysis available.</div>';
     } catch (e) {
-        console.error('Error displaying pattern analysis:', e);
-        patternsContainer.innerHTML = '<div class="alert alert-danger">Error displaying pattern analysis.</div>';
+        console.error('Error parsing patterns data:', e);
+        patternsContainer.innerHTML = '<div class="alert alert-warning">No dream patterns available yet. Try logging more dreams to see patterns.</div>';
     }
 });
 </script>

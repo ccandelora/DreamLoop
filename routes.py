@@ -4,6 +4,7 @@ from app import app, db
 from models import User, Dream, Comment
 from ai_helper import analyze_dream, analyze_dream_patterns
 from werkzeug.security import generate_password_hash
+import json
 
 @app.route('/')
 def index():
@@ -113,7 +114,8 @@ def dream_patterns():
         'tags': dream.tags
     } for dream in dreams]
     
-    # Get pattern analysis
+    # Get pattern analysis and ensure it's valid JSON
     patterns = analyze_dream_patterns(dreams_data)
+    patterns = json.dumps(patterns) if not isinstance(patterns, str) else patterns
     
     return render_template('dream_patterns.html', dreams=dreams, patterns=patterns)
