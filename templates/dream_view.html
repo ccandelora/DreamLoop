@@ -28,7 +28,45 @@
                         <h4>AI Analysis</h4>
                     </div>
                     <div class="card-body">
-                        {{ dream.ai_analysis | safe }}
+                        {% set analysis = dream.ai_analysis|tojson|safe %}
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                try {
+                                    const analysisData = {{ analysis }};
+                                    const data = typeof analysisData === 'string' ? JSON.parse(analysisData) : analysisData;
+                                    
+                                    const sections = {
+                                        'Symbols': data.symbols,
+                                        'Interpretation': data.interpretation,
+                                        'Emotional Significance': data.emotions,
+                                        'Guidance': data.guidance
+                                    };
+
+                                    let html = '';
+                                    for (const [title, content] of Object.entries(sections)) {
+                                        if (content) {
+                                            html += `
+                                                <div class="mb-3">
+                                                    <h5 class="text-primary">${title}</h5>
+                                                    <p class="lead">${content}</p>
+                                                </div>
+                                            `;
+                                        }
+                                    }
+                                    
+                                    document.querySelector('#ai-analysis-content').innerHTML = html;
+                                } catch (e) {
+                                    console.error('Error parsing AI analysis:', e);
+                                    document.querySelector('#ai-analysis-content').innerHTML = 
+                                        '<div class="alert alert-warning">Error processing AI analysis. Please try again.</div>';
+                                }
+                            });
+                        </script>
+                        <div id="ai-analysis-content">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 {% endif %}
