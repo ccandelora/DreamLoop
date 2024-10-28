@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     try {
-        const patternsData = {{ patterns|tojson|safe }};
+        const patternsData = {{ patterns|safe }};
         
         // Parse if it's a string, otherwise use directly
         const data = typeof patternsData === 'string' ? JSON.parse(patternsData) : patternsData;
