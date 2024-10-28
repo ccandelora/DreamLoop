@@ -112,18 +112,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     try {
-        const patternsData = {{ patterns|safe }};
+        const patterns = {{ patterns|tojson|safe }};
         
-        // Parse if it's a string, otherwise use directly
-        const data = typeof patternsData === 'string' ? JSON.parse(patternsData) : patternsData;
-        
-        if (!data || Object.keys(data).length === 0) {
+        if (!patterns || Object.keys(patterns).length === 0) {
             throw new Error('No pattern data available');
         }
 
         // Build HTML sections
         let html = '';
-        for (const [key, value] of Object.entries(data)) {
+        for (const [key, value] of Object.entries(patterns)) {
             if (value && typeof value === 'string') {
                 const formattedTitle = key.replace(/([A-Z])/g, ' $1').trim();
                 html += `
