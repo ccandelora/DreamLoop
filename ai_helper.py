@@ -22,14 +22,20 @@ def analyze_dream(dream_content: str) -> str:
         model = genai.GenerativeModel('gemini-pro')
         response = model.generate_content(prompt)
         
-        # Ensure response is valid JSON
         try:
-            json_response = json.loads(response.text)
+            # Clean the response text and ensure it's proper JSON
+            clean_response = response.text.strip()
+            if not clean_response.startswith('{'): 
+                clean_response = '{' + clean_response.split('{', 1)[1]
+            if not clean_response.endswith('}'): 
+                clean_response = clean_response.rsplit('}', 1)[0] + '}'
+            
+            json_response = json.loads(clean_response)
             return json.dumps(json_response)
         except json.JSONDecodeError:
             return json.dumps({
                 "symbols": "Unable to analyze symbols at this time",
-                "interpretation": response.text,
+                "interpretation": response.text[:500],
                 "emotions": "Analysis unavailable",
                 "guidance": "Please try again later"
             })
@@ -72,18 +78,24 @@ def analyze_dream_patterns(dreams: List[dict]) -> str:
         model = genai.GenerativeModel('gemini-pro')
         response = model.generate_content(prompt)
         
-        # Ensure response is valid JSON
         try:
-            json_response = json.loads(response.text)
+            # Clean the response text and ensure it's proper JSON
+            clean_response = response.text.strip()
+            if not clean_response.startswith('{'): 
+                clean_response = '{' + clean_response.split('{', 1)[1]
+            if not clean_response.endswith('}'): 
+                clean_response = clean_response.rsplit('}', 1)[0] + '}'
+            
+            json_response = json.loads(clean_response)
             return json.dumps(json_response)
         except json.JSONDecodeError:
-            # If the response isn't valid JSON, structure it into our expected format
+            # If JSON parsing fails, create a structured response
             return json.dumps({
-                "Common Symbols and Themes": "Analysis in progress",
-                "Emotional Patterns": response.text,
-                "Life Events and Concerns": "Pattern analysis unavailable",
-                "Personal Growth Indicators": "Please try again later",
-                "Actionable Insights": "System is learning from your dreams"
+                "Common Symbols and Themes": response.text[:500],
+                "Emotional Patterns": "Analysis in progress",
+                "Life Events and Concerns": "Processing patterns",
+                "Personal Growth Indicators": "Analyzing growth trends",
+                "Actionable Insights": "Generating insights"
             })
             
     except Exception as e:
