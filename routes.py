@@ -4,6 +4,7 @@ from app import app, db
 from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply
 from ai_helper import analyze_dream, analyze_dream_patterns
 from werkzeug.security import generate_password_hash
+from datetime import datetime, timedelta
 from add_sample_dreams import add_sample_dreams
 import json
 
@@ -12,6 +13,37 @@ def index():
     if current_user.is_authenticated:
         return redirect(url_for('dream_log'))
     return redirect(url_for('login'))
+
+@app.route('/subscription')
+@login_required
+def subscription():
+    return render_template('subscription.html')
+
+@app.route('/subscription/upgrade', methods=['POST'])
+@login_required
+def upgrade_subscription():
+    if current_user.subscription_type == 'premium':
+        flash('You are already a premium member!')
+        return redirect(url_for('subscription'))
+    
+    current_user.subscription_type = 'premium'
+    current_user.subscription_end_date = datetime.utcnow() + timedelta(days=30)
+    db.session.commit()
+    flash('Successfully upgraded to premium! Enjoy unlimited AI analysis.')
+    return redirect(url_for('subscription'))
+
+@app.route('/subscription/cancel', methods=['POST'])
+@login_required
+def cancel_subscription():
+    if current_user.subscription_type != 'premium':
+        flash('You are not currently subscribed to premium.')
+        return redirect(url_for('subscription'))
+    
+    current_user.subscription_type = 'free'
+    current_user.subscription_end_date = None
+    db.session.commit()
+    flash('Your premium subscription has been canceled. You can resubscribe at any time.')
+    return redirect(url_for('subscription'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -51,6 +83,10 @@ def logout():
 @login_required
 def dream_log():
     if request.method == 'POST':
+        if not current_user.can_use_ai_analysis():
+            flash('You have reached your monthly limit for AI analysis. Upgrade to premium for unlimited analysis!')
+            return redirect(url_for('subscription'))
+            
         dream = Dream()
         dream.title = request.form['title']
         dream.content = request.form['content']
@@ -60,6 +96,7 @@ def dream_log():
         dream.user_id = current_user.id
         
         dream.ai_analysis = analyze_dream(request.form['content'])
+        current_user.increment_ai_analysis_count()
         
         db.session.add(dream)
         db.session.commit()
@@ -97,7 +134,6 @@ def add_comment(dream_id):
     db.session.commit()
     return redirect(url_for('dream_view', dream_id=dream_id))
 
-# Dream Groups Routes
 @app.route('/groups')
 @login_required
 def dream_groups():
@@ -195,7 +231,6 @@ def share_dream(group_id):
     flash('Dream shared with the group')
     return redirect(url_for('group_detail', group_id=group_id))
 
-# Forum Routes
 @app.route('/groups/<int:group_id>/forum/create', methods=['GET', 'POST'])
 @login_required
 def create_forum_post(group_id):
@@ -259,6 +294,15 @@ def dream_patterns():
         'tags': dream.tags
     } for dream in dreams]
     
-    patterns = analyze_dream_patterns(dreams_data)
+    if current_user.subscription_type == 'premium':
+        patterns = analyze_dream_patterns(dreams_data)
+    else:
+        patterns = json.dumps({
+            "Common Symbols and Themes": "Upgrade to premium for detailed symbol analysis!",
+            "Emotional Patterns": "Basic mood tracking available. Premium users get detailed emotional pattern analysis.",
+            "Life Events and Concerns": "Upgrade to premium to unlock deep insights about life patterns.",
+            "Personal Growth Indicators": "Premium feature: Track your personal growth through dream patterns.",
+            "Actionable Insights": "Get personalized recommendations with premium subscription."
+        })
     
     return render_template('dream_patterns.html', dreams=dreams, patterns=patterns)

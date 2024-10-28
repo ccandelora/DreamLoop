@@ -12,15 +12,34 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(256))
+    subscription_type = db.Column(db.String(20), default='free')  # free, premium
+    subscription_end_date = db.Column(db.DateTime)
     dreams = db.relationship('Dream', backref='author', lazy='dynamic')
     group_memberships = db.relationship('GroupMembership', backref='user', lazy='dynamic')
     forum_posts = db.relationship('ForumPost', backref='author', lazy='dynamic')
+    monthly_ai_analysis_count = db.Column(db.Integer, default=0)
+    last_analysis_reset = db.Column(db.DateTime, default=datetime.utcnow)
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
         
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+        
+    def can_use_ai_analysis(self):
+        if self.subscription_type == 'premium':
+            return True
+        # Free users get 3 analyses per month
+        if self.last_analysis_reset is None or (datetime.utcnow() - self.last_analysis_reset).days >= 30:
+            self.monthly_ai_analysis_count = 0
+            self.last_analysis_reset = datetime.utcnow()
+            db.session.commit()
+        return self.monthly_ai_analysis_count < 3
+        
+    def increment_ai_analysis_count(self):
+        if self.subscription_type != 'premium':
+            self.monthly_ai_analysis_count += 1
+            db.session.commit()
 
 class Dream(db.Model):
     id = db.Column(db.Integer, primary_key=True)

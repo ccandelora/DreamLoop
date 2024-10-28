@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Premium Subscription{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2>Dream Journal Premium</h2>
+                </div>
+                <div class="card-body">
+                    <h3 class="mb-4">Your Current Plan: 
+                        <span class="badge {% if current_user.subscription_type == 'premium' %}bg-success{% else %}bg-secondary{% endif %}">
+                            {{ current_user.subscription_type|title }}
+                        </span>
+                    </h3>
+
+                    {% if current_user.subscription_type == 'free' %}
+                    <div class="alert alert-info">
+                        <h4>Free Plan Limitations:</h4>
+                        <ul>
+                            <li>3 AI dream analyses per month</li>
+                            <li>Basic pattern recognition</li>
+                            <li>Standard dream journaling features</li>
+                        </ul>
+                        <p class="mb-0">AI Analyses Remaining This Month: {{ 3 - current_user.monthly_ai_analysis_count }}</p>
+                    </div>
+
+                    <div class="card bg-dark mb-4">
+                        <div class="card-body">
+                            <h4 class="card-title">Upgrade to Premium</h4>
+                            <ul class="list-unstyled">
+                                <li>✨ Unlimited AI dream analyses</li>
+                                <li>✨ Advanced pattern recognition</li>
+                                <li>✨ Priority support</li>
+                                <li>✨ Ad-free experience</li>
+                                <li>✨ Early access to new features</li>
+                            </ul>
+                            <div class="text-center mt-4">
+                                <form method="POST" action="{{ url_for('upgrade_subscription') }}">
+                                    <button type="submit" class="btn btn-primary btn-lg">Upgrade Now - $9.99/month</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-success">
+                        <h4>Premium Benefits Active:</h4>
+                        <ul>
+                            <li>✨ Unlimited AI dream analyses</li>
+                            <li>✨ Advanced pattern recognition</li>
+                            <li>✨ Priority support</li>
+                            <li>✨ Ad-free experience</li>
+                            <li>✨ Early access to new features</li>
+                        </ul>
+                        {% if current_user.subscription_end_date %}
+                        <p class="mb-0">Subscription renews on: {{ current_user.subscription_end_date.strftime('%Y-%m-%d') }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <form method="POST" action="{{ url_for('cancel_subscription') }}" class="mt-4">
+                        <button type="submit" class="btn btn-outline-danger">Cancel Subscription</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
