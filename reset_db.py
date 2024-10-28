@@ -1,7 +1,7 @@
 from app import app, db
 from models import User, Dream, DreamGroup, GroupMembership, ForumPost, ForumReply
 from werkzeug.security import generate_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def reset_database():
     with app.app_context():

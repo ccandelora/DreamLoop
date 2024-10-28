@@ -149,6 +149,16 @@ def dream_groups():
 @app.route('/groups/create', methods=['GET', 'POST'])
 @login_required
 def create_group():
+    if current_user.subscription_type == 'free':
+        user_groups = DreamGroup.query.join(GroupMembership).filter(
+            GroupMembership.user_id == current_user.id,
+            GroupMembership.is_admin == True
+        ).count()
+        
+        if user_groups >= 2:
+            flash('Free users can only create up to 2 groups. Upgrade to premium for unlimited groups!')
+            return redirect(url_for('subscription'))
+    
     if request.method == 'POST':
         group = DreamGroup()
         group.name = request.form['name']
