@@ -29,11 +29,11 @@ def register():
             flash('Username already exists')
             return redirect(url_for('register'))
             
-        user = User(
-            username=request.form['username'],
-            email=request.form['email']
-        )
+        user = User()
+        user.username = request.form['username']
+        user.email = request.form['email']
         user.set_password(request.form['password'])
+        
         db.session.add(user)
         db.session.commit()
         login_user(user)
@@ -50,15 +50,17 @@ def logout():
 @login_required
 def dream_log():
     if request.method == 'POST':
-        dream = Dream(
-            title=request.form['title'],
-            content=request.form['content'],
-            mood=request.form['mood'],
-            tags=request.form['tags'],
-            is_public=bool(request.form.get('is_public')),
-            user_id=current_user.id
-        )
+        dream = Dream()
+        dream.title = request.form['title']
+        dream.content = request.form['content']
+        dream.mood = request.form['mood']
+        dream.tags = request.form['tags']
+        dream.is_public = bool(request.form.get('is_public'))
+        dream.user_id = current_user.id
+        
+        # Get AI analysis
         dream.ai_analysis = analyze_dream(request.form['content'])
+        
         db.session.add(dream)
         db.session.commit()
         return redirect(url_for('dream_view', dream_id=dream.id))
@@ -86,11 +88,11 @@ def add_comment(dream_id):
     if not dream.is_public and dream.user_id != current_user.id:
         return jsonify({'error': 'Access denied'}), 403
         
-    comment = Comment(
-        content=request.form['content'],
-        dream_id=dream_id,
-        author_id=current_user.id
-    )
+    comment = Comment()
+    comment.content = request.form['content']
+    comment.dream_id = dream_id
+    comment.author_id = current_user.id
+    
     db.session.add(comment)
     db.session.commit()
     return redirect(url_for('dream_view', dream_id=dream_id))
@@ -116,6 +118,5 @@ def dream_patterns():
     
     # Get pattern analysis and ensure it's valid JSON
     patterns = analyze_dream_patterns(dreams_data)
-    patterns = json.dumps(patterns) if not isinstance(patterns, str) else patterns
     
     return render_template('dream_patterns.html', dreams=dreams, patterns=patterns)

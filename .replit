@@ -15,6 +15,10 @@ author = "agent"
 task = "workflow.run"
 args = "Flask Dream Journal"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Add Sample Dreams"
+
 [[workflows.workflow]]
 name = "Flask Dream Journal"
 author = "agent"
@@ -26,6 +30,17 @@ agentRequireRestartOnSave = false
 task = "shell.exec"
 args = "python main.py"
 waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Add Sample Dreams"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 add_sample_dreams.py"
 
 [deployment]
 run = ["sh", "-c", "python main.py"]

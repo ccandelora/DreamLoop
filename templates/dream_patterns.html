@@ -48,11 +48,16 @@
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const patternsData = {{ patterns|tojson|safe }};
+    const patternsData = {{ patterns|safe }};
     const patternsContainer = document.getElementById('patterns-analysis');
     
     try {
-        const data = JSON.parse(patternsData);
+        let data = patternsData;
+        // Handle case where data might be a string
+        if (typeof patternsData === 'string') {
+            data = JSON.parse(patternsData);
+        }
+        
         if (!data || Object.keys(data).length === 0) {
             throw new Error('No pattern data available');
         }
@@ -65,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h3>${title}</h3>
                     <div class="card">
                         <div class="card-body">
-                            ${content}
+                            ${typeof content === 'string' ? content : JSON.stringify(content)}
                         </div>
                     </div>
                 </div>
@@ -74,15 +79,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Build the HTML for each section
         let html = '';
-        html += createSection('Common Symbols & Themes', data.common_symbols);
-        html += createSection('Emotional Patterns', data.emotional_patterns);
-        html += createSection('Life Events & Concerns', data.life_events);
-        html += createSection('Personal Growth Indicators', data.growth_indicators);
-        html += createSection('Actionable Insights', data.actionable_insights);
+        html += createSection('Common Symbols & Themes', data.common_symbols || data['Common Symbols and Themes']);
+        html += createSection('Emotional Patterns', data.emotional_patterns || data['Emotional Patterns']);
+        html += createSection('Life Events & Concerns', data.life_events || data['Life Events and Concerns']);
+        html += createSection('Personal Growth Indicators', data.growth_indicators || data['Personal Growth Indicators']);
+        html += createSection('Actionable Insights', data.actionable_insights || data['Actionable Insights']);
 
         patternsContainer.innerHTML = html || '<div class="alert alert-info">No pattern analysis available.</div>';
     } catch (e) {
-        console.error('Error parsing patterns data:', e);
+        console.error('Error processing patterns data:', e);
         patternsContainer.innerHTML = '<div class="alert alert-warning">No dream patterns available yet. Try logging more dreams to see patterns.</div>';
     }
 });
