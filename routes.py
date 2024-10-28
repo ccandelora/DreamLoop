@@ -10,6 +10,12 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Constants
+GROUP_THEMES = [
+    "Lucid Dreams", "Nightmares", "Flying Dreams", "Adventure",
+    "Spiritual", "Recurring Dreams", "Prophetic Dreams", "Nature Dreams"
+]
+
 @app.route('/')
 def index():
     """Handle the main landing page."""
@@ -162,6 +168,179 @@ def community():
     dreams = Dream.query.filter_by(is_public=True).order_by(Dream.date.desc()).all()
     return render_template('community.html', dreams=dreams)
 
+@app.route('/groups')
+@login_required
+def dream_groups():
+    theme = request.args.get('theme')
+    if theme:
+        groups = DreamGroup.query.filter_by(theme=theme).all()
+    else:
+        groups = DreamGroup.query.all()
+    return render_template('dream_groups.html', groups=groups, theme=theme, themes=GROUP_THEMES)
+
+@app.route('/groups/create', methods=['GET', 'POST'])
+@login_required
+def create_group():
+    """Create a new dream group."""
+    if request.method == 'POST':
+        name = request.form.get('name')
+        description = request.form.get('description')
+        theme = request.form.get('theme')
+        
+        if not name or not theme:
+            flash('Name and theme are required!')
+            return render_template('create_group.html', themes=GROUP_THEMES)
+        
+        group = DreamGroup()
+        group.name = name
+        group.description = description
+        group.theme = theme
+        
+        db.session.add(group)
+        db.session.flush()
+        
+        # Make creator an admin member
+        membership = GroupMembership()
+        membership.user_id = current_user.id
+        membership.group_id = group.id
+        membership.is_admin = True
+        
+        db.session.add(membership)
+        db.session.commit()
+        
+        flash('Group created successfully!')
+        return redirect(url_for('group_detail', group_id=group.id))
+    
+    return render_template('create_group.html', themes=GROUP_THEMES)
+
+@app.route('/groups/<int:group_id>')
+@login_required
+def group_detail(group_id):
+    """View a specific group."""
+    group = DreamGroup.query.get_or_404(group_id)
+    is_member = current_user in [m.user for m in group.members]
+    is_admin = any(m.is_admin for m in group.members if m.user_id == current_user.id)
+    user_dreams = current_user.dreams.all() if is_member else []
+    
+    return render_template('group_detail.html', group=group, is_member=is_member,
+                         is_admin=is_admin, user_dreams=user_dreams)
+
+@app.route('/groups/<int:group_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_group(group_id):
+    """Edit a dream group."""
+    group = DreamGroup.query.get_or_404(group_id)
+    if not any(m.is_admin for m in group.members if m.user_id == current_user.id):
+        flash('Only group admins can edit the group.')
+        return redirect(url_for('group_detail', group_id=group_id))
+    
+    if request.method == 'POST':
+        group.name = request.form.get('name')
+        group.description = request.form.get('description')
+        group.theme = request.form.get('theme')
+        db.session.commit()
+        flash('Group updated successfully!')
+        return redirect(url_for('group_detail', group_id=group_id))
+    
+    return render_template('edit_group.html', group=group, themes=GROUP_THEMES)
+
+@app.route('/groups/<int:group_id>/join', methods=['POST'])
+@login_required
+def join_group(group_id):
+    """Join a dream group."""
+    group = DreamGroup.query.get_or_404(group_id)
+    if current_user in [m.user for m in group.members]:
+        flash('You are already a member of this group!')
+        return redirect(url_for('group_detail', group_id=group_id))
+    
+    membership = GroupMembership()
+    membership.user_id = current_user.id
+    membership.group_id = group_id
+    
+    db.session.add(membership)
+    db.session.commit()
+    flash('Successfully joined the group!')
+    return redirect(url_for('group_detail', group_id=group_id))
+
+@app.route('/forum/post/<int:post_id>')
+@login_required
+def forum_post(post_id):
+    """View a specific forum post."""
+    post = ForumPost.query.get_or_404(post_id)
+    is_member = current_user in [m.user for m in post.dream_group.members]
+    return render_template('forum_post.html', post=post, is_member=is_member)
+
+@app.route('/forum/post/create/<int:group_id>', methods=['GET', 'POST'])
+@login_required
+def create_forum_post(group_id):
+    """Create a new forum post."""
+    group = DreamGroup.query.get_or_404(group_id)
+    if current_user not in [m.user for m in group.members]:
+        flash('Only group members can create posts!')
+        return redirect(url_for('group_detail', group_id=group_id))
+    
+    if request.method == 'POST':
+        post = ForumPost()
+        post.title = request.form.get('title')
+        post.content = request.form.get('content')
+        post.author_id = current_user.id
+        post.group_id = group_id
+        
+        db.session.add(post)
+        db.session.commit()
+        flash('Post created successfully!')
+        return redirect(url_for('forum_post', post_id=post.id))
+    
+    return render_template('create_forum_post.html', group=group)
+
+@app.route('/forum/post/<int:post_id>/reply', methods=['POST'])
+@login_required
+def add_forum_reply(post_id):
+    """Add a reply to a forum post."""
+    post = ForumPost.query.get_or_404(post_id)
+    if current_user not in [m.user for m in post.dream_group.members]:
+        flash('Only group members can reply to posts!')
+        return redirect(url_for('forum_post', post_id=post_id))
+    
+    content = request.form.get('content')
+    if not content:
+        flash('Reply content cannot be empty!')
+        return redirect(url_for('forum_post', post_id=post_id))
+    
+    reply = ForumReply()
+    reply.content = content
+    reply.author_id = current_user.id
+    reply.post_id = post_id
+    
+    db.session.add(reply)
+    db.session.commit()
+    flash('Reply added successfully!')
+    return redirect(url_for('forum_post', post_id=post_id))
+
+@app.route('/dream/<int:dream_id>/share/<int:group_id>', methods=['POST'])
+@login_required
+def share_dream(dream_id, group_id):
+    """Share a dream with a group."""
+    dream = Dream.query.get_or_404(dream_id)
+    group = DreamGroup.query.get_or_404(group_id)
+    
+    if dream.user_id != current_user.id:
+        flash('You can only share your own dreams!')
+        return redirect(url_for('group_detail', group_id=group_id))
+    
+    if current_user not in [m.user for m in group.members]:
+        flash('You must be a group member to share dreams!')
+        return redirect(url_for('group_detail', group_id=group_id))
+    
+    if dream.dream_group_id:
+        flash('This dream has already been shared with a group!')
+        return redirect(url_for('group_detail', group_id=group_id))
+    
+    dream.dream_group_id = group_id
+    db.session.commit()
+    flash('Dream shared successfully with the group!')
+    return redirect(url_for('group_detail', group_id=group_id))
+
 @app.route('/subscription/upgrade', methods=['POST'])
 @login_required
 def upgrade_subscription():
@@ -192,6 +371,11 @@ def upgrade_subscription():
         db.session.rollback()
         flash('An error occurred during the upgrade. Please try again or contact support.')
         return redirect(url_for('subscription'))
+
+@app.route('/subscription')
+@login_required
+def subscription():
+    return render_template('subscription.html')
 
 @app.context_processor
 def inject_ad_context():

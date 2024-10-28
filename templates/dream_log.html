@@ -2,42 +2,49 @@
 {% block title %}Log Dream{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h2>Log Your Dream</h2>
-            </div>
-            <div class="card-body">
-                <form method="POST">
-                    <div class="mb-3">
-                        <label for="title" class="form-label">Dream Title</label>
-                        <input type="text" class="form-control" id="title" name="title" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="content" class="form-label">Dream Description</label>
-                        <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="mood" class="form-label">Mood</label>
-                        <select class="form-select" id="mood" name="mood" required>
-                            <option value="happy">Happy</option>
-                            <option value="sad">Sad</option>
-                            <option value="scared">Scared</option>
-                            <option value="peaceful">Peaceful</option>
-                            <option value="anxious">Anxious</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="tags" class="form-label">Tags (comma-separated)</label>
-                        <input type="text" class="form-control" id="tags" name="tags">
-                    </div>
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="is_public" name="is_public">
-                        <label class="form-check-label" for="is_public">Share anonymously with community</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save Dream</button>
-                </form>
+<div class="container">
+    {% include 'partials/_premium_ad.html' %}
+    
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Log Dream</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Dream Description</label>
+                            <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mood" class="form-label">Mood</label>
+                            <select class="form-select" id="mood" name="mood">
+                                <option value="happy">Happy</option>
+                                <option value="sad">Sad</option>
+                                <option value="scared">Scared</option>
+                                <option value="peaceful">Peaceful</option>
+                                <option value="anxious">Anxious</option>
+                                <option value="excited">Excited</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tags" class="form-label">Tags (comma-separated)</label>
+                            <input type="text" class="form-control" id="tags" name="tags" placeholder="flying, chase, water">
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="is_public" name="is_public">
+                            <label class="form-check-label" for="is_public">Share with Community</label>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Log Dream</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
