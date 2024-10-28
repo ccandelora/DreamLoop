@@ -17,7 +17,7 @@
 
         {% if current_user.is_authenticated %}
         gtag('set', 'user_data', {
-            'email_hash': '{{ current_user.email|hash }}',
+            'email_hash': '{{ hash_email(current_user.email) }}',
             'subscription_type': '{{ current_user.subscription_type }}'
         });
         {% endif %}
@@ -39,6 +39,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('dream_patterns') }}">Dream Patterns</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('dream_groups') }}">Groups</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('community') }}">Community</a>

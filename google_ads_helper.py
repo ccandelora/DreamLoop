@@ -38,6 +38,8 @@ def create_google_ads_client():
             "refresh_token": os.environ.get('GOOGLE_ADS_REFRESH_TOKEN'),
             "client_secret": os.environ.get('GOOGLE_ADS_CLIENT_SECRET'),
             "login_customer_id": os.environ.get('GOOGLE_ADS_LOGIN_CUSTOMER_ID'),
+            "use_proto_plus": True,  # Explicitly set use_proto_plus to True
+            "linked_customer_id": os.environ.get('GOOGLE_ADS_CUSTOMER_ID')
         }
         
         return GoogleAdsClient.load_from_dict(credentials)
@@ -46,7 +48,7 @@ def create_google_ads_client():
         return None
 
 def track_premium_conversion(user_id, conversion_value=9.99):
-    """Track a premium subscription conversion in Google Ads with fallback behavior."""
+    """Track a premium subscription conversion in Google Ads."""
     if not validate_google_ads_credentials():
         logger.info("Skipping conversion tracking due to missing credentials")
         return False
@@ -57,54 +59,61 @@ def track_premium_conversion(user_id, conversion_value=9.99):
             return False
 
         customer_id = os.environ.get('GOOGLE_ADS_CUSTOMER_ID')
-        
-        # Get the required services
+
+        # Create conversion action service and type
         conversion_action_service = client.get_service("ConversionActionService")
-        conversion_upload_service = client.get_service("ConversionUploadService")
+        conversion_action_operation = client.get_type("ConversionActionOperation")
+        conversion_action = conversion_action_operation.create
         
+        # Set conversion action settings
+        conversion_action.name = f"Premium Subscription - User {user_id}"
+        conversion_action.category = client.enums.ConversionActionCategoryEnum.PURCHASE
+        conversion_action.status = client.enums.ConversionActionStatusEnum.ENABLED
+        conversion_action.type_ = client.enums.ConversionActionTypeEnum.WEBPAGE
+        
+        # Set value settings
+        value_settings = client.get_type("ValueSettings")
+        value_settings.default_value = conversion_value
+        value_settings.always_use_default_value = True
+        conversion_action.value_settings = value_settings
+        
+        # Create the conversion action
         try:
-            # Create the conversion action request
-            conversion_action_operation = client.get_type("ConversionActionOperation")
-            conversion_action = conversion_action_operation.create
-            conversion_action.name = "Premium Subscription Upgrade"
-            conversion_action.category = client.enums.ConversionActionCategoryEnum.PURCHASE
-            conversion_action.type_ = client.enums.ConversionActionTypeEnum.WEBPAGE
-            conversion_action.status = client.enums.ConversionActionStatusEnum.ENABLED
-            
-            # Set value settings
-            value_settings = client.get_type("ValueSettings")
-            value_settings.default_value = conversion_value
-            value_settings.always_use_default_value = True
-            conversion_action.value_settings = value_settings
-            
-            # Upload click conversion
-            click_conversion = client.get_type("ClickConversion")
-            click_conversion.conversion_action = conversion_action_service.conversion_action_path(
-                customer_id, "INSERT_CONVERSION_ACTION_ID"
+            response = conversion_action_service.mutate_conversion_actions(
+                customer_id=customer_id,
+                operations=[conversion_action_operation]
             )
-            click_conversion.conversion_value = conversion_value
-            click_conversion.conversion_date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            
-            # Add user identifier
-            user_identifier = client.get_type("UserIdentifier")
-            user_identifier.user_identifier_source = client.enums.UserIdentifierSourceEnum.FIRST_PARTY
-            user_identifier.hashed_email = str(user_id)  # In production, this should be hashed
-            click_conversion.user_identifiers.append(user_identifier)
-            
-            # Create upload request
-            request = client.get_type("UploadClickConversionsRequest")
-            request.customer_id = customer_id
-            request.conversions = [click_conversion]
-            request.partial_failure = True
-            
-            # Upload conversion
-            response = conversion_upload_service.upload_click_conversions(request=request)
-            logger.info("Successfully tracked premium conversion")
-            return True
-            
+            conversion_action_id = response.results[0].resource_name
         except GoogleAdsException as ex:
-            logger.error(f"Failed to track conversion: {ex.error.code().name}")
-            return False
+            # If conversion action already exists, retrieve its ID
+            conversion_action_id = conversion_action_service.conversion_action_path(
+                customer_id, str(user_id)
+            )
+
+        # Upload click conversion
+        conversion_upload_service = client.get_service("ConversionUploadService")
+        click_conversion = client.get_type("ClickConversion")
+        
+        # Set click conversion properties
+        click_conversion.conversion_action = conversion_action_id
+        click_conversion.conversion_date_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S+00:00")
+        click_conversion.conversion_value = float(conversion_value)
+        click_conversion.currency_code = "USD"
+        click_conversion.gclid = f"premium_upgrade_{user_id}"
+        
+        # Upload the conversion
+        request = client.get_type("UploadClickConversionsRequest")
+        request.customer_id = customer_id
+        request.conversions = [click_conversion]
+        request.partial_failure = True
+        
+        response = conversion_upload_service.upload_click_conversions(request=request)
+        logger.info("Successfully tracked premium conversion")
+        return True
+            
+    except GoogleAdsException as ex:
+        logger.error(f"Failed to track conversion: {ex.error.code().name}")
+        return False
             
     except Exception as e:
         logger.error(f"Unexpected error in conversion tracking: {str(e)}")
