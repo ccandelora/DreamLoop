@@ -1,0 +1,60 @@
+{% if should_show_premium_ads() %}
+<div class="alert alert-info alert-dismissible fade show premium-upgrade-banner" role="alert">
+    <h4 class="alert-heading">
+        {% if current_user.monthly_ai_analysis_count >= 2 %}
+        🚀 Upgrade Now - Only {{ 3 - current_user.monthly_ai_analysis_count }} AI Analysis Remaining!
+        {% else %}
+        🌟 Unlock Premium Features
+        {% endif %}
+    </h4>
+    
+    <p>
+        {% if current_user.monthly_ai_analysis_count >= 2 %}
+        You're making great use of our AI analysis! Upgrade to premium for unlimited dream insights and pattern recognition.
+        {% elif current_user.dreams.count() > 5 %}
+        You've logged {{ current_user.dreams.count() }} dreams! Unlock deeper insights with our premium AI analysis.
+        {% else %}
+        Experience the full potential of dream analysis with unlimited AI insights and advanced pattern recognition!
+        {% endif %}
+    </p>
+    
+    <hr>
+    <div class="feature-list mb-3">
+        <small>
+            <ul class="list-unstyled">
+                <li>✨ Unlimited AI dream analysis (currently {{ 3 - current_user.monthly_ai_analysis_count }} remaining)</li>
+                <li>✨ Advanced pattern recognition across all your dreams</li>
+                <li>✨ Priority support and early access to new features</li>
+            </ul>
+        </small>
+    </div>
+    
+    <p class="mb-0">
+        <a href="{{ url_for('subscription') }}" class="btn btn-primary upgrade-button" 
+           onclick="gtag('event', 'begin_checkout', { value: 9.99, currency: 'USD' });">
+            Upgrade Now - Only $9.99/month
+        </a>
+    </p>
+    
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<!-- Google Ads Conversion Tracking -->
+{% if validate_google_ads_credentials() %}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ google_ads_client_id }}"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '{{ google_ads_client_id }}');
+
+// Enhanced conversion tracking
+gtag('event', 'page_view', {
+    'send_to': '{{ google_ads_client_id }}',
+    'user_data': {
+        'email': '{{ current_user.email }}'  // This should be hashed in production
+    }
+});
+</script>
+{% endif %}
+{% endif %}

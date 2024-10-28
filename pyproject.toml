@@ -11,4 +11,5 @@ dependencies = [
     "openai>=1.52.2",
     "flask-login>=0.6.3",
     "google-generativeai>=0.8.3",
+    "google-ads>=25.1.0",
 ]
