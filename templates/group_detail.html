@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}{{ group.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('dream_groups') }}">Groups</a></li>
+                    <li class="breadcrumb-item active">{{ group.name }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>{{ group.name }}</h2>
+            <span class="badge bg-primary">{{ group.theme }}</span>
+            <p class="mt-3">{{ group.description }}</p>
+        </div>
+        <div class="col-md-4 text-end">
+            {% if is_member %}
+            <a href="{{ url_for('create_forum_post', group_id=group.id) }}" class="btn btn-primary">New Discussion</a>
+            {% if is_admin %}
+            <a href="{{ url_for('edit_group', group_id=group.id) }}" class="btn btn-outline-secondary">Edit Group</a>
+            {% endif %}
+            {% else %}
+            <form method="POST" action="{{ url_for('join_group', group_id=group.id) }}">
+                <button type="submit" class="btn btn-primary">Join Group</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Group Content Tabs -->
+    <ul class="nav nav-tabs mb-4" id="groupTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="dreams-tab" data-bs-toggle="tab" href="#dreams" role="tab">Shared Dreams</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="discussions-tab" data-bs-toggle="tab" href="#discussions" role="tab">Discussions</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="members-tab" data-bs-toggle="tab" href="#members" role="tab">Members</a>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="groupTabContent">
+        <!-- Dreams Tab -->
+        <div class="tab-pane fade show active" id="dreams" role="tabpanel">
+            {% if is_member %}
+            <div class="mb-4">
+                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#shareDreamModal">
+                    Share a Dream
+                </button>
+            </div>
+            {% endif %}
+            
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                {% for dream in group.dreams %}
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ dream.title }}</h5>
+                            <p class="card-text">{{ dream.content[:200] }}...</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">by {{ dream.author.username }}</small>
+                                <a href="{{ url_for('dream_view', dream_id=dream.id) }}" class="btn btn-sm btn-outline-primary">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Discussions Tab -->
+        <div class="tab-pane fade" id="discussions" role="tabpanel">
+            {% if is_member %}
+            <div class="mb-4">
+                <a href="{{ url_for('create_forum_post', group_id=group.id) }}" class="btn btn-outline-primary">
+                    Start New Discussion
+                </a>
+            </div>
+            {% endif %}
+
+            <div class="list-group">
+                {% for post in group.forum_posts %}
+                <a href="{{ url_for('forum_post', post_id=post.id) }}" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ post.title }}</h5>
+                        <small>{{ post.created_at.strftime('%Y-%m-%d') }}</small>
+                    </div>
+                    <p class="mb-1">{{ post.content[:200] }}...</p>
+                    <small>by {{ post.author.username }} • {{ post.replies.count() }} replies</small>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Members Tab -->
+        <div class="tab-pane fade" id="members" role="tabpanel">
+            <div class="list-group">
+                {% for membership in group.members %}
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">{{ membership.user.username }}</h6>
+                            {% if membership.is_admin %}
+                            <small class="text-primary">Admin</small>
+                            {% endif %}
+                        </div>
+                        <small class="text-muted">Joined {{ membership.join_date.strftime('%Y-%m-%d') }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Share Dream Modal -->
+{% if is_member %}
+<div class="modal fade" id="shareDreamModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Share Dream with Group</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ url_for('share_dream', group_id=group.id) }}">
+                    <div class="mb-3">
+                        <label for="dreamSelect" class="form-label">Select Dream to Share</label>
+                        <select class="form-select" id="dreamSelect" name="dream_id" required>
+                            {% for dream in user_dreams %}
+                            <option value="{{ dream.id }}">{{ dream.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Share Dream</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

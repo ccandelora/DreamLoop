@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('dream_groups') }}">Groups</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('group_detail', group_id=post.group_id) }}">{{ post.dream_group.name }}</a></li>
+                    <li class="breadcrumb-item active">Discussion</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Post -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">{{ post.title }}</h2>
+            <div class="mb-3">
+                <small class="text-muted">
+                    Posted by {{ post.author.username }} on {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}
+                </small>
+            </div>
+            <p class="card-text">{{ post.content }}</p>
+        </div>
+    </div>
+
+    <!-- Replies -->
+    <div class="card">
+        <div class="card-header">
+            <h3>Replies</h3>
+        </div>
+        <div class="card-body">
+            {% if is_member %}
+            <form method="POST" action="{{ url_for('add_forum_reply', post_id=post.id) }}" class="mb-4">
+                <div class="mb-3">
+                    <label for="replyContent" class="form-label">Your Reply</label>
+                    <textarea class="form-control" id="replyContent" name="content" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Post Reply</button>
+            </form>
+            {% endif %}
+
+            <div class="list-group">
+                {% for reply in post.replies %}
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <strong>{{ reply.author.username }}</strong>
+                        <small class="text-muted">{{ reply.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                    </div>
+                    <p class="mb-0">{{ reply.content }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

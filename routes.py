@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db
-from models import User, Dream, Comment
+from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply
 from ai_helper import analyze_dream, analyze_dream_patterns
 from werkzeug.security import generate_password_hash
 from add_sample_dreams import add_sample_dreams
@@ -59,7 +59,6 @@ def dream_log():
         dream.is_public = bool(request.form.get('is_public'))
         dream.user_id = current_user.id
         
-        # Get AI analysis
         dream.ai_analysis = analyze_dream(request.form['content'])
         
         db.session.add(dream)
@@ -98,24 +97,142 @@ def add_comment(dream_id):
     db.session.commit()
     return redirect(url_for('dream_view', dream_id=dream_id))
 
-@app.route('/add_sample_dreams')
+# Dream Groups Routes
+@app.route('/groups')
 @login_required
-def add_samples():
-    add_sample_dreams()
-    flash('Sample dreams added successfully!')
-    return redirect(url_for('dream_patterns'))
+def dream_groups():
+    theme = request.args.get('theme')
+    if theme:
+        groups = DreamGroup.query.filter_by(theme=theme).all()
+    else:
+        groups = DreamGroup.query.all()
+    themes = db.session.query(DreamGroup.theme).distinct().all()
+    themes = [t[0] for t in themes]
+    return render_template('dream_groups.html', groups=groups, themes=themes, theme=theme)
+
+@app.route('/groups/create', methods=['GET', 'POST'])
+@login_required
+def create_group():
+    if request.method == 'POST':
+        group = DreamGroup()
+        group.name = request.form['name']
+        group.description = request.form['description']
+        group.theme = request.form['theme']
+        
+        db.session.add(group)
+        db.session.flush()
+        
+        membership = GroupMembership()
+        membership.user_id = current_user.id
+        membership.group_id = group.id
+        membership.is_admin = True
+        
+        db.session.add(membership)
+        db.session.commit()
+        
+        return redirect(url_for('group_detail', group_id=group.id))
+    return render_template('create_group.html')
+
+@app.route('/groups/<int:group_id>')
+@login_required
+def group_detail(group_id):
+    group = DreamGroup.query.get_or_404(group_id)
+    is_member = group.members.filter_by(user_id=current_user.id).first() is not None
+    is_admin = is_member and group.members.filter_by(user_id=current_user.id).first().is_admin
+    user_dreams = current_user.dreams if is_member else []
+    return render_template('group_detail.html', group=group, is_member=is_member, 
+                         is_admin=is_admin, user_dreams=user_dreams)
+
+@app.route('/groups/<int:group_id>/join', methods=['POST'])
+@login_required
+def join_group(group_id):
+    group = DreamGroup.query.get_or_404(group_id)
+    if not group.members.filter_by(user_id=current_user.id).first():
+        membership = GroupMembership()
+        membership.user_id = current_user.id
+        membership.group_id = group_id
+        db.session.add(membership)
+        db.session.commit()
+    return redirect(url_for('group_detail', group_id=group_id))
+
+@app.route('/groups/<int:group_id>/share-dream', methods=['POST'])
+@login_required
+def share_dream(group_id):
+    group = DreamGroup.query.get_or_404(group_id)
+    if not group.members.filter_by(user_id=current_user.id).first():
+        flash('You must be a member to share dreams')
+        return redirect(url_for('group_detail', group_id=group_id))
+    
+    dream_id = request.form.get('dream_id')
+    dream = Dream.query.get_or_404(dream_id)
+    
+    if dream.user_id != current_user.id:
+        flash('You can only share your own dreams')
+        return redirect(url_for('group_detail', group_id=group_id))
+    
+    dream.dream_group_id = group_id
+    dream.is_public = True
+    db.session.commit()
+    
+    flash('Dream shared with the group')
+    return redirect(url_for('group_detail', group_id=group_id))
+
+# Forum Routes
+@app.route('/groups/<int:group_id>/forum/create', methods=['GET', 'POST'])
+@login_required
+def create_forum_post(group_id):
+    group = DreamGroup.query.get_or_404(group_id)
+    if not group.members.filter_by(user_id=current_user.id).first():
+        flash('You must be a member to create discussions')
+        return redirect(url_for('group_detail', group_id=group_id))
+    
+    if request.method == 'POST':
+        post = ForumPost()
+        post.title = request.form['title']
+        post.content = request.form['content']
+        post.author_id = current_user.id
+        post.group_id = group_id
+        
+        db.session.add(post)
+        db.session.commit()
+        
+        return redirect(url_for('forum_post', post_id=post.id))
+    return render_template('create_forum_post.html', group=group)
+
+@app.route('/forum/post/<int:post_id>')
+@login_required
+def forum_post(post_id):
+    post = ForumPost.query.get_or_404(post_id)
+    is_member = post.dream_group.members.filter_by(user_id=current_user.id).first() is not None
+    return render_template('forum_post.html', post=post, is_member=is_member)
+
+@app.route('/forum/post/<int:post_id>/reply', methods=['POST'])
+@login_required
+def add_forum_reply(post_id):
+    post = ForumPost.query.get_or_404(post_id)
+    if not post.dream_group.members.filter_by(user_id=current_user.id).first():
+        flash('You must be a member to reply')
+        return redirect(url_for('forum_post', post_id=post_id))
+    
+    reply = ForumReply()
+    reply.content = request.form['content']
+    reply.author_id = current_user.id
+    reply.post_id = post_id
+    
+    db.session.add(reply)
+    db.session.commit()
+    
+    return redirect(url_for('forum_post', post_id=post_id))
 
 @app.route('/dream/patterns')
 @login_required
 def dream_patterns():
-    # Get user's dreams ordered by date
     dreams = Dream.query.filter_by(user_id=current_user.id).order_by(Dream.date.desc()).all()
     
     if not dreams:
         flash('You need to log some dreams first to see patterns!')
         return redirect(url_for('dream_log'))
     
-    # Prepare dreams data for analysis
     dreams_data = [{
         'date': dream.date.strftime('%Y-%m-%d'),
         'title': dream.title,
@@ -124,7 +241,6 @@ def dream_patterns():
         'tags': dream.tags
     } for dream in dreams]
     
-    # Get pattern analysis and ensure it's valid JSON
     patterns = analyze_dream_patterns(dreams_data)
     
     return render_template('dream_patterns.html', dreams=dreams, patterns=patterns)

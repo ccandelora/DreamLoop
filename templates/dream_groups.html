@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Dream Groups{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>Dream Groups</h2>
+            <p class="text-muted">Join theme-based groups to share and discuss your dreams with like-minded dreamers</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{{ url_for('create_group') }}" class="btn btn-primary">Create New Group</a>
+        </div>
+    </div>
+
+    <!-- Theme Filter -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Filter by Theme</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="{{ url_for('dream_groups') }}" class="btn btn-sm {% if not theme %}btn-primary{% else %}btn-outline-primary{% endif %}">All</a>
+                        {% for t in themes %}
+                        <a href="{{ url_for('dream_groups', theme=t) }}" class="btn btn-sm {% if theme == t %}btn-primary{% else %}btn-outline-primary{% endif %}">{{ t }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Groups List -->
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for group in groups %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ group.name }}</h5>
+                    <span class="badge bg-primary mb-2">{{ group.theme }}</span>
+                    <p class="card-text">{{ group.description }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">{{ group.members.count() }} members</small>
+                        {% if current_user in group.members %}
+                        <a href="{{ url_for('group_detail', group_id=group.id) }}" class="btn btn-outline-primary">View Group</a>
+                        {% else %}
+                        <form method="POST" action="{{ url_for('join_group', group_id=group.id) }}" style="display: inline;">
+                            <button type="submit" class="btn btn-primary">Join Group</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
