@@ -30,20 +30,25 @@ def add_sample_dreams():
             }
         ]
 
-        # Get the first user from the database
-        from models import User
-        user = User.query.first()
-        
-        if not user:
-            print("No user found in the database")
+        if not current_user or not current_user.is_authenticated:
+            print("No authenticated user found. Please login first.")
             return
 
         # Add dreams
         for dream_data in dreams_data:
+            # Check if dream already exists for this user
+            existing_dream = Dream.query.filter_by(
+                user_id=current_user.id,
+                title=dream_data["title"]
+            ).first()
+            
+            if existing_dream:
+                continue
+
             # Create dream instance
             dream = Dream()
             # Set attributes
-            dream.user_id = user.id
+            dream.user_id = current_user.id
             dream.title = dream_data["title"]
             dream.content = dream_data["content"]
             dream.mood = dream_data["mood"]

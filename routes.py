@@ -4,6 +4,7 @@ from app import app, db
 from models import User, Dream, Comment
 from ai_helper import analyze_dream, analyze_dream_patterns
 from werkzeug.security import generate_password_hash
+from add_sample_dreams import add_sample_dreams
 import json
 
 @app.route('/')
@@ -96,6 +97,13 @@ def add_comment(dream_id):
     db.session.add(comment)
     db.session.commit()
     return redirect(url_for('dream_view', dream_id=dream_id))
+
+@app.route('/add_sample_dreams')
+@login_required
+def add_samples():
+    add_sample_dreams()
+    flash('Sample dreams added successfully!')
+    return redirect(url_for('dream_patterns'))
 
 @app.route('/dream/patterns')
 @login_required
