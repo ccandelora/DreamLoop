@@ -48,47 +48,42 @@
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const patternsData = {{ patterns|tojson|safe }};
     const patternsContainer = document.getElementById('patterns-analysis');
-    
     try {
-        let data = patternsData;
-        // If data is a string, try to parse it
-        if (typeof data === 'string') {
-            data = JSON.parse(data);
-        }
+        // Get the patterns data directly from the template
+        const patternsData = {{ patterns|tojson|safe }};
+        
+        // Parse if it's a string, otherwise use directly
+        const data = typeof patternsData === 'string' ? JSON.parse(patternsData) : patternsData;
         
         if (!data || Object.keys(data).length === 0) {
             throw new Error('No pattern data available');
         }
 
-        // Check for error in the response
-        if (data.error) {
-            throw new Error(data.error + (data.details ? ': ' + data.details : ''));
-        }
-        
-        // Helper function to create a section
-        function createSection(title, content) {
-            if (!content) return '';
-            return `
-                <div class="mb-4">
-                    <h3>${title}</h3>
-                    <div class="card">
-                        <div class="card-body">
-                            ${typeof content === 'string' ? content : JSON.stringify(content)}
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
         // Build the HTML for each section
         let html = '';
-        html += createSection('Common Symbols & Themes', data['Common Symbols and Themes']);
-        html += createSection('Emotional Patterns', data['Emotional Patterns']);
-        html += createSection('Life Events & Concerns', data['Life Events and Concerns']);
-        html += createSection('Personal Growth Indicators', data['Personal Growth Indicators']);
-        html += createSection('Actionable Insights', data['Actionable Insights']);
+        const sections = {
+            'Common Symbols & Themes': data['Common Symbols and Themes'],
+            'Emotional Patterns': data['Emotional Patterns'],
+            'Life Events & Concerns': data['Life Events and Concerns'],
+            'Personal Growth Indicators': data['Personal Growth Indicators'],
+            'Actionable Insights': data['Actionable Insights']
+        };
+
+        for (const [title, content] of Object.entries(sections)) {
+            if (content) {
+                html += `
+                    <div class="mb-4">
+                        <h3>${title}</h3>
+                        <div class="card">
+                            <div class="card-body">
+                                ${content}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
 
         patternsContainer.innerHTML = html || '<div class="alert alert-info">No pattern analysis available.</div>';
     } catch (e) {
