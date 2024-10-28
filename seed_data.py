@@ -76,9 +76,22 @@ def create_ai_analysis():
 
 def seed_database():
     with app.app_context():
-        # Clear existing data
-        db.drop_all()
-        db.create_all()
+        print("Clearing existing data...")
+        try:
+            # Clear existing data in reverse order of dependencies
+            ForumReply.query.delete()
+            ForumPost.query.delete()
+            Comment.query.delete()
+            GroupMembership.query.delete()
+            Dream.query.delete()
+            DreamGroup.query.delete()
+            User.query.delete()
+            db.session.commit()
+            print("Existing data cleared successfully!")
+        except Exception as e:
+            print(f"Error clearing data: {str(e)}")
+            db.session.rollback()
+            return
         
         print("Creating users...")
         users = []
@@ -143,7 +156,9 @@ def seed_database():
                 
                 # Randomly assign some dreams to groups
                 if random.random() < 0.3:  # 30% chance
-                    dream.dream_group_id = random.choice(groups).id
+                    group = random.choice(groups)
+                    if user in [m.user for m in group.members]:
+                        dream.dream_group_id = group.id
                 
                 db.session.add(dream)
                 all_dreams.append(dream)
@@ -176,7 +191,11 @@ def seed_database():
         for group in groups:
             # Create 3-7 forum posts per group
             for _ in range(random.randint(3, 7)):
-                author = random.choice([m.user for m in group.members])
+                group_members = [m.user for m in group.members]
+                if not group_members:
+                    continue
+                    
+                author = random.choice(group_members)
                 post = ForumPost(
                     title=random.choice([
                         "Interpreting recurring symbols",
@@ -196,7 +215,9 @@ def seed_database():
 
                 # Add 2-8 replies per post
                 for _ in range(random.randint(2, 8)):
-                    replier = random.choice([m.user for m in group.members])
+                    if not group_members:
+                        continue
+                    replier = random.choice(group_members)
                     reply = ForumReply(
                         content=random.choice([
                             "Great insights! Thanks for sharing.",
