@@ -10,15 +10,9 @@
                 <p class="text-muted">Analysis based on your last {{ dreams|length }} dreams</p>
             </div>
             <div class="card-body">
-                {% if patterns %}
-                    <div id="patterns-analysis">
-                        <!-- Content will be populated by JavaScript -->
-                    </div>
-                {% else %}
-                    <div class="alert alert-info">
-                        No patterns could be analyzed at this time. Try logging more dreams to get better insights.
-                    </div>
-                {% endif %}
+                <div id="patterns-analysis">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
             </div>
         </div>
 
@@ -35,7 +29,14 @@
                             <small>{{ dream.date.strftime('%Y-%m-%d') }}</small>
                         </div>
                         <p class="mb-1">{{ dream.content[:100] }}...</p>
-                        <small>Mood: {{ dream.mood }}</small>
+                        <small>
+                            <span class="badge bg-secondary">{{ dream.mood }}</span>
+                            {% if dream.tags %}
+                                {% for tag in dream.tags.split(',') %}
+                                <span class="badge bg-info">{{ tag.strip() }}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </small>
                     </a>
                     {% endfor %}
                 </div>
@@ -49,15 +50,41 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const patternsContainer = document.getElementById('patterns-analysis');
+    
+    function displayError(message) {
+        patternsContainer.innerHTML = `
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle"></i>
+                ${message}
+            </div>`;
+    }
+
+    function createSection(title, content) {
+        if (!content) return '';
+        return `
+            <div class="mb-4">
+                <h3>${title}</h3>
+                <div class="card">
+                    <div class="card-body">
+                        ${content}
+                    </div>
+                </div>
+            </div>`;
+    }
+
     try {
-        // Get the patterns data directly from the template
-        const patternsData = {{ patterns|tojson|safe }};
+        // Get the patterns data from the template
+        const patterns = {{ patterns|tojson|safe }};
         
-        // Parse if it's a string, otherwise use directly
-        const data = typeof patternsData === 'string' ? JSON.parse(patternsData) : patternsData;
+        // Parse if it's a string
+        const data = typeof patterns === 'string' ? JSON.parse(patterns) : patterns;
         
         if (!data || Object.keys(data).length === 0) {
             throw new Error('No pattern data available');
+        }
+
+        if (data.error) {
+            throw new Error(data.error);
         }
 
         // Build the HTML for each section
@@ -72,23 +99,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
         for (const [title, content] of Object.entries(sections)) {
             if (content) {
-                html += `
-                    <div class="mb-4">
-                        <h3>${title}</h3>
-                        <div class="card">
-                            <div class="card-body">
-                                ${content}
-                            </div>
-                        </div>
-                    </div>
-                `;
+                html += createSection(title, content);
             }
         }
 
-        patternsContainer.innerHTML = html || '<div class="alert alert-info">No pattern analysis available.</div>';
+        if (!html) {
+            displayError('No pattern analysis available at this time. Please try again later.');
+            return;
+        }
+
+        patternsContainer.innerHTML = html;
+
     } catch (e) {
         console.error('Error processing patterns data:', e);
-        patternsContainer.innerHTML = '<div class="alert alert-warning">Still analyzing your dream patterns. Please try again in a moment.</div>';
+        displayError('Still analyzing your dream patterns. Please try again in a moment.');
     }
 });
 </script>
