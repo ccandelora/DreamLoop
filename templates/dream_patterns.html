@@ -11,62 +11,9 @@
             </div>
             <div class="card-body">
                 {% if patterns %}
-                    {% set pattern_data = patterns|tojson|safe|from_json %}
-                    
-                    {% if pattern_data.common_symbols %}
-                    <div class="mb-4">
-                        <h3>Common Symbols & Themes</h3>
-                        <div class="card">
-                            <div class="card-body">
-                                {{ pattern_data.common_symbols|safe }}
-                            </div>
-                        </div>
+                    <div id="patterns-analysis">
+                        <!-- Content will be populated by JavaScript -->
                     </div>
-                    {% endif %}
-
-                    {% if pattern_data.emotional_patterns %}
-                    <div class="mb-4">
-                        <h3>Emotional Patterns</h3>
-                        <div class="card">
-                            <div class="card-body">
-                                {{ pattern_data.emotional_patterns|safe }}
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    {% if pattern_data.life_events %}
-                    <div class="mb-4">
-                        <h3>Life Events & Concerns</h3>
-                        <div class="card">
-                            <div class="card-body">
-                                {{ pattern_data.life_events|safe }}
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    {% if pattern_data.growth_indicators %}
-                    <div class="mb-4">
-                        <h3>Personal Growth Indicators</h3>
-                        <div class="card">
-                            <div class="card-body">
-                                {{ pattern_data.growth_indicators|safe }}
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    {% if pattern_data.actionable_insights %}
-                    <div class="mb-4">
-                        <h3>Actionable Insights</h3>
-                        <div class="card">
-                            <div class="card-body">
-                                {{ pattern_data.actionable_insights|safe }}
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
                 {% else %}
                     <div class="alert alert-info">
                         No patterns could be analyzed at this time. Try logging more dreams to get better insights.
@@ -96,4 +43,45 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const patternsData = {{ patterns|tojson|safe }};
+    const patternsContainer = document.getElementById('patterns-analysis');
+    
+    try {
+        const data = JSON.parse(patternsData);
+        
+        // Helper function to create a section
+        function createSection(title, content) {
+            if (!content) return '';
+            return `
+                <div class="mb-4">
+                    <h3>${title}</h3>
+                    <div class="card">
+                        <div class="card-body">
+                            ${content}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Build the HTML for each section
+        let html = '';
+        html += createSection('Common Symbols & Themes', data.common_symbols);
+        html += createSection('Emotional Patterns', data.emotional_patterns);
+        html += createSection('Life Events & Concerns', data.life_events);
+        html += createSection('Personal Growth Indicators', data.growth_indicators);
+        html += createSection('Actionable Insights', data.actionable_insights);
+
+        patternsContainer.innerHTML = html || '<div class="alert alert-info">No pattern analysis available.</div>';
+    } catch (e) {
+        console.error('Error parsing patterns data:', e);
+        patternsContainer.innerHTML = '<div class="alert alert-danger">Error displaying pattern analysis.</div>';
+    }
+});
+</script>
 {% endblock %}
