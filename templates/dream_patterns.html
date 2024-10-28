@@ -112,10 +112,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     try {
-        const patterns = {{ patterns|tojson|safe }};
+        const patterns = {{ patterns|safe }};
         
-        if (!patterns || Object.keys(patterns).length === 0) {
-            throw new Error('No pattern data available');
+        if (!patterns || typeof patterns !== 'object') {
+            throw new Error('Invalid pattern data');
         }
 
         // Build HTML sections
