@@ -16,9 +16,44 @@
             </div>
         </div>
 
+        <!-- Statistics Section -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Dream Statistics</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card bg-dark">
+                            <div class="card-body text-center">
+                                <h4>Total Dreams</h4>
+                                <p class="lead">{{ dreams|length }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-dark">
+                            <div class="card-body text-center">
+                                <h4>Unique Tags</h4>
+                                <p class="lead" id="unique-tags">Calculating...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-dark">
+                            <div class="card-body text-center">
+                                <h4>Most Common Mood</h4>
+                                <p class="lead" id="common-mood">Analyzing...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-header">
-                <h3>Dreams Analyzed</h3>
+                <h3>Dreams Timeline</h3>
             </div>
             <div class="card-body">
                 <div class="list-group">
@@ -50,6 +85,8 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const patternsContainer = document.getElementById('patterns-analysis');
+    const uniqueTagsElement = document.getElementById('unique-tags');
+    const commonMoodElement = document.getElementById('common-mood');
     
     function displayError(message) {
         patternsContainer.innerHTML = `
@@ -61,40 +98,78 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function createSection(title, content) {
         if (!content) return '';
+        // Format content by replacing JSON escape characters and adding line breaks
+        const formattedContent = content
+            .replace(/\\n/g, '<br>')
+            .replace(/\\"/g, '"')
+            .replace(/^"|"$/g, '')
+            .replace(/\\/g, '');
+        
         return `
             <div class="mb-4">
-                <h3>${title}</h3>
+                <h3 class="text-primary">${title}</h3>
                 <div class="card">
                     <div class="card-body">
-                        ${content}
+                        <p class="lead">${formattedContent}</p>
                     </div>
                 </div>
             </div>`;
     }
 
+    function calculateStatistics() {
+        // Calculate unique tags
+        const allTags = new Set();
+        document.querySelectorAll('.badge.bg-info').forEach(tag => {
+            allTags.add(tag.textContent.trim());
+        });
+        uniqueTagsElement.textContent = allTags.size;
+
+        // Calculate most common mood
+        const moodCounts = {};
+        document.querySelectorAll('.badge.bg-secondary').forEach(mood => {
+            const moodText = mood.textContent.trim();
+            moodCounts[moodText] = (moodCounts[moodText] || 0) + 1;
+        });
+        const commonMood = Object.entries(moodCounts)
+            .sort((a, b) => b[1] - a[1])[0];
+        if (commonMood) {
+            commonMoodElement.textContent = `${commonMood[0]} (${commonMood[1]}x)`;
+        }
+    }
+
     try {
         // Get the patterns data from the template
-        const patterns = {{ patterns|tojson|safe }};
+        const patternsString = '{{ patterns|tojson|safe }}';
+        let patterns;
         
-        // Parse if it's a string
-        const data = typeof patterns === 'string' ? JSON.parse(patterns) : patterns;
+        try {
+            patterns = JSON.parse(patternsString);
+        } catch (parseError) {
+            console.error('Error parsing initial JSON:', parseError);
+            // Try parsing after cleaning the string
+            const cleanString = patternsString
+                .replace(/\\n/g, '\n')
+                .replace(/\\"/g, '"')
+                .replace(/^"|"$/g, '');
+            patterns = JSON.parse(cleanString);
+        }
         
-        if (!data || Object.keys(data).length === 0) {
+        if (!patterns || Object.keys(patterns).length === 0) {
             throw new Error('No pattern data available');
         }
 
-        if (data.error) {
-            throw new Error(data.error);
+        if (patterns.error) {
+            throw new Error(patterns.error);
         }
 
         // Build the HTML for each section
         let html = '';
         const sections = {
-            'Common Symbols & Themes': data['Common Symbols and Themes'],
-            'Emotional Patterns': data['Emotional Patterns'],
-            'Life Events & Concerns': data['Life Events and Concerns'],
-            'Personal Growth Indicators': data['Personal Growth Indicators'],
-            'Actionable Insights': data['Actionable Insights']
+            'Common Symbols & Themes': patterns['Common Symbols and Themes'],
+            'Emotional Patterns': patterns['Emotional Patterns'],
+            'Life Events & Concerns': patterns['Life Events and Concerns'],
+            'Personal Growth Indicators': patterns['Personal Growth Indicators'],
+            'Actionable Insights': patterns['Actionable Insights']
         };
 
         for (const [title, content] of Object.entries(sections)) {
@@ -109,6 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         patternsContainer.innerHTML = html;
+        calculateStatistics();
 
     } catch (e) {
         console.error('Error processing patterns data:', e);

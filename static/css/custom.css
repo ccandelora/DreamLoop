@@ -18,3 +18,17 @@ textarea {
 .dream-entry:hover {
     transform: translateY(-2px);
 }
+
+/* Dream Patterns Analysis Styles */
+.card-body p {
+    white-space: pre-line;
+    line-height: 1.6;
+}
+
+.text-primary {
+    color: #007bff;
+}
+
+.lead {
+    font-size: 1.1rem;
+}
