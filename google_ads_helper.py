@@ -3,6 +3,7 @@ import logging
 from datetime import datetime
 from google.ads.googleads.client import GoogleAdsClient
 from google.ads.googleads.errors import GoogleAdsException
+from models import User
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -49,6 +50,20 @@ def create_google_ads_client():
 
 def track_premium_conversion(user_id, conversion_value=9.99):
     """Track a premium subscription conversion in Google Ads."""
+    # Get user subscription status first
+    from app import db
+    user = User.query.get(user_id)
+    
+    if not user:
+        logger.warning(f"Cannot track conversion - User {user_id} not found")
+        return False
+        
+    if user.subscription_type == 'premium':
+        logger.info(f"Skipping conversion tracking for user {user_id} (already premium)")
+        return True
+        
+    logger.debug(f"Processing conversion for user {user_id} (current status: {user.subscription_type})")
+    
     if not validate_google_ads_credentials():
         logger.info("Skipping conversion tracking due to missing credentials")
         return False
@@ -84,8 +99,10 @@ def track_premium_conversion(user_id, conversion_value=9.99):
                 operations=[conversion_action_operation]
             )
             conversion_action_id = response.results[0].resource_name
+            logger.debug(f"Created conversion action: {conversion_action_id}")
         except GoogleAdsException as ex:
             # If conversion action already exists, retrieve its ID
+            logger.debug(f"Conversion action exists, retrieving ID for user {user_id}")
             conversion_action_id = conversion_action_service.conversion_action_path(
                 customer_id, str(user_id)
             )
@@ -108,7 +125,7 @@ def track_premium_conversion(user_id, conversion_value=9.99):
         request.partial_failure = True
         
         response = conversion_upload_service.upload_click_conversions(request=request)
-        logger.info("Successfully tracked premium conversion")
+        logger.info(f"Successfully tracked premium conversion for user {user_id}")
         return True
             
     except GoogleAdsException as ex:
@@ -122,26 +139,34 @@ def track_premium_conversion(user_id, conversion_value=9.99):
 def show_premium_ads(user):
     """Determine if premium upgrade ads should be shown to the user."""
     try:
-        if not user.is_authenticated:
+        # Basic validation checks
+        if not user or not user.is_authenticated:
+            logger.debug("No authenticated user, not showing premium ads")
             return False
             
         if user.subscription_type == 'premium':
+            logger.debug(f"User {user.id} is already premium, not showing ads")
             return False
             
         # Show ads more frequently as users approach their limits
         if user.monthly_ai_analysis_count >= 2:  # User has used 2 or more of their 3 free analyses
+            logger.debug(f"User {user.id} approaching analysis limit, showing ads")
             return True
             
         # Show ads to engaged users
-        if hasattr(user, 'dreams') and user.dreams.count() > 5:
-            return True
+        if hasattr(user, 'dreams'):
+            dream_count = user.dreams.count()
+            if dream_count > 5:
+                logger.debug(f"User {user.id} has {dream_count} dreams, showing engagement-based ads")
+                return True
             
         # Show ads randomly to other free users (20% chance)
         if not validate_google_ads_credentials():
-            return True  # Show basic upgrade prompts when ads are disabled
+            logger.debug("Ads credentials missing, showing basic upgrade prompts")
+            return True
             
         return False
         
     except Exception as e:
-        logger.error(f"Error in premium ads logic: {str(e)}")
+        logger.error(f"Error in premium ads logic for user {user.id if user else 'None'}: {str(e)}")
         return False  # Default to not showing ads on error
