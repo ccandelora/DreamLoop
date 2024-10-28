@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Welcome to Dream Journal{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if current_user.is_authenticated %}
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>Welcome back, {{ current_user.username }}!</h1>
+            <p class="lead">Track your dreams, discover patterns, and connect with fellow dreamers.</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{{ url_for('dream_log') }}" class="btn btn-primary">Log New Dream</a>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-dark">
+                <div class="card-body text-center">
+                    <h3 class="card-title">{{ current_user.dreams.count() }}</h3>
+                    <p class="card-text">Dreams Logged</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-dark">
+                <div class="card-body text-center">
+                    <h3 class="card-title">{{ current_user.group_memberships.count() }}</h3>
+                    <p class="card-text">Groups Joined</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-dark">
+                <div class="card-body text-center">
+                    <h3 class="card-title">
+                        {% if current_user.subscription_type == 'free' %}
+                        {{ 3 - current_user.monthly_ai_analysis_count }}
+                        {% else %}
+                        ∞
+                        {% endif %}
+                    </h3>
+                    <p class="card-text">AI Analyses Remaining</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="row align-items-center" style="min-height: 80vh;">
+        <div class="col-md-6">
+            <h1 class="display-4 mb-4">Unlock the Power of Your Dreams</h1>
+            <p class="lead mb-4">Document your dreams, receive AI-powered analysis, and connect with a community of dreamers. Start your journey of self-discovery today.</p>
+            <div class="d-grid gap-2 d-md-flex">
+                <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">Get Started</a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-secondary btn-lg">Login</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-dark">
+                <div class="card-body">
+                    <h3>✨ Key Features</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">🌙 AI-Powered Dream Analysis</li>
+                        <li class="mb-2">📊 Pattern Recognition</li>
+                        <li class="mb-2">👥 Dream-Sharing Community</li>
+                        <li class="mb-2">🎯 Theme-Based Groups</li>
+                        <li>🔍 Personal Dream Journal</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
