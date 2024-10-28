@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Dream Patterns Analysis{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>Your Dream Patterns</h2>
+                <p class="text-muted">Analysis based on your last {{ dreams|length }} dreams</p>
+            </div>
+            <div class="card-body">
+                {% if patterns %}
+                    {% set pattern_data = patterns|tojson|safe|from_json %}
+                    
+                    {% if pattern_data.common_symbols %}
+                    <div class="mb-4">
+                        <h3>Common Symbols & Themes</h3>
+                        <div class="card">
+                            <div class="card-body">
+                                {{ pattern_data.common_symbols|safe }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if pattern_data.emotional_patterns %}
+                    <div class="mb-4">
+                        <h3>Emotional Patterns</h3>
+                        <div class="card">
+                            <div class="card-body">
+                                {{ pattern_data.emotional_patterns|safe }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if pattern_data.life_events %}
+                    <div class="mb-4">
+                        <h3>Life Events & Concerns</h3>
+                        <div class="card">
+                            <div class="card-body">
+                                {{ pattern_data.life_events|safe }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if pattern_data.growth_indicators %}
+                    <div class="mb-4">
+                        <h3>Personal Growth Indicators</h3>
+                        <div class="card">
+                            <div class="card-body">
+                                {{ pattern_data.growth_indicators|safe }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if pattern_data.actionable_insights %}
+                    <div class="mb-4">
+                        <h3>Actionable Insights</h3>
+                        <div class="card">
+                            <div class="card-body">
+                                {{ pattern_data.actionable_insights|safe }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div class="alert alert-info">
+                        No patterns could be analyzed at this time. Try logging more dreams to get better insights.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Dreams Analyzed</h3>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for dream in dreams %}
+                    <a href="{{ url_for('dream_view', dream_id=dream.id) }}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ dream.title }}</h5>
+                            <small>{{ dream.date.strftime('%Y-%m-%d') }}</small>
+                        </div>
+                        <p class="mb-1">{{ dream.content[:100] }}...</p>
+                        <small>Mood: {{ dream.mood }}</small>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

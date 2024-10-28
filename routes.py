@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db
 from models import User, Dream, Comment
-from ai_helper import analyze_dream
+from ai_helper import analyze_dream, analyze_dream_patterns
 from werkzeug.security import generate_password_hash
 
 @app.route('/')
@@ -93,3 +93,27 @@ def add_comment(dream_id):
     db.session.add(comment)
     db.session.commit()
     return redirect(url_for('dream_view', dream_id=dream_id))
+
+@app.route('/dream/patterns')
+@login_required
+def dream_patterns():
+    # Get user's dreams ordered by date
+    dreams = Dream.query.filter_by(user_id=current_user.id).order_by(Dream.date.desc()).all()
+    
+    if not dreams:
+        flash('You need to log some dreams first to see patterns!')
+        return redirect(url_for('dream_log'))
+    
+    # Prepare dreams data for analysis
+    dreams_data = [{
+        'date': dream.date.strftime('%Y-%m-%d'),
+        'title': dream.title,
+        'content': dream.content,
+        'mood': dream.mood,
+        'tags': dream.tags
+    } for dream in dreams]
+    
+    # Get pattern analysis
+    patterns = analyze_dream_patterns(dreams_data)
+    
+    return render_template('dream_patterns.html', dreams=dreams, patterns=patterns)
