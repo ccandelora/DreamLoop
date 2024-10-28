@@ -133,6 +133,24 @@ def create_group():
         return redirect(url_for('group_detail', group_id=group.id))
     return render_template('create_group.html')
 
+@app.route('/groups/<int:group_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_group(group_id):
+    group = DreamGroup.query.get_or_404(group_id)
+    if not group.members.filter_by(user_id=current_user.id, is_admin=True).first():
+        flash('Only group admins can edit group details')
+        return redirect(url_for('group_detail', group_id=group_id))
+    
+    if request.method == 'POST':
+        group.name = request.form['name']
+        group.description = request.form['description']
+        group.theme = request.form['theme']
+        db.session.commit()
+        flash('Group details updated successfully')
+        return redirect(url_for('group_detail', group_id=group_id))
+    
+    return render_template('edit_group.html', group=group)
+
 @app.route('/groups/<int:group_id>')
 @login_required
 def group_detail(group_id):
