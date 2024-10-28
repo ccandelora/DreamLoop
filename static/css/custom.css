@@ -20,15 +20,36 @@ textarea {
 }
 
 /* Dream Patterns Analysis Styles */
-.card-body p {
+.card-body .lead {
     white-space: pre-line;
     line-height: 1.6;
+    margin-bottom: 0;
 }
 
 .text-primary {
-    color: #007bff;
+    color: #007bff !important;
 }
 
-.lead {
-    font-size: 1.1rem;
+.alert {
+    border-radius: 0.5rem;
+}
+
+/* Card styling for dark theme */
+.card {
+    background-color: var(--bs-dark);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+.list-group-item {
+    background-color: var(--bs-dark);
+    border-color: rgba(255, 255, 255, 0.125);
+}
+
+.list-group-item:hover {
+    background-color: var(--bs-dark);
+    filter: brightness(1.1);
 }
