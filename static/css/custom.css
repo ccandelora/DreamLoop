@@ -1,0 +1,20 @@
+/* Minimal custom styles to complement Bootstrap */
+.card {
+    margin-bottom: 1.5rem;
+}
+
+.badge {
+    margin-right: 0.5rem;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.dream-entry {
+    transition: transform 0.2s;
+}
+
+.dream-entry:hover {
+    transform: translateY(-2px);
+}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Community Dreams{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Community Dreams</h2>
+
+<div class="row">
+    {% for dream in dreams %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h3 class="card-title">{{ dream.title }}</h3>
+                <small class="text-muted">{{ dream.date.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ dream.content[:200] }}...</p>
+                <div class="mb-2">
+                    <strong>Mood:</strong> {{ dream.mood }}
+                </div>
+                {% if dream.tags %}
+                <div class="mb-2">
+                    {% for tag in dream.tags.split(',') %}
+                    <span class="badge bg-secondary">{{ tag.strip() }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <a href="{{ url_for('dream_view', dream_id=dream.id) }}" class="btn btn-primary">Read More</a>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">{{ dream.comments.count() }} comments</small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
