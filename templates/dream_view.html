@@ -79,7 +79,7 @@
                     {% endif %}
 
                     <!-- Comment Form -->
-                    <form method="POST" action="{{ url_for('add_comment', dream_id=dream.id) }}" class="mb-4">
+                    <form method="POST" action="{{ url_for('dream.add_comment', dream_id=dream.id) }}" class="mb-4">
                         <div class="mb-3">
                             <label for="content" class="form-label">Add a Comment</label>
                             <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
