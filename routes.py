@@ -124,9 +124,7 @@ def create_checkout_session():
                 'user_id': str(current_user.id)
             }
         )
-        
-        return jsonify({'id': checkout_session.id})
-        
+        return jsonify({'url': checkout_session.url})
     except Exception as e:
         logger.error(f"Error creating checkout session: {str(e)}")
         return jsonify({'error': str(e)}), 400

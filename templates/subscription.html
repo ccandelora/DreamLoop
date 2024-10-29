@@ -82,22 +82,22 @@
 {% block scripts %}
 <!-- Load Stripe.js only when needed and available -->
 {% if current_user.subscription_type == 'free' and stripe_publishable_key %}
-<!-- Stripe.js -->
-<script src="https://js.stripe.com/v3/"></script>
-
-<!-- Custom JavaScript for handling subscription -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const stripe = Stripe('{{ stripe_publishable_key }}');
-    const checkoutButton = document.getElementById('checkout-button');
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/create-stripe-session';
+    document.body.appendChild(form);
+
+    const button = document.getElementById('checkout-button');
     const errorMessage = document.getElementById('error-message');
     const successMessage = document.getElementById('success-message');
-    const buttonText = checkoutButton.querySelector('.button-text');
-    const spinner = checkoutButton.querySelector('.spinner-border');
+    const buttonText = button.querySelector('.button-text');
+    const spinner = button.querySelector('.spinner-border');
 
     function setLoading(isLoading) {
-        if (checkoutButton) {
-            checkoutButton.disabled = isLoading;
+        if (button) {
+            button.disabled = isLoading;
             spinner.classList.toggle('d-none', !isLoading);
             buttonText.textContent = isLoading ? 'Processing...' : 'Upgrade Now - $4.99/month';
         }
@@ -120,48 +120,35 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    if (checkoutButton) {
-        checkoutButton.addEventListener('click', async (e) => {
-            e.preventDefault();
-            setLoading(true);
-            errorMessage.style.display = 'none';
-            successMessage.style.display = 'none';
-
-            try {
-                const response = await fetch('/create-checkout-session', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'An error occurred during checkout.');
-                }
-
-                const session = await response.json();
-                
-                if (session.id) {
-                    // Use Stripe's redirectToCheckout
-                    const result = await stripe.redirectToCheckout({
-                        sessionId: session.id
-                    });
-
-                    if (result.error) {
-                        throw new Error(result.error.message);
-                    }
-                } else {
-                    showError('Unable to start checkout process. Please try again.');
-                }
-            } catch (error) {
-                console.error('Checkout error:', error);
-                showError('Unable to start checkout. Please contact support if this persists.');
-            } finally {
-                setLoading(false);
+    button.addEventListener('click', async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        
+        try {
+            const response = await fetch('/create-checkout-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
-        });
-    }
+            
+            const session = await response.json();
+            
+            // Use window.location instead of Stripe.redirectToCheckout
+            if (session.url) {
+                window.location.href = session.url;
+            } else {
+                throw new Error('No checkout URL returned');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showError('Unable to start checkout. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
+    });
 
     // Handle the success/cancel URL parameters
     const urlParams = new URLSearchParams(window.location.search);
