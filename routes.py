@@ -16,12 +16,10 @@ logger = logging.getLogger(__name__)
 
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 
-
 @app.route('/')
 def index():
     """Landing page route."""
     return render_template('index.html')
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -43,7 +41,6 @@ def login():
 
         flash('Invalid username or password')
     return render_template('login.html')
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -80,7 +77,6 @@ def register():
 
     return render_template('register.html')
 
-
 @app.route('/logout')
 @login_required
 def logout():
@@ -88,7 +84,6 @@ def logout():
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('index'))
-
 
 @app.route('/dream/new', methods=['GET', 'POST'])
 @login_required
@@ -117,11 +112,11 @@ def dream_new():
 
         db.session.add(dream)
         db.session.commit()
+
         flash('Dream logged successfully!')
         return redirect(url_for('dream_view', dream_id=dream.id))
 
     return render_template('dream_new.html')
-
 
 @app.route('/dream/<int:dream_id>')
 @login_required
@@ -133,7 +128,6 @@ def dream_view(dream_id):
         return redirect(url_for('index'))
     return render_template('dream_view.html', dream=dream)
 
-
 @app.route('/dream/patterns')
 @login_required
 def dream_patterns():
@@ -142,14 +136,12 @@ def dream_patterns():
     patterns = analyze_dream_patterns(user_dreams) if user_dreams else {}
     return render_template('dream_patterns.html', dreams=user_dreams, patterns=patterns)
 
-
 @app.route('/groups')
 @login_required
 def dream_groups():
     """Dream groups listing route."""
     groups = DreamGroup.query.all()
     return render_template('dream_groups.html', groups=groups)
-
 
 @app.route('/groups/create', methods=['GET', 'POST'])
 @login_required
@@ -182,14 +174,12 @@ def create_group():
         
     return render_template('create_group.html')
 
-
 @app.route('/groups/join/<int:group_id>', methods=['POST'])
 @login_required
 def join_group(group_id):
     """Join a dream group."""
     group = DreamGroup.query.get_or_404(group_id)
     
-    # Check if user is already a member
     if current_user in group.members:
         flash('You are already a member of this group.')
         return redirect(url_for('dream_groups'))
@@ -206,7 +196,6 @@ def join_group(group_id):
     flash(f'Successfully joined {group.name}!')
     return redirect(url_for('dream_groups'))
 
-
 @app.route('/subscription')
 @login_required
 def subscription():
@@ -217,10 +206,9 @@ def subscription():
         return redirect(url_for('index'))
     return render_template('subscription.html', stripe_publishable_key=stripe_publishable_key)
 
-
 @app.route('/subscription/cancel', methods=['POST'])
 @login_required
-def subscription_cancel():
+def cancel_subscription():
     """Cancel user's premium subscription."""
     try:
         if current_user.subscription_type != 'premium':
@@ -239,13 +227,11 @@ def subscription_cancel():
         flash('An error occurred while canceling your subscription. Please try again.')
         return redirect(url_for('subscription'))
 
-
 @app.route('/create-checkout-session', methods=['POST'])
 @login_required
 def create_checkout_session():
     """Create Stripe checkout session."""
     try:
-        # Create the product and price
         product = stripe.Product.create(
             name='DreamLoop Premium Subscription',
             description='Unlimited AI dream analysis and advanced features')
@@ -256,7 +242,6 @@ def create_checkout_session():
             recurring={'interval': 'month'},
             product=product.id)
 
-        # Create the checkout session
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
             line_items=[{
@@ -264,10 +249,8 @@ def create_checkout_session():
                 'quantity': 1
             }],
             mode='subscription',
-            success_url=url_for('subscription', success='true',
-                              _external=True),
-            cancel_url=url_for('subscription', canceled='true',
-                             _external=True),
+            success_url=url_for('subscription', success='true', _external=True),
+            cancel_url=url_for('subscription', canceled='true', _external=True),
             customer_email=current_user.email,
             metadata={
                 'user_email': current_user.email,
@@ -281,7 +264,6 @@ def create_checkout_session():
     except Exception as e:
         logger.error(f"Error creating checkout session: {str(e)}")
         return jsonify({'error': str(e)}), 400
-
 
 @app.route('/webhook/stripe', methods=['POST'])
 def stripe_webhook():
@@ -299,6 +281,12 @@ def stripe_webhook():
     else:
         return message, 400
 
+@app.route('/community')
+@login_required
+def community():
+    """Community page route."""
+    public_dreams = Dream.query.filter_by(is_public=True).order_by(Dream.date.desc()).all()
+    return render_template('community.html', dreams=public_dreams)
 
 @app.context_processor
 def utility_processor():

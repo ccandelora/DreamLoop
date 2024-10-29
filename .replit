@@ -27,6 +27,14 @@ args = "Seed Database"
 task = "workflow.run"
 args = "Flask Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Flask DreamLoop"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Flask Application"
+
 [[workflows.workflow]]
 name = "Flask Dream Journal"
 author = "agent"
@@ -77,6 +85,36 @@ task = "packager.installForAll"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python3 app.py"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Flask DreamLoop"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 app.py"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Flask Application"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 main.py"
 waitForPort = 5000
 
 [deployment]
