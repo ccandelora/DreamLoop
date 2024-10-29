@@ -141,8 +141,8 @@ def dream_patterns():
     user_dreams = current_user.dreams.all()
     patterns = analyze_dream_patterns(user_dreams) if user_dreams else {}
     return render_template('dream_patterns.html',
-                           dreams=user_dreams,
-                           patterns=patterns)
+                         dreams=user_dreams,
+                         patterns=patterns)
 
 
 @app.route('/groups')
@@ -185,12 +185,28 @@ def create_group():
     return render_template('create_group.html')
 
 
-@app.route('/community')
+@app.route('/groups/join/<int:group_id>', methods=['POST'])
 @login_required
-def community():
-    """Community page route."""
-    public_dreams = Dream.query.filter_by(is_public=True).order_by(Dream.date.desc()).limit(20).all()
-    return render_template('community.html', dreams=public_dreams)
+def join_group(group_id):
+    """Join a dream group."""
+    group = DreamGroup.query.get_or_404(group_id)
+    
+    # Check if user is already a member
+    if current_user in group.members:
+        flash('You are already a member of this group.')
+        return redirect(url_for('dream_groups'))
+        
+    membership = GroupMembership(
+        user_id=current_user.id,
+        group_id=group.id,
+        is_admin=False
+    )
+    
+    db.session.add(membership)
+    db.session.commit()
+    
+    flash(f'Successfully joined {group.name}!')
+    return redirect(url_for('dream_groups'))
 
 
 @app.route('/subscription')
@@ -229,9 +245,9 @@ def create_checkout_session():
             }],
             mode='subscription',
             success_url=url_for('subscription', success='true',
-                                _external=True),
+                              _external=True),
             cancel_url=url_for('subscription', canceled='true',
-                               _external=True),
+                             _external=True),
             customer_email=current_user.email,
             metadata={
                 'user_email': current_user.email,
