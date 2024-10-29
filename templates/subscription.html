@@ -39,14 +39,14 @@
                             </ul>
                             <div class="text-center">
                                 {% if stripe_publishable_key %}
-                                <form id="checkout-form" action="{{ url_for('create_checkout_session') }}" method="POST">
+                                <form id="checkout-form" method="POST" action="{{ url_for('create_checkout_session') }}">
                                     <button type="submit" class="btn btn-primary btn-lg w-100" id="checkout-button">
                                         <span class="button-text">Upgrade Now - $9.99/month</span>
                                         <span class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
                                     </button>
+                                    <div id="error-message" class="alert alert-danger mt-3" style="display: none;"></div>
+                                    <div id="success-message" class="alert alert-success mt-3" style="display: none;"></div>
                                 </form>
-                                <div id="error-message" class="alert alert-danger mt-3" style="display: none;"></div>
-                                <div id="success-message" class="alert alert-success mt-3" style="display: none;"></div>
                                 {% else %}
                                 <div class="alert alert-warning">
                                     Payment system is currently unavailable. Please try again later.
@@ -106,6 +106,12 @@ document.addEventListener('DOMContentLoaded', function() {
         setLoading(false);
     }
 
+    function showSuccess(message) {
+        successMessage.textContent = message;
+        successMessage.style.display = 'block';
+        errorMessage.style.display = 'none';
+    }
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -114,8 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch(form.action, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Content-Type': 'application/json'
                 }
             });
             
@@ -124,15 +129,26 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             const data = await response.json();
+            
             if (data.url) {
-                // Use form submission for navigation
-                window.location.href = data.url;
+                // Create a temporary anchor element for redirection
+                const anchor = document.createElement('a');
+                anchor.href = data.url;
+                anchor.target = '_blank';
+                anchor.style.display = 'none';
+                document.body.appendChild(anchor);
+                anchor.click();
+                document.body.removeChild(anchor);
+                
+                // Show a message about the new window
+                showSuccess('Checkout opened in a new tab. Please complete your payment there.');
             } else {
                 throw new Error('No checkout URL received');
             }
         } catch (error) {
             console.error('Error:', error);
-            showError('Unable to start checkout. Please try again later.');
+            showError('Unable to start checkout process. Please try again or contact support.');
+        } finally {
             setLoading(false);
         }
     });
@@ -140,8 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle the success/cancel URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('success') === 'true') {
-        successMessage.textContent = 'Payment successful! Your premium features will be activated shortly.';
-        successMessage.style.display = 'block';
+        showSuccess('Payment successful! Your premium features will be activated shortly.');
         setTimeout(() => {
             window.location.reload();
         }, 2000);
