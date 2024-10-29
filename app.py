@@ -1,27 +1,21 @@
-import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from sqlalchemy.orm import DeclarativeBase
+import os
+import logging
 
-class Base(DeclarativeBase):
-    pass
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
-db = SQLAlchemy(model_class=Base)
-login_manager = LoginManager()
+app = Flask(__name__, static_folder='static', static_url_path='/static')
+app.config['SECRET_KEY'] = os.urandom(24)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-app = Flask(__name__)
-app.secret_key = os.environ.get("FLASK_SECRET_KEY") or "dream_journal_secret"
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
-app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-    "pool_recycle": 300,
-    "pool_pre_ping": True,
-}
+# Add debug logging for static file serving
+logger.debug(f"Static folder path: {app.static_folder}")
 
-db.init_app(app)
-login_manager.init_app(app)
+db = SQLAlchemy(app)
+login_manager = LoginManager(app)
 login_manager.login_view = 'login'
-
-with app.app_context():
-    import models
-    db.create_all()

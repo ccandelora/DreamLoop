@@ -27,9 +27,9 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">
-                <img src="{{ url_for('static', filename='images/dreamlooplogo.png') }}" alt="DreamLoop" class="navbar-brand-logo">
-                <span>DreamLoop</span>
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='images/dreamlooplogo.png') }}" alt="DreamLoop" style="height: 40px; width: auto; display: inline-block; vertical-align: middle;">
+                <span class="ms-2">DreamLoop</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
