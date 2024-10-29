@@ -153,17 +153,55 @@ def dream_groups():
     return render_template('dream_groups.html', groups=groups)
 
 
+@app.route('/groups/create', methods=['GET', 'POST'])
+@login_required
+def create_group():
+    """Create new dream group route."""
+    if request.method == 'POST':
+        name = request.form.get('name')
+        description = request.form.get('description')
+        
+        group = DreamGroup(
+            name=name,
+            description=description,
+            created_by=current_user.id,
+            created_at=datetime.utcnow()
+        )
+        
+        db.session.add(group)
+        db.session.commit()
+        
+        membership = GroupMembership(
+            user_id=current_user.id,
+            group_id=group.id,
+            is_admin=True
+        )
+        db.session.add(membership)
+        db.session.commit()
+        
+        flash('Group created successfully!')
+        return redirect(url_for('dream_groups'))
+        
+    return render_template('create_group.html')
+
+
+@app.route('/community')
+@login_required
+def community():
+    """Community page route."""
+    public_dreams = Dream.query.filter_by(is_public=True).order_by(Dream.date.desc()).limit(20).all()
+    return render_template('community.html', dreams=public_dreams)
+
+
 @app.route('/subscription')
 @login_required
 def subscription():
     """View and manage subscription."""
     stripe_publishable_key = os.environ.get('STRIPE_PUBLISHABLE_KEY')
     if not stripe_publishable_key:
-        flash(
-            'Payment system is currently unavailable. Please try again later.')
+        flash('Payment system is currently unavailable. Please try again later.')
         return redirect(url_for('index'))
-    return render_template('subscription.html',
-                           stripe_publishable_key=stripe_publishable_key)
+    return render_template('subscription.html', stripe_publishable_key=stripe_publishable_key)
 
 
 @app.route('/create-checkout-session', methods=['POST'])
@@ -227,9 +265,7 @@ def subscription_cancel():
 
     except Exception as e:
         logger.error(f"Error canceling subscription: {str(e)}")
-        flash(
-            'An error occurred while canceling your subscription. Please try again.'
-        )
+        flash('An error occurred while canceling your subscription. Please try again.')
         return redirect(url_for('subscription'))
 
 
@@ -252,7 +288,6 @@ def stripe_webhook():
 
 @app.context_processor
 def utility_processor():
-
     def validate_google_ads_credentials():
         return True
 
@@ -260,8 +295,7 @@ def utility_processor():
         return hashlib.md5(email.lower().encode()).hexdigest()
 
     def should_show_premium_ads():
-        return show_premium_ads(
-            current_user) if current_user.is_authenticated else False
+        return show_premium_ads(current_user) if current_user.is_authenticated else False
 
     return dict(
         validate_google_ads_credentials=validate_google_ads_credentials,
