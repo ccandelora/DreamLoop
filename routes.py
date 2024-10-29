@@ -87,6 +87,63 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('index'))
 
+@app.route('/dream/new', methods=['GET', 'POST'])
+@login_required
+def dream_log():
+    """Dream logging route."""
+    if request.method == 'POST':
+        title = request.form.get('title')
+        content = request.form.get('content')
+        mood = request.form.get('mood')
+        tags = request.form.get('tags')
+        is_public = request.form.get('is_public') == 'true'
+        
+        dream = Dream()
+        dream.user_id = current_user.id
+        dream.title = title
+        dream.content = content
+        dream.mood = mood
+        dream.tags = tags
+        dream.is_public = is_public
+        dream.date = datetime.utcnow()
+        
+        if current_user.subscription_type == 'premium' or current_user.monthly_ai_analysis_count < 3:
+            dream.ai_analysis = analyze_dream(content)
+            if current_user.subscription_type == 'free':
+                current_user.monthly_ai_analysis_count += 1
+        
+        db.session.add(dream)
+        db.session.commit()
+        flash('Dream logged successfully!')
+        return redirect(url_for('dream_view', dream_id=dream.id))
+    
+    return render_template('dream_log.html')
+
+@app.route('/dream/<int:dream_id>')
+@login_required
+def dream_view(dream_id):
+    """View individual dream."""
+    dream = Dream.query.get_or_404(dream_id)
+    if dream.user_id != current_user.id and not dream.is_public:
+        flash('You do not have permission to view this dream.')
+        return redirect(url_for('index'))
+    return render_template('dream_view.html', dream=dream)
+
+@app.route('/dream/patterns')
+@login_required
+def dream_patterns():
+    """Dream patterns analysis route."""
+    user_dreams = current_user.dreams.all()
+    patterns = analyze_dream_patterns(user_dreams) if user_dreams else {}
+    return render_template('dream_patterns.html', dreams=user_dreams, patterns=patterns)
+
+@app.route('/groups')
+@login_required
+def dream_groups():
+    """Dream groups listing route."""
+    groups = DreamGroup.query.all()
+    return render_template('dream_groups.html', groups=groups)
+
 @app.route('/subscription')
 @login_required
 def subscription():
@@ -110,7 +167,7 @@ def create_checkout_session():
 
         # Create the price for the product
         price = stripe.Price.create(
-            unit_amount=499,  # $4.99 in cents
+            unit_amount=999,  # $9.99 in cents
             currency='usd',
             recurring={'interval': 'month'},
             product=product.id
@@ -124,8 +181,8 @@ def create_checkout_session():
                 'quantity': 1
             }],
             mode='subscription',
-            success_url=request.url_root.rstrip('/') + url_for('subscription') + '?success=true',
-            cancel_url=request.url_root.rstrip('/') + url_for('subscription') + '?canceled=true',
+            success_url=url_for('subscription', success='true', _external=True),
+            cancel_url=url_for('subscription', canceled='true', _external=True),
             customer_email=current_user.email,
             metadata={
                 'user_email': current_user.email,
@@ -140,7 +197,7 @@ def create_checkout_session():
 
 @app.route('/subscription/cancel', methods=['POST'])
 @login_required
-def subscription_cancel():
+def cancel_subscription():
     """Cancel user's premium subscription."""
     try:
         if current_user.subscription_type != 'premium':

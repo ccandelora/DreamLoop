@@ -5,6 +5,14 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-info">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
             <div class="card mb-4">
                 <div class="card-header">
                     <h2>DreamLoop Premium</h2>
@@ -39,14 +47,12 @@
                             </ul>
                             <div class="text-center">
                                 {% if stripe_publishable_key %}
-                                <form id="checkout-form" method="POST" action="{{ url_for('create_checkout_session') }}">
-                                    <button type="submit" class="btn btn-primary btn-lg w-100" id="checkout-button">
-                                        <span class="button-text">Upgrade Now - $4.99/month</span>
-                                        <span class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
-                                    </button>
-                                    <div id="error-message" class="alert alert-danger mt-3" style="display: none;"></div>
-                                    <div id="success-message" class="alert alert-success mt-3" style="display: none;"></div>
-                                </form>
+                                <button type="button" class="btn btn-primary btn-lg w-100" id="checkout-button">
+                                    <span class="button-text">Upgrade Now - $9.99/month</span>
+                                    <div class="spinner-border spinner-border-sm ms-2 d-none" role="status"></div>
+                                </button>
+                                <div id="error-message" class="alert alert-danger mt-3" style="display: none;"></div>
+                                <div id="success-message" class="alert alert-success mt-3" style="display: none;"></div>
                                 {% else %}
                                 <div class="alert alert-warning">
                                     Payment system is currently unavailable. Please try again later.
@@ -70,7 +76,7 @@
                         {% endif %}
                     </div>
                     
-                    <form method="POST" action="{{ url_for('subscription_cancel') }}" class="mt-4">
+                    <form method="POST" action="{{ url_for('cancel_subscription') }}" class="mt-4">
                         <button type="submit" class="btn btn-outline-danger">Cancel Subscription</button>
                     </form>
                     {% endif %}
@@ -86,17 +92,21 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('checkout-form');
     const button = document.getElementById('checkout-button');
     const errorMessage = document.getElementById('error-message');
     const successMessage = document.getElementById('success-message');
-    const buttonText = button.querySelector('.button-text');
     const spinner = button.querySelector('.spinner-border');
+    const buttonText = button.querySelector('.button-text');
 
     function setLoading(isLoading) {
         button.disabled = isLoading;
-        spinner.classList.toggle('d-none', !isLoading);
-        buttonText.textContent = isLoading ? 'Processing...' : 'Upgrade Now - $4.99/month';
+        if (isLoading) {
+            spinner.classList.remove('d-none');
+            buttonText.textContent = 'Processing...';
+        } else {
+            spinner.classList.add('d-none');
+            buttonText.textContent = 'Upgrade Now - $9.99/month';
+        }
     }
 
     function showError(message) {
@@ -112,46 +122,44 @@ document.addEventListener('DOMContentLoaded', function() {
         errorMessage.style.display = 'none';
     }
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        
+    button.addEventListener('click', async () => {
         try {
-            const response = await fetch(form.action, {
+            setLoading(true);
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+
+            const response = await fetch("{{ url_for('create_checkout_session') }}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
-            
+
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Network response was not ok');
+                throw new Error('Network response was not ok');
             }
-            
+
             const data = await response.json();
             
-            if (data.url) {
-                // Redirect to Stripe Checkout
-                window.location.href = data.url;
-            } else {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            if (!data.url) {
                 throw new Error('No checkout URL received');
             }
+
+            window.location.href = data.url;
         } catch (error) {
             console.error('Error:', error);
-            showError('Unable to start checkout. Please try again later.');
-        } finally {
-            setLoading(false);
+            showError(error.message || 'Unable to start checkout. Please try again later.');
         }
     });
 
-    // Handle the success/cancel URL parameters
+    // Handle success/cancel URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('success') === 'true') {
         showSuccess('Payment successful! Your premium features will be activated shortly.');
-        setTimeout(() => {
-            window.location.reload();
-        }, 2000);
     } else if (urlParams.get('canceled') === 'true') {
         showError('Payment was canceled. Please try again if you wish to upgrade.');
     }

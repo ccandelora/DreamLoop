@@ -842,7 +842,9 @@ dependencies = [
     { name = "google-generativeai" },
     { name = "openai" },
     { name = "psycopg2-binary" },
+    { name = "sqlalchemy" },
     { name = "stripe" },
+    { name = "werkzeug" },
 ]
 
 [package.metadata]
@@ -855,7 +857,9 @@ requires-dist = [
     { name = "google-generativeai", specifier = ">=0.8.3" },
     { name = "openai", specifier = ">=1.52.2" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
+    { name = "sqlalchemy" },
     { name = "stripe", specifier = ">=11.1.1" },
+    { name = "werkzeug" },
 ]
 
 [[package]]
