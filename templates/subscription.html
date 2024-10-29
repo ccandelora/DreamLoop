@@ -131,6 +131,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function showMessage(message) {
+        showSuccess(message);
+        setTimeout(() => {
+            successMessage.style.display = 'none';
+        }, 5000);
+    }
+
     if (checkoutButton) {
         checkoutButton.addEventListener('click', async (e) => {
             e.preventDefault();
@@ -154,13 +161,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 const session = await response.json();
                 
                 if (session.url) {
-                    window.location.href = session.url;
+                    // Create and submit form to open in new tab
+                    const checkoutForm = document.createElement('form');
+                    checkoutForm.method = 'GET';
+                    checkoutForm.action = session.url;
+                    checkoutForm.target = '_blank';
+                    document.body.appendChild(checkoutForm);
+                    checkoutForm.submit();
+                    document.body.removeChild(checkoutForm);
+                    
+                    // Show message about new window
+                    showMessage('Checkout window opening in a new tab. Please complete your payment there.');
                 } else {
                     throw new Error('No checkout URL returned');
                 }
             } catch (error) {
                 console.error('Checkout error:', error);
-                showError('Unable to start checkout process. Please try again or contact support.');
+                showError('Unable to open checkout. Please try again or contact support if the issue persists.');
                 setLoading(false);
             }
         });
