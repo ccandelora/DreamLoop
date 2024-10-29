@@ -10,7 +10,6 @@ from google_ads_helper import track_premium_conversion, show_premium_ads, valida
 from ai_helper import analyze_dream, analyze_dream_patterns
 from stripe_webhook_handler import handle_stripe_webhook
 import stripe
-from werkzeug.security import check_password_hash, generate_password_hash
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -21,10 +20,12 @@ stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 
 @app.route('/')
 def index():
+    """Landing page route."""
     return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """User login route."""
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     
@@ -33,7 +34,7 @@ def login():
         password = request.form.get('password')
         user = User.query.filter_by(username=username).first()
         
-        if user and check_password_hash(user.password_hash, password):
+        if user and user.check_password(password):
             login_user(user)
             next_page = request.args.get('next')
             if next_page:
@@ -45,6 +46,7 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    """User registration route."""
     if current_user.is_authenticated:
         return redirect(url_for('index'))
         
@@ -80,9 +82,51 @@ def register():
 @app.route('/logout')
 @login_required
 def logout():
+    """User logout route."""
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('index'))
+
+@app.route('/dream/new', methods=['GET', 'POST'])
+@login_required
+def dream_log():
+    """Dream logging route."""
+    if request.method == 'POST':
+        dream = Dream()
+        dream.user_id = current_user.id
+        dream.title = request.form.get('title')
+        dream.content = request.form.get('content')
+        dream.mood = request.form.get('mood')
+        dream.tags = request.form.get('tags')
+        dream.is_public = bool(request.form.get('is_public'))
+        dream.date = datetime.utcnow()
+        
+        if current_user.can_use_ai_analysis():
+            dream.ai_analysis = analyze_dream(dream.content)
+            current_user.increment_ai_analysis_count()
+            
+        db.session.add(dream)
+        db.session.commit()
+        
+        flash('Dream logged successfully!')
+        return redirect(url_for('index'))
+        
+    return render_template('dream_log.html')
+
+@app.route('/dream/patterns')
+@login_required
+def dream_patterns():
+    """Dream patterns analysis route."""
+    dreams = current_user.dreams.order_by(Dream.date.desc()).all()
+    patterns = analyze_dream_patterns(dreams) if dreams else None
+    return render_template('dream_patterns.html', dreams=dreams, patterns=patterns)
+
+@app.route('/dream-groups')
+@login_required
+def dream_groups():
+    """Dream groups listing route."""
+    groups = DreamGroup.query.all()
+    return render_template('dream_groups.html', groups=groups)
 
 @app.route('/subscription')
 @login_required
@@ -99,32 +143,37 @@ def subscription():
 def create_checkout_session():
     """Create Stripe checkout session for premium subscription."""
     try:
+        # Create a price for the subscription
+        price = stripe.Price.create(
+            unit_amount=999,  # $9.99 in cents
+            currency='usd',
+            recurring={'interval': 'month'},
+            product_data={
+                'name': 'DreamLoop Premium Subscription',
+                'description': 'Unlimited AI dream analysis and advanced features'
+            },
+        )
+
+        # Create the checkout session
         checkout_session = stripe.checkout.Session.create(
-            customer_email=current_user.email,
             payment_method_types=['card'],
+            mode='subscription',
+            customer_email=current_user.email,
             line_items=[{
-                'price_data': {
-                    'currency': 'usd',
-                    'product_data': {
-                        'name': 'DreamLoop Premium',
-                        'description': 'Unlimited AI dream analysis and advanced features',
-                    },
-                    'unit_amount': 499,  # $4.99 in cents
-                    'recurring': {
-                        'interval': 'month',
-                    },
-                },
+                'price': price.id,
                 'quantity': 1,
             }],
-            mode='subscription',
-            success_url=request.host_url + 'subscription?success=true',
-            cancel_url=request.host_url + 'subscription?canceled=true',
+            success_url=request.url_root.rstrip('/') + url_for('subscription') + '?success=true',
+            cancel_url=request.url_root.rstrip('/') + url_for('subscription') + '?canceled=true',
             metadata={
                 'user_email': current_user.email,
                 'user_id': str(current_user.id)
             }
         )
-        return jsonify({'url': checkout_session.url})
+        
+        return jsonify({
+            'url': checkout_session.url
+        })
     except Exception as e:
         logger.error(f"Error creating checkout session: {str(e)}")
         return jsonify({'error': str(e)}), 400
@@ -134,24 +183,15 @@ def create_checkout_session():
 def subscription_cancel():
     """Cancel user's premium subscription."""
     try:
-        # Get the customer's subscription
-        subscriptions = stripe.Subscription.list(
-            customer=current_user.stripe_customer_id,
-            limit=1,
-            status='active'
-        )
-        
-        if not subscriptions.data:
+        if current_user.subscription_type != 'premium':
             flash('No active subscription found.')
             return redirect(url_for('subscription'))
-            
-        subscription = subscriptions.data[0]
-        stripe.Subscription.modify(
-            subscription.id,
-            cancel_at_period_end=True
-        )
+
+        current_user.subscription_type = 'free'
+        current_user.subscription_end_date = None
+        db.session.commit()
         
-        flash('Your subscription will be canceled at the end of the billing period.')
+        flash('Your subscription has been canceled.')
         return redirect(url_for('subscription'))
         
     except Exception as e:
@@ -162,15 +202,10 @@ def subscription_cancel():
 @app.route('/webhook/stripe', methods=['POST'])
 def stripe_webhook():
     """Handle Stripe webhook events"""
-    if request.content_length > 65535:
-        logger.warning("Request payload too large")
-        return "Request payload too large", 400
-        
     payload = request.get_data()
     sig_header = request.headers.get('Stripe-Signature')
     
     if not sig_header:
-        logger.warning("No Stripe signature header")
         return "No Stripe signature header", 400
         
     success, message = handle_stripe_webhook(payload, sig_header)
