@@ -38,11 +38,10 @@
                                 <li>✨ Early access to new features</li>
                             </ul>
                             <div class="text-center mt-4">
-                                <form method="POST" action="{{ url_for('upgrade_subscription') }}">
-                                    <button type="submit" class="btn btn-primary btn-lg" id="checkout-button">
-                                        Upgrade Now - $9.99/month
-                                    </button>
-                                </form>
+                                <button type="button" class="btn btn-primary btn-lg" id="checkout-button">
+                                    Upgrade Now - $9.99/month
+                                </button>
+                                <div id="error-message" class="alert alert-danger mt-3" style="display: none;"></div>
                             </div>
                         </div>
                     </div>
@@ -61,7 +60,7 @@
                         {% endif %}
                     </div>
                     
-                    <form method="POST" action="{{ url_for('cancel_subscription') }}" class="mt-4">
+                    <form method="POST" action="{{ url_for('subscription_cancel') }}" class="mt-4">
                         <button type="submit" class="btn btn-outline-danger">Cancel Subscription</button>
                     </form>
                     {% endif %}
@@ -78,11 +77,39 @@
 <script>
 const stripe = Stripe('{{ config.STRIPE_PUBLISHABLE_KEY }}');
 const checkoutButton = document.getElementById('checkout-button');
+const errorMessage = document.getElementById('error-message');
 
-checkoutButton.addEventListener('click', function(e) {
+checkoutButton.addEventListener('click', async (e) => {
     e.preventDefault();
-    const form = e.target.closest('form');
-    form.submit();
+    checkoutButton.disabled = true;
+    errorMessage.style.display = 'none';
+
+    try {
+        const response = await fetch('/create-checkout-session', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const session = await response.json();
+        const result = await stripe.redirectToCheckout({
+            sessionId: session.id
+        });
+
+        if (result.error) {
+            throw new Error(result.error.message);
+        }
+    } catch (error) {
+        errorMessage.textContent = 'An error occurred during checkout. Please try again.';
+        errorMessage.style.display = 'block';
+        console.error('Error:', error);
+        checkoutButton.disabled = false;
+    }
 });
 
 // Handle the checkout session result
@@ -90,10 +117,25 @@ const urlParams = new URLSearchParams(window.location.search);
 const sessionId = urlParams.get('session_id');
 
 if (sessionId) {
-    stripe.retrieveCheckoutSession(sessionId).then(function(result) {
-        if (result.error) {
-            console.error('Error:', result.error);
+    checkoutButton.disabled = true;
+    stripe.retrieveSession(sessionId).then(function(session) {
+        if (session.status === 'complete') {
+            errorMessage.className = 'alert alert-success mt-3';
+            errorMessage.textContent = 'Payment successful! Your premium features will be activated shortly.';
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        } else {
+            errorMessage.textContent = 'Payment was not completed. Please try again.';
+            errorMessage.style.display = 'block';
+            checkoutButton.disabled = false;
         }
+    }).catch(function(error) {
+        console.error('Error:', error);
+        errorMessage.textContent = 'Could not verify payment status. Please contact support if you completed payment.';
+        errorMessage.style.display = 'block';
+        checkoutButton.disabled = false;
     });
 }
 </script>
