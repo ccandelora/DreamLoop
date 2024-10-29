@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
         stripe = Stripe('{{ stripe_publishable_key }}');
     } catch (error) {
-        console.error('Error initializing Stripe:', error);
+        console.error('Stripe initialization error:', error);
         showError('Payment system initialization failed. Please try again later.');
         if (checkoutButton) {
             checkoutButton.disabled = true;
@@ -152,16 +152,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 const session = await response.json();
-                const result = await stripe.redirectToCheckout({
-                    sessionId: session.id
-                });
-
-                if (result.error) {
-                    throw new Error(result.error.message);
+                
+                if (session.url) {
+                    window.location.href = session.url;
+                } else {
+                    throw new Error('No checkout URL returned');
                 }
             } catch (error) {
-                console.error('Error:', error);
-                showError(error.message || 'An error occurred during checkout. Please try again.');
+                console.error('Checkout error:', error);
+                showError('Unable to start checkout process. Please try again or contact support.');
                 setLoading(false);
             }
         });
