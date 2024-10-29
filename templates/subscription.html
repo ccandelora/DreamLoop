@@ -30,18 +30,20 @@
                     <div class="card bg-dark mb-4">
                         <div class="card-body">
                             <h4 class="card-title">Upgrade to Premium</h4>
-                            <ul class="list-unstyled">
+                            <ul class="list-unstyled mb-4">
                                 <li>✨ Unlimited AI dream analyses</li>
                                 <li>✨ Advanced pattern recognition</li>
                                 <li>✨ Priority support</li>
                                 <li>✨ Ad-free experience</li>
                                 <li>✨ Early access to new features</li>
                             </ul>
-                            <div class="text-center mt-4">
-                                <button type="button" class="btn btn-primary btn-lg" id="checkout-button">
-                                    Upgrade Now - $9.99/month
+                            <div class="text-center">
+                                <button type="button" class="btn btn-primary btn-lg w-100" id="checkout-button">
+                                    <span class="button-text">Upgrade Now - $9.99/month</span>
+                                    <span class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
                                 </button>
                                 <div id="error-message" class="alert alert-danger mt-3" style="display: none;"></div>
+                                <div id="success-message" class="alert alert-success mt-3" style="display: none;"></div>
                             </div>
                         </div>
                     </div>
@@ -72,17 +74,39 @@
 {% endblock %}
 
 {% block scripts %}
-{% if current_user.subscription_type == 'free' %}
+{% if current_user.subscription_type == 'free' and stripe_publishable_key %}
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-const stripe = Stripe('{{ config.STRIPE_PUBLISHABLE_KEY }}');
+const stripe = Stripe('{{ stripe_publishable_key }}');
 const checkoutButton = document.getElementById('checkout-button');
 const errorMessage = document.getElementById('error-message');
+const successMessage = document.getElementById('success-message');
+const buttonText = checkoutButton.querySelector('.button-text');
+const spinner = checkoutButton.querySelector('.spinner-border');
+
+function setLoading(isLoading) {
+    checkoutButton.disabled = isLoading;
+    spinner.classList.toggle('d-none', !isLoading);
+    buttonText.textContent = isLoading ? 'Processing...' : 'Upgrade Now - $9.99/month';
+}
+
+function showError(message) {
+    errorMessage.textContent = message;
+    errorMessage.style.display = 'block';
+    successMessage.style.display = 'none';
+}
+
+function showSuccess(message) {
+    successMessage.textContent = message;
+    successMessage.style.display = 'block';
+    errorMessage.style.display = 'none';
+}
 
 checkoutButton.addEventListener('click', async (e) => {
     e.preventDefault();
-    checkoutButton.disabled = true;
+    setLoading(true);
     errorMessage.style.display = 'none';
+    successMessage.style.display = 'none';
 
     try {
         const response = await fetch('/create-checkout-session', {
@@ -93,7 +117,8 @@ checkoutButton.addEventListener('click', async (e) => {
         });
 
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'An error occurred during checkout.');
         }
 
         const session = await response.json();
@@ -105,10 +130,9 @@ checkoutButton.addEventListener('click', async (e) => {
             throw new Error(result.error.message);
         }
     } catch (error) {
-        errorMessage.textContent = 'An error occurred during checkout. Please try again.';
-        errorMessage.style.display = 'block';
         console.error('Error:', error);
-        checkoutButton.disabled = false;
+        showError(error.message || 'An error occurred during checkout. Please try again.');
+        setLoading(false);
     }
 });
 
@@ -117,25 +141,21 @@ const urlParams = new URLSearchParams(window.location.search);
 const sessionId = urlParams.get('session_id');
 
 if (sessionId) {
-    checkoutButton.disabled = true;
+    setLoading(true);
     stripe.retrieveSession(sessionId).then(function(session) {
         if (session.status === 'complete') {
-            errorMessage.className = 'alert alert-success mt-3';
-            errorMessage.textContent = 'Payment successful! Your premium features will be activated shortly.';
-            errorMessage.style.display = 'block';
+            showSuccess('Payment successful! Your premium features will be activated shortly.');
             setTimeout(() => {
                 window.location.reload();
             }, 2000);
         } else {
-            errorMessage.textContent = 'Payment was not completed. Please try again.';
-            errorMessage.style.display = 'block';
-            checkoutButton.disabled = false;
+            showError('Payment was not completed. Please try again.');
+            setLoading(false);
         }
     }).catch(function(error) {
         console.error('Error:', error);
-        errorMessage.textContent = 'Could not verify payment status. Please contact support if you completed payment.';
-        errorMessage.style.display = 'block';
-        checkoutButton.disabled = false;
+        showError('Could not verify payment status. Please contact support if you completed payment.');
+        setLoading(false);
     });
 }
 </script>

@@ -110,6 +110,8 @@ def subscription_cancel():
 @login_required
 def subscription():
     """View and manage subscription."""
-    return render_template('subscription.html')
-
-[... keep all existing routes ...]
+    stripe_publishable_key = os.environ.get('STRIPE_PUBLISHABLE_KEY')
+    if not stripe_publishable_key:
+        flash('Payment system is currently unavailable. Please try again later.')
+        return redirect(url_for('index'))
+    return render_template('subscription.html', stripe_publishable_key=stripe_publishable_key)
