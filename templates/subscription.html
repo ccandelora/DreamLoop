@@ -40,7 +40,7 @@
                             <div class="text-center">
                                 {% if stripe_publishable_key %}
                                 <button type="button" class="btn btn-primary btn-lg w-100" id="checkout-button">
-                                    <span class="button-text">Upgrade Now - $9.99/month</span>
+                                    <span class="button-text">Upgrade Now - $4.99/month</span>
                                     <span class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
                                 </button>
                                 <div id="error-message" class="alert alert-danger mt-3" style="display: none;"></div>
@@ -88,29 +88,18 @@
 <!-- Custom JavaScript for handling subscription -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    let stripe;
+    const stripe = Stripe('{{ stripe_publishable_key }}');
     const checkoutButton = document.getElementById('checkout-button');
     const errorMessage = document.getElementById('error-message');
     const successMessage = document.getElementById('success-message');
     const buttonText = checkoutButton.querySelector('.button-text');
     const spinner = checkoutButton.querySelector('.spinner-border');
 
-    try {
-        stripe = Stripe('{{ stripe_publishable_key }}');
-    } catch (error) {
-        console.error('Stripe initialization error:', error);
-        showError('Payment system initialization failed. Please try again later.');
-        if (checkoutButton) {
-            checkoutButton.disabled = true;
-        }
-        return;
-    }
-
     function setLoading(isLoading) {
         if (checkoutButton) {
             checkoutButton.disabled = isLoading;
             spinner.classList.toggle('d-none', !isLoading);
-            buttonText.textContent = isLoading ? 'Processing...' : 'Upgrade Now - $9.99/month';
+            buttonText.textContent = isLoading ? 'Processing...' : 'Upgrade Now - $4.99/month';
         }
     }
 
@@ -152,56 +141,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 const session = await response.json();
-
+                
                 if (session.id) {
-                    // Create a hidden form to handle the redirect
-                    const form = document.createElement('form');
-                    form.method = 'GET';
-                    form.action = 'https://checkout.stripe.com/pay/' + session.id;
-                    document.body.appendChild(form);
-                    form.submit();
-                    document.body.removeChild(form);
+                    // Use Stripe's redirectToCheckout
+                    const result = await stripe.redirectToCheckout({
+                        sessionId: session.id
+                    });
+
+                    if (result.error) {
+                        throw new Error(result.error.message);
+                    }
                 } else {
                     showError('Unable to start checkout process. Please try again.');
                 }
             } catch (error) {
                 console.error('Checkout error:', error);
                 showError('Unable to start checkout. Please contact support if this persists.');
+            } finally {
                 setLoading(false);
             }
         });
     }
 
-    // Handle the checkout session result
+    // Handle the success/cancel URL parameters
     const urlParams = new URLSearchParams(window.location.search);
-    const sessionId = urlParams.get('session_id');
-
-    if (sessionId) {
-        setLoading(true);
-        fetch(`/subscription/session-status/${sessionId}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.status === 'complete') {
-                    showSuccess('Payment successful! Your premium features will be activated shortly.');
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 2000);
-                } else {
-                    showError('Payment was not completed. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showError('Could not verify payment status. Please contact support if you completed payment.');
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+    if (urlParams.get('success') === 'true') {
+        showSuccess('Payment successful! Your premium features will be activated shortly.');
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
+    } else if (urlParams.get('canceled') === 'true') {
+        showError('Payment was canceled. Please try again if you wish to upgrade.');
     }
 });
 </script>

@@ -84,29 +84,15 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('index'))
 
-@app.route('/dream/new', methods=['GET'])
+@app.route('/subscription')
 @login_required
-def dream_log():
-    return render_template('dream_log.html')
-
-@app.route('/dream/patterns')
-@login_required
-def dream_patterns():
-    dreams = current_user.dreams.order_by(Dream.date.desc()).all()
-    patterns = analyze_dream_patterns(dreams) if dreams else None
-    return render_template('dream_patterns.html', dreams=dreams, patterns=patterns)
-
-@app.route('/dream/groups')
-@login_required
-def dream_groups():
-    groups = DreamGroup.query.all()
-    return render_template('dream_groups.html', groups=groups)
-
-@app.route('/community')
-@login_required
-def community():
-    public_dreams = Dream.query.filter_by(is_public=True).order_by(Dream.date.desc()).all()
-    return render_template('community.html', dreams=public_dreams)
+def subscription():
+    """View and manage subscription."""
+    stripe_publishable_key = os.environ.get('STRIPE_PUBLISHABLE_KEY')
+    if not stripe_publishable_key:
+        flash('Payment system is currently unavailable. Please try again later.')
+        return redirect(url_for('index'))
+    return render_template('subscription.html', stripe_publishable_key=stripe_publishable_key)
 
 @app.route('/create-checkout-session', methods=['POST'])
 @login_required
@@ -123,7 +109,7 @@ def create_checkout_session():
                         'name': 'DreamLoop Premium',
                         'description': 'Unlimited AI dream analysis and advanced features',
                     },
-                    'unit_amount': 999,  # $9.99 in cents
+                    'unit_amount': 499,  # $4.99 in cents
                     'recurring': {
                         'interval': 'month',
                     },
@@ -131,8 +117,8 @@ def create_checkout_session():
                 'quantity': 1,
             }],
             mode='subscription',
-            success_url=request.host_url + 'subscription?session_id={CHECKOUT_SESSION_ID}',
-            cancel_url=request.host_url + 'subscription',
+            success_url=request.host_url + 'subscription?success=true',
+            cancel_url=request.host_url + 'subscription?canceled=true',
             metadata={
                 'user_email': current_user.email,
                 'user_id': str(current_user.id)
@@ -144,39 +130,6 @@ def create_checkout_session():
     except Exception as e:
         logger.error(f"Error creating checkout session: {str(e)}")
         return jsonify({'error': str(e)}), 400
-
-@app.route('/subscription/session-status/<session_id>')
-@login_required
-def check_session_status(session_id):
-    try:
-        session = stripe.checkout.Session.retrieve(session_id)
-        return jsonify({
-            'status': session.payment_status
-        })
-    except Exception as e:
-        logger.error(f"Error checking session status: {str(e)}")
-        return jsonify({'error': str(e)}), 400
-
-@app.route('/webhook/stripe', methods=['POST'])
-def stripe_webhook():
-    """Handle Stripe webhook events"""
-    if request.content_length > 65535:
-        logger.warning("Request payload too large")
-        return "Request payload too large", 400
-        
-    payload = request.get_data()
-    sig_header = request.headers.get('Stripe-Signature')
-    
-    if not sig_header:
-        logger.warning("No Stripe signature header")
-        return "No Stripe signature header", 400
-        
-    success, message = handle_stripe_webhook(payload, sig_header)
-    
-    if success:
-        return message, 200
-    else:
-        return message, 400
 
 @app.route('/subscription/cancel', methods=['POST'])
 @login_required
@@ -208,15 +161,26 @@ def subscription_cancel():
         flash('An error occurred while canceling your subscription. Please try again.')
         return redirect(url_for('subscription'))
 
-@app.route('/subscription')
-@login_required
-def subscription():
-    """View and manage subscription."""
-    stripe_publishable_key = os.environ.get('STRIPE_PUBLISHABLE_KEY')
-    if not stripe_publishable_key:
-        flash('Payment system is currently unavailable. Please try again later.')
-        return redirect(url_for('index'))
-    return render_template('subscription.html', stripe_publishable_key=stripe_publishable_key)
+@app.route('/webhook/stripe', methods=['POST'])
+def stripe_webhook():
+    """Handle Stripe webhook events"""
+    if request.content_length > 65535:
+        logger.warning("Request payload too large")
+        return "Request payload too large", 400
+        
+    payload = request.get_data()
+    sig_header = request.headers.get('Stripe-Signature')
+    
+    if not sig_header:
+        logger.warning("No Stripe signature header")
+        return "No Stripe signature header", 400
+        
+    success, message = handle_stripe_webhook(payload, sig_header)
+    
+    if success:
+        return message, 200
+    else:
+        return message, 400
 
 # Context processor for template functions
 @app.context_processor
