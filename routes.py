@@ -128,6 +128,53 @@ def dream_view(dream_id):
         return redirect(url_for('index'))
     return render_template('dream_view.html', dream=dream)
 
+@app.route('/dream/<int:dream_id>/comment', methods=['POST'])
+@login_required
+def add_comment(dream_id):
+    """Add a comment to a dream."""
+    dream = Dream.query.get_or_404(dream_id)
+    
+    # Check if the dream is public or belongs to the current user
+    if not dream.is_public and dream.user_id != current_user.id:
+        flash('You cannot comment on this dream.')
+        return redirect(url_for('index'))
+    
+    content = request.form.get('content')
+    if not content:
+        flash('Comment cannot be empty.')
+        return redirect(url_for('dream_view', dream_id=dream_id))
+    
+    comment = Comment(
+        content=content,
+        user_id=current_user.id,
+        dream_id=dream_id,
+        created_at=datetime.utcnow()
+    )
+    
+    db.session.add(comment)
+    db.session.commit()
+    
+    flash('Comment added successfully!')
+    return redirect(url_for('dream_view', dream_id=dream_id))
+
+@app.route('/dream/<int:dream_id>/comment/<int:comment_id>/delete', methods=['POST'])
+@login_required
+def delete_comment(dream_id, comment_id):
+    """Delete a comment."""
+    comment = Comment.query.get_or_404(comment_id)
+    dream = Dream.query.get_or_404(dream_id)
+    
+    # Check if the user has permission to delete the comment
+    if comment.user_id != current_user.id and dream.user_id != current_user.id:
+        flash('You do not have permission to delete this comment.')
+        return redirect(url_for('dream_view', dream_id=dream_id))
+    
+    db.session.delete(comment)
+    db.session.commit()
+    
+    flash('Comment deleted successfully!')
+    return redirect(url_for('dream_view', dream_id=dream_id))
+
 @app.route('/dream/patterns')
 @login_required
 def dream_patterns():
