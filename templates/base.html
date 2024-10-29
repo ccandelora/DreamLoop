@@ -6,29 +6,12 @@
     <title>DreamLoop - {% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
-    {% if validate_google_ads_credentials() %}
-    <!-- Google Ads -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ google_ads_client_id }}"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', '{{ google_ads_client_id }}');
-
-        {% if current_user.is_authenticated %}
-        gtag('set', 'user_data', {
-            'email_hash': '{{ hash_email(current_user.email) }}',
-            'subscription_type': '{{ current_user.subscription_type }}'
-        });
-        {% endif %}
-    </script>
-    {% endif %}
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark black mb-4">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
-                <img src="{{ url_for('static', filename='images/dreamlooplogo.png') }}" alt="DreamLoop" style="height: 40px; width: auto; display: inline-block; vertical-align: middle;">
+                <img src="{{ url_for('static', filename='images/dreamlooplogo.png') }}" alt="DreamLoop" class="navbar-brand-logo">
                 <span class="ms-2">DreamLoop</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -41,7 +24,7 @@
                         <a class="nav-link" href="{{ url_for('dream_new') }}">Log Dream</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('dream_patterns') }}">Dream Patterns/Log</a>
+                        <a class="nav-link" href="{{ url_for('dream_patterns') }}">Patterns</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('dream_groups') }}">Groups</a>

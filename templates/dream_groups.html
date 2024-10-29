@@ -27,7 +27,7 @@
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-between align-items-center">
-                        <small>{{ group.members|length }} members</small>
+                        <small>{{ group.members.count() }} members</small>
                         {% if current_user in group.members %}
                         <span class="badge bg-success">Member</span>
                         {% else %}

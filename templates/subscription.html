@@ -153,7 +153,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error('No checkout URL received');
             }
 
-            // Direct redirection to the Stripe checkout URL
             window.location.href = data.url;
         } catch (error) {
             console.error('Error:', error);
@@ -161,7 +160,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle success/cancel URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('success') === 'true') {
         showSuccess('Payment successful! Your premium features will be activated shortly.');

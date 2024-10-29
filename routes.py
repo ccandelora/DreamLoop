@@ -140,9 +140,7 @@ def dream_patterns():
     """Dream patterns analysis route."""
     user_dreams = current_user.dreams.all()
     patterns = analyze_dream_patterns(user_dreams) if user_dreams else {}
-    return render_template('dream_patterns.html',
-                         dreams=user_dreams,
-                         patterns=patterns)
+    return render_template('dream_patterns.html', dreams=user_dreams, patterns=patterns)
 
 
 @app.route('/groups')
@@ -220,6 +218,28 @@ def subscription():
     return render_template('subscription.html', stripe_publishable_key=stripe_publishable_key)
 
 
+@app.route('/subscription/cancel', methods=['POST'])
+@login_required
+def subscription_cancel():
+    """Cancel user's premium subscription."""
+    try:
+        if current_user.subscription_type != 'premium':
+            flash('No active subscription found.')
+            return redirect(url_for('subscription'))
+
+        current_user.subscription_type = 'free'
+        current_user.subscription_end_date = None
+        db.session.commit()
+
+        flash('Your subscription has been canceled.')
+        return redirect(url_for('subscription'))
+
+    except Exception as e:
+        logger.error(f"Error canceling subscription: {str(e)}")
+        flash('An error occurred while canceling your subscription. Please try again.')
+        return redirect(url_for('subscription'))
+
+
 @app.route('/create-checkout-session', methods=['POST'])
 @login_required
 def create_checkout_session():
@@ -261,28 +281,6 @@ def create_checkout_session():
     except Exception as e:
         logger.error(f"Error creating checkout session: {str(e)}")
         return jsonify({'error': str(e)}), 400
-
-
-@app.route('/subscription/cancel', methods=['POST'])
-@login_required
-def subscription_cancel():
-    """Cancel user's premium subscription."""
-    try:
-        if current_user.subscription_type != 'premium':
-            flash('No active subscription found.')
-            return redirect(url_for('subscription'))
-
-        current_user.subscription_type = 'free'
-        current_user.subscription_end_date = None
-        db.session.commit()
-
-        flash('Your subscription has been canceled.')
-        return redirect(url_for('subscription'))
-
-    except Exception as e:
-        logger.error(f"Error canceling subscription: {str(e)}")
-        flash('An error occurred while canceling your subscription. Please try again.')
-        return redirect(url_for('subscription'))
 
 
 @app.route('/webhook/stripe', methods=['POST'])
