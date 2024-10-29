@@ -85,12 +85,24 @@ textarea {
 /* Logo styling */
 .navbar-brand-logo {
     height: 40px;
+    width: auto;
     margin-right: 0.5rem;
-    vertical-align: middle;
 }
 
 .navbar-brand {
     display: flex;
     align-items: center;
     font-size: 1.5rem;
+    padding: 0;
+}
+
+/* Landing page logo */
+.landing-logo {
+    max-width: 200px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 1.5rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
