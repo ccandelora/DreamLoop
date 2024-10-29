@@ -76,7 +76,7 @@
                         {% endif %}
                     </div>
                     
-                    <form method="POST" action="{{ url_for('cancel_subscription') }}" class="mt-4">
+                    <form method="POST" action="{{ url_for('subscription_cancel') }}" class="mt-4">
                         <button type="submit" class="btn btn-outline-danger">Cancel Subscription</button>
                     </form>
                     {% endif %}
@@ -122,7 +122,9 @@ document.addEventListener('DOMContentLoaded', function() {
         errorMessage.style.display = 'none';
     }
 
-    button.addEventListener('click', async () => {
+    button.addEventListener('click', async (e) => {
+        e.preventDefault();
+
         try {
             setLoading(true);
             errorMessage.style.display = 'none';
@@ -131,8 +133,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch("{{ url_for('create_checkout_session') }}", {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
-                }
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'same-origin'
             });
 
             if (!response.ok) {
@@ -149,6 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error('No checkout URL received');
             }
 
+            // Direct redirection to the Stripe checkout URL
             window.location.href = data.url;
         } catch (error) {
             console.error('Error:', error);

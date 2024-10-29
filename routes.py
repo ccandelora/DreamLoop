@@ -11,58 +11,59 @@ from ai_helper import analyze_dream, analyze_dream_patterns
 from stripe_webhook_handler import handle_stripe_webhook
 import stripe
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Set Stripe API key
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
+
 
 @app.route('/')
 def index():
     """Landing page route."""
     return render_template('index.html')
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """User login route."""
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-    
+
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
         user = User.query.filter_by(username=username).first()
-        
+
         if user and user.check_password(password):
             login_user(user)
             next_page = request.args.get('next')
             if next_page:
                 return redirect(next_page)
             return redirect(url_for('index'))
-        
+
         flash('Invalid username or password')
     return render_template('login.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """User registration route."""
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-        
+
     if request.method == 'POST':
         username = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
-        
+
         if User.query.filter_by(username=username).first():
             flash('Username already exists')
             return redirect(url_for('register'))
-            
+
         if User.query.filter_by(email=email).first():
             flash('Email already registered')
             return redirect(url_for('register'))
-            
+
         user = User()
         user.username = username
         user.email = email
@@ -70,14 +71,15 @@ def register():
         user.subscription_type = 'free'
         user.monthly_ai_analysis_count = 0
         user.last_analysis_reset = datetime.utcnow()
-        
+
         db.session.add(user)
         db.session.commit()
-        
+
         flash('Registration successful! Please login.')
         return redirect(url_for('login'))
-        
+
     return render_template('register.html')
+
 
 @app.route('/logout')
 @login_required
@@ -87,9 +89,10 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('index'))
 
+
 @app.route('/dream/new', methods=['GET', 'POST'])
 @login_required
-def dream_log():
+def dream_new():
     """Dream logging route."""
     if request.method == 'POST':
         title = request.form.get('title')
@@ -97,7 +100,7 @@ def dream_log():
         mood = request.form.get('mood')
         tags = request.form.get('tags')
         is_public = request.form.get('is_public') == 'true'
-        
+
         dream = Dream()
         dream.user_id = current_user.id
         dream.title = title
@@ -106,18 +109,19 @@ def dream_log():
         dream.tags = tags
         dream.is_public = is_public
         dream.date = datetime.utcnow()
-        
+
         if current_user.subscription_type == 'premium' or current_user.monthly_ai_analysis_count < 3:
             dream.ai_analysis = analyze_dream(content)
             if current_user.subscription_type == 'free':
                 current_user.monthly_ai_analysis_count += 1
-        
+
         db.session.add(dream)
         db.session.commit()
         flash('Dream logged successfully!')
         return redirect(url_for('dream_view', dream_id=dream.id))
-    
-    return render_template('dream_log.html')
+
+    return render_template('dream_new.html')
+
 
 @app.route('/dream/<int:dream_id>')
 @login_required
@@ -129,13 +133,17 @@ def dream_view(dream_id):
         return redirect(url_for('index'))
     return render_template('dream_view.html', dream=dream)
 
+
 @app.route('/dream/patterns')
 @login_required
 def dream_patterns():
     """Dream patterns analysis route."""
     user_dreams = current_user.dreams.all()
     patterns = analyze_dream_patterns(user_dreams) if user_dreams else {}
-    return render_template('dream_patterns.html', dreams=user_dreams, patterns=patterns)
+    return render_template('dream_patterns.html',
+                           dreams=user_dreams,
+                           patterns=patterns)
+
 
 @app.route('/groups')
 @login_required
@@ -144,36 +152,37 @@ def dream_groups():
     groups = DreamGroup.query.all()
     return render_template('dream_groups.html', groups=groups)
 
+
 @app.route('/subscription')
 @login_required
 def subscription():
     """View and manage subscription."""
     stripe_publishable_key = os.environ.get('STRIPE_PUBLISHABLE_KEY')
     if not stripe_publishable_key:
-        flash('Payment system is currently unavailable. Please try again later.')
+        flash(
+            'Payment system is currently unavailable. Please try again later.')
         return redirect(url_for('index'))
-    return render_template('subscription.html', stripe_publishable_key=stripe_publishable_key)
+    return render_template('subscription.html',
+                           stripe_publishable_key=stripe_publishable_key)
+
 
 @app.route('/create-checkout-session', methods=['POST'])
 @login_required
 def create_checkout_session():
     """Create Stripe checkout session."""
     try:
-        # Create the product first (or use existing)
+        # Create the product and price
         product = stripe.Product.create(
             name='DreamLoop Premium Subscription',
-            description='Unlimited AI dream analysis and advanced features'
-        )
+            description='Unlimited AI dream analysis and advanced features')
 
-        # Create the price for the product
         price = stripe.Price.create(
             unit_amount=999,  # $9.99 in cents
             currency='usd',
             recurring={'interval': 'month'},
-            product=product.id
-        )
+            product=product.id)
 
-        # Create checkout session with metadata
+        # Create the checkout session
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
             line_items=[{
@@ -181,23 +190,28 @@ def create_checkout_session():
                 'quantity': 1
             }],
             mode='subscription',
-            success_url=url_for('subscription', success='true', _external=True),
-            cancel_url=url_for('subscription', canceled='true', _external=True),
+            success_url=url_for('subscription', success='true',
+                                _external=True),
+            cancel_url=url_for('subscription', canceled='true',
+                               _external=True),
             customer_email=current_user.email,
             metadata={
                 'user_email': current_user.email,
                 'user_id': str(current_user.id)
-            }
-        )
-        
-        return jsonify({'url': checkout_session.url})
+            })
+
+        return jsonify({
+            'url': checkout_session.url,
+            'sessionId': checkout_session.id
+        })
     except Exception as e:
         logger.error(f"Error creating checkout session: {str(e)}")
         return jsonify({'error': str(e)}), 400
 
+
 @app.route('/subscription/cancel', methods=['POST'])
 @login_required
-def cancel_subscription():
+def subscription_cancel():
     """Cancel user's premium subscription."""
     try:
         if current_user.subscription_type != 'premium':
@@ -207,42 +221,49 @@ def cancel_subscription():
         current_user.subscription_type = 'free'
         current_user.subscription_end_date = None
         db.session.commit()
-        
+
         flash('Your subscription has been canceled.')
         return redirect(url_for('subscription'))
-        
+
     except Exception as e:
         logger.error(f"Error canceling subscription: {str(e)}")
-        flash('An error occurred while canceling your subscription. Please try again.')
+        flash(
+            'An error occurred while canceling your subscription. Please try again.'
+        )
         return redirect(url_for('subscription'))
+
 
 @app.route('/webhook/stripe', methods=['POST'])
 def stripe_webhook():
     """Handle Stripe webhook events"""
     payload = request.get_data()
     sig_header = request.headers.get('Stripe-Signature')
-    
+
     if not sig_header:
         return "No Stripe signature header", 400
-        
+
     success, message = handle_stripe_webhook(payload, sig_header)
-    
+
     if success:
         return message, 200
     else:
         return message, 400
 
-# Context processor for template functions
+
 @app.context_processor
 def utility_processor():
+
     def validate_google_ads_credentials():
-        return True  # Simplified for now
+        return True
+
     def hash_email(email):
         return hashlib.md5(email.lower().encode()).hexdigest()
+
     def should_show_premium_ads():
-        return show_premium_ads(current_user) if current_user.is_authenticated else False
+        return show_premium_ads(
+            current_user) if current_user.is_authenticated else False
+
     return dict(
         validate_google_ads_credentials=validate_google_ads_credentials,
         hash_email=hash_email,
-        should_show_premium_ads=should_show_premium_ads
-    )
+        should_show_premium_ads=should_show_premium_ads)
