@@ -39,7 +39,9 @@
                             </ul>
                             <div class="text-center mt-4">
                                 <form method="POST" action="{{ url_for('upgrade_subscription') }}">
-                                    <button type="submit" class="btn btn-primary btn-lg">Upgrade Now - $9.99/month</button>
+                                    <button type="submit" class="btn btn-primary btn-lg" id="checkout-button">
+                                        Upgrade Now - $9.99/month
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -68,4 +70,32 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{% if current_user.subscription_type == 'free' %}
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+const stripe = Stripe('{{ config.STRIPE_PUBLISHABLE_KEY }}');
+const checkoutButton = document.getElementById('checkout-button');
+
+checkoutButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    const form = e.target.closest('form');
+    form.submit();
+});
+
+// Handle the checkout session result
+const urlParams = new URLSearchParams(window.location.search);
+const sessionId = urlParams.get('session_id');
+
+if (sessionId) {
+    stripe.retrieveCheckoutSession(sessionId).then(function(result) {
+        if (result.error) {
+            console.error('Error:', result.error);
+        }
+    });
+}
+</script>
+{% endif %}
 {% endblock %}

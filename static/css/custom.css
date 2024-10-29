@@ -22,7 +22,7 @@ textarea {
 /* Premium Upgrade Banner Styles */
 .premium-upgrade-banner {
     border-left: 4px solid var(--bs-primary);
-    background-color: var(--bs-dark);
+    background-color: black;
 }
 
 .premium-upgrade-banner .alert-heading {
@@ -109,4 +109,9 @@ textarea {
     margin-left: auto;
     margin-right: auto;
     object-fit: contain;
+}
+
+/* body */
+body {
+    background-color: black;
 }
