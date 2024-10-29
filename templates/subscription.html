@@ -94,6 +94,7 @@ function showError(message) {
     errorMessage.textContent = message;
     errorMessage.style.display = 'block';
     successMessage.style.display = 'none';
+    setLoading(false);
 }
 
 function showSuccess(message) {
@@ -132,7 +133,6 @@ checkoutButton.addEventListener('click', async (e) => {
     } catch (error) {
         console.error('Error:', error);
         showError(error.message || 'An error occurred during checkout. Please try again.');
-        setLoading(false);
     }
 });
 
@@ -142,21 +142,25 @@ const sessionId = urlParams.get('session_id');
 
 if (sessionId) {
     setLoading(true);
-    stripe.retrieveSession(sessionId).then(function(session) {
-        if (session.status === 'complete') {
-            showSuccess('Payment successful! Your premium features will be activated shortly.');
-            setTimeout(() => {
-                window.location.reload();
-            }, 2000);
-        } else {
-            showError('Payment was not completed. Please try again.');
+    fetch(`/subscription/session-status/${sessionId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'complete') {
+                showSuccess('Payment successful! Your premium features will be activated shortly.');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                showError('Payment was not completed. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showError('Could not verify payment status. Please contact support if you completed payment.');
+        })
+        .finally(() => {
             setLoading(false);
-        }
-    }).catch(function(error) {
-        console.error('Error:', error);
-        showError('Could not verify payment status. Please contact support if you completed payment.');
-        setLoading(false);
-    });
+        });
 }
 </script>
 {% endif %}

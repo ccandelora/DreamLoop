@@ -55,6 +55,18 @@ def create_checkout_session():
         logger.error(f"Error creating checkout session: {str(e)}")
         return jsonify({'error': str(e)}), 400
 
+@app.route('/subscription/session-status/<session_id>')
+@login_required
+def check_session_status(session_id):
+    try:
+        session = stripe.checkout.Session.retrieve(session_id)
+        return jsonify({
+            'status': session.payment_status
+        })
+    except Exception as e:
+        logger.error(f"Error checking session status: {str(e)}")
+        return jsonify({'error': str(e)}), 400
+
 @app.route('/webhook/stripe', methods=['POST'])
 def stripe_webhook():
     """Handle Stripe webhook events"""
