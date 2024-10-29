@@ -15,8 +15,13 @@ webhook_secret = os.environ.get('STRIPE_WEBHOOK_SECRET')
 def handle_subscription_created(event):
     """Handle subscription.created event"""
     subscription = event.data.object
-    user = User.query.filter_by(email=subscription.metadata.get('user_email')).first()
+    customer_email = subscription.customer_email or subscription.metadata.get('user_email')
     
+    if not customer_email:
+        logger.error(f"No customer email found for subscription {subscription.id}")
+        return
+        
+    user = User.query.filter_by(email=customer_email).first()
     if not user:
         logger.error(f"User not found for subscription {subscription.id}")
         return
@@ -25,7 +30,7 @@ def handle_subscription_created(event):
         user.subscription_type = 'premium'
         user.subscription_end_date = datetime.fromtimestamp(subscription.current_period_end)
         db.session.commit()
-        logger.info(f"Successfully processed subscription.created for user {user.id}")
+        logger.info(f"Successfully upgraded user {user.id} to premium")
     except Exception as e:
         logger.error(f"Error processing subscription.created: {str(e)}")
         db.session.rollback()
@@ -33,7 +38,13 @@ def handle_subscription_created(event):
 def handle_subscription_deleted(event):
     """Handle subscription.deleted event"""
     subscription = event.data.object
-    user = User.query.filter_by(email=subscription.metadata.get('user_email')).first()
+    customer_email = subscription.customer_email or subscription.metadata.get('user_email')
+    
+    if not customer_email:
+        logger.error(f"No customer email found for subscription {subscription.id}")
+        return
+        
+    user = User.query.filter_by(email=customer_email).first()
     
     if not user:
         logger.error(f"User not found for subscription {subscription.id}")
@@ -51,7 +62,13 @@ def handle_subscription_deleted(event):
 def handle_subscription_updated(event):
     """Handle subscription.updated event"""
     subscription = event.data.object
-    user = User.query.filter_by(email=subscription.metadata.get('user_email')).first()
+    customer_email = subscription.customer_email or subscription.metadata.get('user_email')
+    
+    if not customer_email:
+        logger.error(f"No customer email found for subscription {subscription.id}")
+        return
+        
+    user = User.query.filter_by(email=customer_email).first()
     
     if not user:
         logger.error(f"User not found for subscription {subscription.id}")
@@ -77,7 +94,13 @@ def handle_subscription_updated(event):
 def handle_payment_failed(event):
     """Handle payment_failed event"""
     invoice = event.data.object
-    user = User.query.filter_by(email=invoice.customer_email).first()
+    customer_email = invoice.customer_email or invoice.metadata.get('user_email')
+    
+    if not customer_email:
+        logger.error(f"No customer email found for invoice {invoice.id}")
+        return
+        
+    user = User.query.filter_by(email=customer_email).first()
     
     if not user:
         logger.error(f"User not found for invoice {invoice.id}")

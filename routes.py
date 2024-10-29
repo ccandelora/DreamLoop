@@ -87,47 +87,6 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('index'))
 
-@app.route('/dream/new', methods=['GET', 'POST'])
-@login_required
-def dream_log():
-    """Dream logging route."""
-    if request.method == 'POST':
-        dream = Dream()
-        dream.user_id = current_user.id
-        dream.title = request.form.get('title')
-        dream.content = request.form.get('content')
-        dream.mood = request.form.get('mood')
-        dream.tags = request.form.get('tags')
-        dream.is_public = bool(request.form.get('is_public'))
-        dream.date = datetime.utcnow()
-        
-        if current_user.can_use_ai_analysis():
-            dream.ai_analysis = analyze_dream(dream.content)
-            current_user.increment_ai_analysis_count()
-            
-        db.session.add(dream)
-        db.session.commit()
-        
-        flash('Dream logged successfully!')
-        return redirect(url_for('index'))
-        
-    return render_template('dream_log.html')
-
-@app.route('/dream/patterns')
-@login_required
-def dream_patterns():
-    """Dream patterns analysis route."""
-    dreams = current_user.dreams.order_by(Dream.date.desc()).all()
-    patterns = analyze_dream_patterns(dreams) if dreams else None
-    return render_template('dream_patterns.html', dreams=dreams, patterns=patterns)
-
-@app.route('/dream-groups')
-@login_required
-def dream_groups():
-    """Dream groups listing route."""
-    groups = DreamGroup.query.all()
-    return render_template('dream_groups.html', groups=groups)
-
 @app.route('/subscription')
 @login_required
 def subscription():
@@ -141,6 +100,7 @@ def subscription():
 @app.route('/create-checkout-session', methods=['POST'])
 @login_required
 def create_checkout_session():
+    """Create Stripe checkout session."""
     try:
         # Create the product first (or use existing)
         product = stripe.Product.create(
@@ -156,7 +116,7 @@ def create_checkout_session():
             product=product.id
         )
 
-        # Create checkout session
+        # Create checkout session with metadata
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
             line_items=[{
@@ -166,7 +126,11 @@ def create_checkout_session():
             mode='subscription',
             success_url=request.url_root.rstrip('/') + url_for('subscription') + '?success=true',
             cancel_url=request.url_root.rstrip('/') + url_for('subscription') + '?canceled=true',
-            customer_email=current_user.email
+            customer_email=current_user.email,
+            metadata={
+                'user_email': current_user.email,
+                'user_id': str(current_user.id)
+            }
         )
         
         return jsonify({'url': checkout_session.url})
