@@ -31,7 +31,7 @@ class Dream(db.Model):
     tags = db.Column(db.String(200))
     is_public = db.Column(db.Boolean, default=False)
     ai_analysis = db.Column(db.Text)
-    comments = db.relationship('Comment', backref='dream', lazy='dynamic')
+    comments = db.relationship('Comment', backref='dream', lazy='dynamic', cascade='all, delete-orphan')
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -39,6 +39,7 @@ class Comment(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     dream_id = db.Column(db.Integer, db.ForeignKey('dream.id'), nullable=False)
+    author = db.relationship('User', backref=db.backref('authored_comments', lazy='dynamic'))
 
 class DreamGroup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -46,6 +47,7 @@ class DreamGroup(db.Model):
     description = db.Column(db.Text)
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    creator = db.relationship('User', foreign_keys=[created_by], backref='created_groups')
     members = db.relationship('User', secondary='group_membership', backref=db.backref('groups', lazy=True))
 
 class GroupMembership(db.Model):

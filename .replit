@@ -35,6 +35,10 @@ args = "Flask DreamLoop"
 task = "workflow.run"
 args = "Flask Application"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Update Schema"
+
 [[workflows.workflow]]
 name = "Flask Dream Journal"
 author = "agent"
@@ -116,6 +120,20 @@ task = "packager.installForAll"
 task = "shell.exec"
 args = "python3 main.py"
 waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Update Schema"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 update_schema.py"
 
 [deployment]
 run = ["sh", "-c", "python3 app.py"]
