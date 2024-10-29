@@ -48,7 +48,7 @@ def create_google_ads_client():
         logger.error(f"Failed to create Google Ads client: {str(e)}")
         return None
 
-def track_premium_conversion(user_id, conversion_value=9.99):
+def track_premium_conversion(user_id, conversion_value=4.99):
     """Track a premium subscription conversion in Google Ads."""
     # Get user subscription status first
     from app import db

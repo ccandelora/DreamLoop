@@ -237,7 +237,7 @@ def create_checkout_session():
             description='Unlimited AI dream analysis and advanced features')
 
         price = stripe.Price.create(
-            unit_amount=999,  # $9.99 in cents
+            unit_amount=499,  # $4.99 in cents
             currency='usd',
             recurring={'interval': 'month'},
             product=product.id)

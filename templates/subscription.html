@@ -48,7 +48,7 @@
                             <div class="text-center">
                                 {% if stripe_publishable_key %}
                                 <button type="button" class="btn btn-primary btn-lg w-100" id="checkout-button">
-                                    <span class="button-text">Upgrade Now - $9.99/month</span>
+                                    <span class="button-text">Upgrade Now - $4.99/month</span>
                                     <div class="spinner-border spinner-border-sm ms-2 d-none" role="status"></div>
                                 </button>
                                 <div id="error-message" class="alert alert-danger mt-3" style="display: none;"></div>
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
             buttonText.textContent = 'Processing...';
         } else {
             spinner.classList.add('d-none');
-            buttonText.textContent = 'Upgrade Now - $9.99/month';
+            buttonText.textContent = 'Upgrade Now - $4.99/month';
         }
     }
 
