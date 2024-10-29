@@ -138,6 +138,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     }
 
+    // Add event listener for checkout completion message
+    window.addEventListener('message', function(event) {
+        if (event.data === 'stripe_checkout_completed') {
+            window.location.reload();
+        }
+    });
+
     if (checkoutButton) {
         checkoutButton.addEventListener('click', async (e) => {
             e.preventDefault();
@@ -161,19 +168,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 const session = await response.json();
                 
                 if (session.url) {
-                    // Create and submit form to open in new tab
-                    const checkoutForm = document.createElement('form');
-                    checkoutForm.method = 'GET';
-                    checkoutForm.action = session.url;
-                    checkoutForm.target = '_blank';
-                    document.body.appendChild(checkoutForm);
-                    checkoutForm.submit();
-                    document.body.removeChild(checkoutForm);
-                    
-                    // Show message about new window
-                    showMessage('Checkout window opening in a new tab. Please complete your payment there.');
+                    // Open in new window with proper window features
+                    const popupWindow = window.open(
+                        session.url,
+                        'stripe_checkout',
+                        'width=600,height=800,status=yes,scrollbars=yes'
+                    );
+                    if (popupWindow) {
+                        showMessage('Checkout window opened. Please complete your payment in the new window.');
+                    } else {
+                        showError('Pop-up blocked. Please allow pop-ups and try again.');
+                    }
                 } else {
-                    throw new Error('No checkout URL returned');
+                    showError('Checkout unavailable. Please try again later.');
                 }
             } catch (error) {
                 console.error('Checkout error:', error);
