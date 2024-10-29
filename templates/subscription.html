@@ -131,20 +131,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function showMessage(message) {
-        showSuccess(message);
-        setTimeout(() => {
-            successMessage.style.display = 'none';
-        }, 5000);
-    }
-
-    // Add event listener for checkout completion message
-    window.addEventListener('message', function(event) {
-        if (event.data === 'stripe_checkout_completed') {
-            window.location.reload();
-        }
-    });
-
     if (checkoutButton) {
         checkoutButton.addEventListener('click', async (e) => {
             e.preventDefault();
@@ -166,25 +152,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 const session = await response.json();
-                
-                if (session.url) {
-                    // Open in new window with proper window features
-                    const popupWindow = window.open(
-                        session.url,
-                        'stripe_checkout',
-                        'width=600,height=800,status=yes,scrollbars=yes'
-                    );
-                    if (popupWindow) {
-                        showMessage('Checkout window opened. Please complete your payment in the new window.');
-                    } else {
-                        showError('Pop-up blocked. Please allow pop-ups and try again.');
-                    }
+
+                if (session.id) {
+                    // Create a hidden form to handle the redirect
+                    const form = document.createElement('form');
+                    form.method = 'GET';
+                    form.action = 'https://checkout.stripe.com/pay/' + session.id;
+                    document.body.appendChild(form);
+                    form.submit();
+                    document.body.removeChild(form);
                 } else {
-                    showError('Checkout unavailable. Please try again later.');
+                    showError('Unable to start checkout process. Please try again.');
                 }
             } catch (error) {
                 console.error('Checkout error:', error);
-                showError('Unable to open checkout. Please try again or contact support if the issue persists.');
+                showError('Unable to start checkout. Please contact support if this persists.');
                 setLoading(false);
             }
         });
