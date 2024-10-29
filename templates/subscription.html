@@ -131,23 +131,23 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
             
             if (data.url) {
-                // Create a temporary anchor element for redirection
-                const anchor = document.createElement('a');
-                anchor.href = data.url;
-                anchor.target = '_blank';
-                anchor.style.display = 'none';
-                document.body.appendChild(anchor);
-                anchor.click();
-                document.body.removeChild(anchor);
+                // Create a simple form to handle the redirect
+                const form = document.createElement('form');
+                form.method = 'GET';
+                form.action = data.url;
                 
-                // Show a message about the new window
-                showSuccess('Checkout opened in a new tab. Please complete your payment there.');
+                // Submit the form
+                document.body.appendChild(form);
+                form.submit();
+                document.body.removeChild(form);
+                
+                showSuccess('Redirecting to checkout...');
             } else {
                 throw new Error('No checkout URL received');
             }
         } catch (error) {
             console.error('Error:', error);
-            showError('Unable to start checkout process. Please try again or contact support.');
+            showError('Unable to start checkout. Please try again later.');
         } finally {
             setLoading(false);
         }
