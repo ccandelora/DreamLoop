@@ -38,12 +38,18 @@
                                 <li>✨ Early access to new features</li>
                             </ul>
                             <div class="text-center">
+                                {% if stripe_publishable_key %}
                                 <button type="button" class="btn btn-primary btn-lg w-100" id="checkout-button">
                                     <span class="button-text">Upgrade Now - $9.99/month</span>
                                     <span class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
                                 </button>
                                 <div id="error-message" class="alert alert-danger mt-3" style="display: none;"></div>
                                 <div id="success-message" class="alert alert-success mt-3" style="display: none;"></div>
+                                {% else %}
+                                <div class="alert alert-warning">
+                                    Payment system is currently unavailable. Please try again later.
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -74,94 +80,125 @@
 {% endblock %}
 
 {% block scripts %}
+<!-- Load Stripe.js only when needed and available -->
 {% if current_user.subscription_type == 'free' and stripe_publishable_key %}
+<!-- Stripe.js -->
 <script src="https://js.stripe.com/v3/"></script>
+
+<!-- Custom JavaScript for handling subscription -->
 <script>
-const stripe = Stripe('{{ stripe_publishable_key }}');
-const checkoutButton = document.getElementById('checkout-button');
-const errorMessage = document.getElementById('error-message');
-const successMessage = document.getElementById('success-message');
-const buttonText = checkoutButton.querySelector('.button-text');
-const spinner = checkoutButton.querySelector('.spinner-border');
-
-function setLoading(isLoading) {
-    checkoutButton.disabled = isLoading;
-    spinner.classList.toggle('d-none', !isLoading);
-    buttonText.textContent = isLoading ? 'Processing...' : 'Upgrade Now - $9.99/month';
-}
-
-function showError(message) {
-    errorMessage.textContent = message;
-    errorMessage.style.display = 'block';
-    successMessage.style.display = 'none';
-    setLoading(false);
-}
-
-function showSuccess(message) {
-    successMessage.textContent = message;
-    successMessage.style.display = 'block';
-    errorMessage.style.display = 'none';
-}
-
-checkoutButton.addEventListener('click', async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    errorMessage.style.display = 'none';
-    successMessage.style.display = 'none';
+document.addEventListener('DOMContentLoaded', function() {
+    let stripe;
+    const checkoutButton = document.getElementById('checkout-button');
+    const errorMessage = document.getElementById('error-message');
+    const successMessage = document.getElementById('success-message');
+    const buttonText = checkoutButton.querySelector('.button-text');
+    const spinner = checkoutButton.querySelector('.spinner-border');
 
     try {
-        const response = await fetch('/create-checkout-session', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
+        stripe = Stripe('{{ stripe_publishable_key }}');
+    } catch (error) {
+        console.error('Error initializing Stripe:', error);
+        showError('Payment system initialization failed. Please try again later.');
+        if (checkoutButton) {
+            checkoutButton.disabled = true;
+        }
+        return;
+    }
+
+    function setLoading(isLoading) {
+        if (checkoutButton) {
+            checkoutButton.disabled = isLoading;
+            spinner.classList.toggle('d-none', !isLoading);
+            buttonText.textContent = isLoading ? 'Processing...' : 'Upgrade Now - $9.99/month';
+        }
+    }
+
+    function showError(message) {
+        if (errorMessage) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+            setLoading(false);
+        }
+    }
+
+    function showSuccess(message) {
+        if (successMessage) {
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+        }
+    }
+
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', async (e) => {
+            e.preventDefault();
+            setLoading(true);
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+
+            try {
+                const response = await fetch('/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'An error occurred during checkout.');
+                }
+
+                const session = await response.json();
+                const result = await stripe.redirectToCheckout({
+                    sessionId: session.id
+                });
+
+                if (result.error) {
+                    throw new Error(result.error.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError(error.message || 'An error occurred during checkout. Please try again.');
+                setLoading(false);
             }
         });
+    }
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'An error occurred during checkout.');
-        }
+    // Handle the checkout session result
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
 
-        const session = await response.json();
-        const result = await stripe.redirectToCheckout({
-            sessionId: session.id
-        });
-
-        if (result.error) {
-            throw new Error(result.error.message);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showError(error.message || 'An error occurred during checkout. Please try again.');
+    if (sessionId) {
+        setLoading(true);
+        fetch(`/subscription/session-status/${sessionId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'complete') {
+                    showSuccess('Payment successful! Your premium features will be activated shortly.');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    showError('Payment was not completed. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showError('Could not verify payment status. Please contact support if you completed payment.');
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }
 });
-
-// Handle the checkout session result
-const urlParams = new URLSearchParams(window.location.search);
-const sessionId = urlParams.get('session_id');
-
-if (sessionId) {
-    setLoading(true);
-    fetch(`/subscription/session-status/${sessionId}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'complete') {
-                showSuccess('Payment successful! Your premium features will be activated shortly.');
-                setTimeout(() => {
-                    window.location.reload();
-                }, 2000);
-            } else {
-                showError('Payment was not completed. Please try again.');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showError('Could not verify payment status. Please contact support if you completed payment.');
-        })
-        .finally(() => {
-            setLoading(false);
-        });
-}
 </script>
 {% endif %}
 {% endblock %}
