@@ -41,7 +41,7 @@
                                 {% if stripe_publishable_key %}
                                 <form id="checkout-form" method="POST" action="{{ url_for('create_checkout_session') }}">
                                     <button type="submit" class="btn btn-primary btn-lg w-100" id="checkout-button">
-                                        <span class="button-text">Upgrade Now - $9.99/month</span>
+                                        <span class="button-text">Upgrade Now - $4.99/month</span>
                                         <span class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
                                     </button>
                                     <div id="error-message" class="alert alert-danger mt-3" style="display: none;"></div>
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function setLoading(isLoading) {
         button.disabled = isLoading;
         spinner.classList.toggle('d-none', !isLoading);
-        buttonText.textContent = isLoading ? 'Processing...' : 'Upgrade Now - $9.99/month';
+        buttonText.textContent = isLoading ? 'Processing...' : 'Upgrade Now - $4.99/month';
     }
 
     function showError(message) {
@@ -125,23 +125,15 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Network response was not ok');
             }
             
             const data = await response.json();
             
             if (data.url) {
-                // Create a simple form to handle the redirect
-                const form = document.createElement('form');
-                form.method = 'GET';
-                form.action = data.url;
-                
-                // Submit the form
-                document.body.appendChild(form);
-                form.submit();
-                document.body.removeChild(form);
-                
-                showSuccess('Redirecting to checkout...');
+                // Redirect to Stripe Checkout
+                window.location.href = data.url;
             } else {
                 throw new Error('No checkout URL received');
             }

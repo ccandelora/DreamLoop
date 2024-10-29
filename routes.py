@@ -141,39 +141,35 @@ def subscription():
 @app.route('/create-checkout-session', methods=['POST'])
 @login_required
 def create_checkout_session():
-    """Create Stripe checkout session for premium subscription."""
     try:
-        # Create a price for the subscription
-        price = stripe.Price.create(
-            unit_amount=999,  # $9.99 in cents
-            currency='usd',
-            recurring={'interval': 'month'},
-            product_data={
-                'name': 'DreamLoop Premium Subscription',
-                'description': 'Unlimited AI dream analysis and advanced features'
-            },
+        # Create the product first (or use existing)
+        product = stripe.Product.create(
+            name='DreamLoop Premium Subscription',
+            description='Unlimited AI dream analysis and advanced features'
         )
 
-        # Create the checkout session
+        # Create the price for the product
+        price = stripe.Price.create(
+            unit_amount=499,  # $4.99 in cents
+            currency='usd',
+            recurring={'interval': 'month'},
+            product=product.id
+        )
+
+        # Create checkout session
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
-            mode='subscription',
-            customer_email=current_user.email,
             line_items=[{
                 'price': price.id,
-                'quantity': 1,
+                'quantity': 1
             }],
+            mode='subscription',
             success_url=request.url_root.rstrip('/') + url_for('subscription') + '?success=true',
             cancel_url=request.url_root.rstrip('/') + url_for('subscription') + '?canceled=true',
-            metadata={
-                'user_email': current_user.email,
-                'user_id': str(current_user.id)
-            }
+            customer_email=current_user.email
         )
         
-        return jsonify({
-            'url': checkout_session.url
-        })
+        return jsonify({'url': checkout_session.url})
     except Exception as e:
         logger.error(f"Error creating checkout session: {str(e)}")
         return jsonify({'error': str(e)}), 400
