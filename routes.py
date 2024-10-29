@@ -96,14 +96,15 @@ def dream_new():
         tags = request.form.get('tags')
         is_public = request.form.get('is_public') == 'true'
 
-        dream = Dream()
-        dream.user_id = current_user.id
-        dream.title = title
-        dream.content = content
-        dream.mood = mood
-        dream.tags = tags
-        dream.is_public = is_public
-        dream.date = datetime.utcnow()
+        dream = Dream(
+            user_id=current_user.id,
+            title=title,
+            content=content,
+            mood=mood,
+            tags=tags,
+            is_public=is_public,
+            date=datetime.utcnow()
+        )
 
         if current_user.subscription_type == 'premium' or current_user.monthly_ai_analysis_count < 3:
             dream.ai_analysis = analyze_dream(content)
@@ -134,7 +135,6 @@ def add_comment(dream_id):
     """Add a comment to a dream."""
     dream = Dream.query.get_or_404(dream_id)
     
-    # Check if the dream is public or belongs to the current user
     if not dream.is_public and dream.user_id != current_user.id:
         flash('You cannot comment on this dream.')
         return redirect(url_for('index'))
@@ -164,7 +164,6 @@ def delete_comment(dream_id, comment_id):
     comment = Comment.query.get_or_404(comment_id)
     dream = Dream.query.get_or_404(dream_id)
     
-    # Check if the user has permission to delete the comment
     if comment.user_id != current_user.id and dream.user_id != current_user.id:
         flash('You do not have permission to delete this comment.')
         return redirect(url_for('dream_view', dream_id=dream_id))
@@ -284,7 +283,7 @@ def create_checkout_session():
             description='Unlimited AI dream analysis and advanced features')
 
         price = stripe.Price.create(
-            unit_amount=499,  # $4.99 in cents
+            unit_amount=499,
             currency='usd',
             recurring={'interval': 'month'},
             product=product.id)

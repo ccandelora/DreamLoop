@@ -52,15 +52,15 @@
                     <h3 class="mb-0">Comments</h3>
                 </div>
                 <div class="card-body">
-                    {% if dream.comments %}
+                    {% if dream.comments.all() %}
                     <div class="mb-4">
-                        {% for comment in dream.comments|sort(attribute='created_at', reverse=True) %}
+                        {% for comment in dream.comments.order_by(Comment.created_at.desc()).all() %}
                         <div class="card bg-dark mb-3">
                             <div class="card-body">
                                 <p class="mb-2">{{ comment.content }}</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <small class="text-muted">
-                                        By {{ comment.user.username }} on {{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}
+                                        By {{ comment.author.username }} on {{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}
                                     </small>
                                     {% if comment.user_id == current_user.id or dream.user_id == current_user.id %}
                                     <form method="POST" action="{{ url_for('delete_comment', dream_id=dream.id, comment_id=comment.id) }}" class="d-inline">
@@ -79,7 +79,7 @@
                     {% endif %}
 
                     <!-- Comment Form -->
-                    <form method="POST" action="{{ url_for('dream.add_comment', dream_id=dream.id) }}" class="mb-4">
+                    <form method="POST" action="{{ url_for('add_comment', dream_id=dream.id) }}" class="mb-4">
                         <div class="mb-3">
                             <label for="content" class="form-label">Add a Comment</label>
                             <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
