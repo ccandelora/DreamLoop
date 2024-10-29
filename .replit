@@ -21,10 +21,6 @@ args = "Add Sample Dreams"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Reset Database"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "Seed Database"
 
 [[workflows.workflow]]
@@ -33,6 +29,9 @@ author = "agent"
 
 [workflows.workflow.metadata]
 agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
@@ -49,17 +48,6 @@ agentRequireRestartOnSave = false
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python3 add_sample_dreams.py"
-
-[[workflows.workflow]]
-name = "Reset Database"
-author = "agent"
-
-[workflows.workflow.metadata]
-agentRequireRestartOnSave = false
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "python3 reset_db.py"
 
 [[workflows.workflow]]
 name = "Seed Database"

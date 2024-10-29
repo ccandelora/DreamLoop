@@ -81,3 +81,16 @@ textarea {
     background-color: var(--bs-dark);
     filter: brightness(1.1);
 }
+
+/* Logo styling */
+.navbar-brand-logo {
+    height: 40px;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+}
