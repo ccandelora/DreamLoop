@@ -20,49 +20,61 @@ def analyze_dream(content, is_premium=False):
         
         if is_premium:
             # Enhanced prompt for premium users
-            prompt = f"""As an expert dream analyst, provide a comprehensive analysis of the following dream. 
-            Include these sections:
-            
-            # Core Symbolism
-            * Deep analysis of key symbols and their personal/cultural significance
+            prompt = f"""As an expert dream analyst, provide a comprehensive analysis of the following dream:
+
+            Dream Content: {content}
+
+            # Symbolism Analysis
+            * Detailed interpretation of key symbols
             * Historical and mythological connections
-            * Potential archetypal meanings
-            
-            # Emotional Landscape
-            * Detailed emotional patterns and their real-life connections
-            * Subconscious feelings and their manifestations
+            * Personal and cultural significance
+            * Archetypal meanings and universal patterns
+
+            # Emotional Patterns
+            * Core emotional themes and their origins
+            * Subconscious feelings revealed
+            * Connection to current life situations
             * Impact on waking emotional state
-            
+
             # Psychological Insights
-            * Jungian psychological perspectives
-            * Personal growth opportunities
+            * Jungian archetypal analysis
             * Shadow aspects and integration
-            
-            # Action Recommendations
-            * Specific steps for personal growth
+            * Personal growth opportunities
+            * Relationship dynamics revealed
+
+            # Life Connections
+            * Current life situations reflected
+            * Past experiences influencing the dream
+            * Future possibilities indicated
+            * Relationships and interactions highlighted
+
+            # Growth & Development
+            * Personal development opportunities
+            * Areas for psychological exploration
+            * Potential challenges to address
+            * Skills or qualities to develop
+
+            # Action Steps
+            * Specific recommendations for growth
+            * Daily practices to implement
             * Journal prompts for deeper exploration
             * Mindfulness exercises related to dream themes
-            
-            # Pattern Recognition
-            * Universal archetypes present
-            * Common dream motifs
-            * Personal symbol dictionary suggestions
-            
-            Dream Content: {content}
-            
+
             Format the response in markdown with clear sections and bullet points."""
         else:
-            # Basic prompt for free users
-            prompt = f"""Provide a brief analysis of this dream:
-            
+            # Basic prompt for free users with upgrade message
+            prompt = f"""Provide a very brief analysis of this dream (3-4 sentences maximum):
+
             Dream Content: {content}
-            
-            Include:
-            * Key symbols and their basic meaning
-            * Main emotional theme
-            * One practical insight
-            
-            Keep it concise and clear."""
+
+            Include only:
+            1. One key symbol and its basic meaning
+            2. The main emotional theme
+            3. A single practical insight
+
+            End with: "💫 *Unlock deeper insights with Premium: Get comprehensive symbolism analysis, personal growth recommendations, and detailed psychological patterns.*"
+
+            Keep it clear and concise."""
 
         response = model.generate_content(prompt)
         return response.text
@@ -95,43 +107,47 @@ def analyze_dream_patterns(dreams, is_premium=False):
             Dreams:
             {combined_dreams}
 
-            Provide a comprehensive pattern analysis including:
-            
-            # Recurring Themes and Evolution
+            # Dream Evolution Patterns
             * Major themes and their progression
-            * Symbol patterns and transformations
-            * Narrative arcs across dreams
-            
-            # Psychological Development
-            * Signs of personal growth or challenges
+            * Symbol transformations over time
+            * Narrative pattern development
+
+            # Psychological Growth
+            * Personal development indicators
+            * Recurring challenges and resolutions
             * Integration of shadow aspects
-            * Areas of psychological focus
-            
-            # Emotional Patterns
-            * Dominant emotional currents
-            * Emotional processing patterns
-            * Relationship dynamics
-            
-            # Symbol Networks
-            * Interconnected symbol systems
+
+            # Emotional Journey
+            * Emotional pattern progression
+            * Relationship dynamics evolution
+            * Conflict resolution patterns
+
+            # Symbol Network
+            * Interconnected symbol meanings
             * Personal symbol dictionary
-            * Cultural and archetypal connections
-            
+            * Cultural and archetypal significance
+
             # Growth Recommendations
-            * Specific areas for conscious work
-            * Journaling prompts and exercises
-            * Mindfulness practices
-            
+            * Key areas for conscious work
+            * Specific journaling exercises
+            * Meditation and mindfulness practices
+
             Format the response in markdown with clear sections."""
             
             response = model.generate_content(prompt)
             ai_pattern_analysis = response.text
         else:
-            # Basic analysis for free users
-            ai_pattern_analysis = """### Basic Pattern Analysis
-* Upgrade to premium for in-depth pattern analysis across your dreams
-* Premium analysis includes psychological insights, symbol networks, and personalized recommendations
-* Track your dream patterns more effectively with our advanced AI analysis"""
+            # Basic analysis for free users with upgrade message
+            ai_pattern_analysis = """### Basic Pattern Summary
+* A simple overview of your most common dream themes
+* Basic mood patterns across your dreams
+
+💫 **Upgrade to Premium to Unlock:**
+* Deep psychological pattern analysis
+* Personal growth recommendations
+* Symbol network insights
+* Customized journaling prompts
+* Comprehensive emotional journey tracking"""
 
         # Construct the analysis result
         analysis = {
