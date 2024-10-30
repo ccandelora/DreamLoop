@@ -6,12 +6,14 @@
 }
 
 /* Heroicons styling */
-.heroicon {
+[class^="heroicon-"], 
+[class*=" heroicon-"] {
     width: 24px;
     height: 24px;
     display: inline-block;
     vertical-align: middle;
     margin-right: 0.25rem;
+    stroke-width: 1.5;
 }
 
 /* Navbar and Logo styling */
@@ -20,5 +22,39 @@
     backdrop-filter: blur(10px);
 }
 
+/* Loading spinner icon */
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Mobile menu icon sizing */
+.lg\:hidden [class^="heroicon-"],
+.lg\:hidden [class*=" heroicon-"] {
+    width: 28px;
+    height: 28px;
+}
+
+/* Small icon variants */
+.icon-sm [class^="heroicon-"],
+.icon-sm [class*=" heroicon-"] {
+    width: 16px;
+    height: 16px;
+}
+
+/* Large icon variants */
+.icon-lg [class^="heroicon-"],
+.icon-lg [class*=" heroicon-"] {
+    width: 32px;
+    height: 32px;
+}
+
 /* Rest of the existing CSS remains the same */
-/* ... Previous CSS content ... */
