@@ -20,7 +20,15 @@
             <h3 class="text-xl font-semibold p-4 border-b border-white/10">Mood Distribution</h3>
             <div class="chart-container">
                 <div id="moodChartLoader" class="animate-pulse">
-                    <div class="h-64 bg-gray-800/50 rounded-lg"></div>
+                    <div class="h-64 bg-gray-800/50 rounded-lg flex items-center justify-center">
+                        <div class="text-center">
+                            <svg class="w-12 h-12 mx-auto mb-3 text-gray-400 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <p class="text-gray-400">Loading chart...</p>
+                        </div>
+                    </div>
                 </div>
                 <canvas id="moodChart" class="hidden"></canvas>
             </div>
@@ -31,7 +39,15 @@
             <h3 class="text-xl font-semibold p-4 border-b border-white/10">Dream Frequency</h3>
             <div class="chart-container">
                 <div id="frequencyChartLoader" class="animate-pulse">
-                    <div class="h-64 bg-gray-800/50 rounded-lg"></div>
+                    <div class="h-64 bg-gray-800/50 rounded-lg flex items-center justify-center">
+                        <div class="text-center">
+                            <svg class="w-12 h-12 mx-auto mb-3 text-gray-400 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <p class="text-gray-400">Loading chart...</p>
+                        </div>
+                    </div>
                 </div>
                 <canvas id="frequencyChart" class="hidden"></canvas>
             </div>
@@ -42,7 +58,15 @@
             <h3 class="text-xl font-semibold p-4 border-b border-white/10">Common Themes</h3>
             <div class="chart-container">
                 <div id="themeChartLoader" class="animate-pulse">
-                    <div class="h-64 bg-gray-800/50 rounded-lg"></div>
+                    <div class="h-64 bg-gray-800/50 rounded-lg flex items-center justify-center">
+                        <div class="text-center">
+                            <svg class="w-12 h-12 mx-auto mb-3 text-gray-400 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <p class="text-gray-400">Loading chart...</p>
+                        </div>
+                    </div>
                 </div>
                 <canvas id="themeChart" class="hidden"></canvas>
             </div>
@@ -95,10 +119,13 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 const patterns = {{ patterns|tojson if patterns else 'null' }};
+if (typeof patterns === 'undefined' || patterns === null) {
+    console.warn('Pattern data is not available');
+}
 
 const chartColors = {
-    primary: ['rgba(138, 43, 226, 0.7)', 'rgba(70, 130, 180, 0.7)'],
-    background: ['rgba(147, 112, 219, 0.4)', 'rgba(123, 104, 238, 0.4)'],
+    primary: ['rgba(138, 43, 226, 0.7)', 'rgba(70, 130, 180, 0.7)', 'rgba(236, 72, 153, 0.7)'],
+    background: ['rgba(147, 112, 219, 0.4)', 'rgba(123, 104, 238, 0.4)', 'rgba(244, 114, 182, 0.4)'],
     border: 'rgba(255, 255, 255, 0.1)'
 };
 
@@ -147,31 +174,52 @@ const chartOptions = {
     }
 };
 
-function safeInitializeChart(canvasId, loaderIdOrNull = null) {
+function hideLoader(loaderId, canvasId) {
+    const loader = document.getElementById(loaderId);
     const canvas = document.getElementById(canvasId);
-    if (!canvas) {
-        console.warn(`Canvas element ${canvasId} not found`);
-        return null;
+    if (loader && canvas) {
+        loader.classList.add('hidden');
+        canvas.classList.remove('hidden');
     }
-    
-    if (loaderIdOrNull) {
-        const loader = document.getElementById(loaderIdOrNull);
-        if (loader) {
-            setTimeout(() => {
-                loader.classList.add('hidden');
-                canvas.classList.remove('hidden');
-            }, 1000);
-        }
-    }
-    
-    return canvas.getContext('2d');
 }
 
-function initializeChart(ctx, config) {
+function showError(containerId, message) {
+    const container = document.getElementById(containerId);
+    if (container) {
+        container.innerHTML = `
+            <div class="flex items-center justify-center h-64 bg-gray-800/50 rounded-lg">
+                <div class="text-center">
+                    <svg class="w-12 h-12 mx-auto mb-3 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                    </svg>
+                    <p class="text-gray-400">${message}</p>
+                </div>
+            </div>
+        `;
+    }
+}
+
+function initializeChart(canvasId, loaderId, config) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) {
+        console.warn(`Canvas ${canvasId} not found`);
+        showError(loaderId, 'Chart could not be loaded');
+        return null;
+    }
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+        console.warn(`Could not get context for ${canvasId}`);
+        showError(loaderId, 'Chart could not be loaded');
+        return null;
+    }
+
     try {
+        hideLoader(loaderId, canvasId);
         return new Chart(ctx, config);
     } catch (error) {
-        console.warn(`Failed to initialize chart: ${error.message}`);
+        console.error(`Error initializing ${canvasId}:`, error);
+        showError(loaderId, 'Error loading chart');
         return null;
     }
 }
@@ -179,17 +227,7 @@ function initializeChart(ctx, config) {
 document.addEventListener('DOMContentLoaded', function() {
     if (!patterns) {
         document.querySelectorAll('.chart-container').forEach(container => {
-            container.innerHTML = `
-                <div class="flex items-center justify-center h-64 bg-gray-800/50 rounded-lg">
-                    <div class="text-center">
-                        <svg class="w-12 h-12 mx-auto mb-3 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-                        </svg>
-                        <p class="text-gray-400">No data available</p>
-                        <p class="text-sm text-gray-500">Start logging dreams to see patterns</p>
-                    </div>
-                </div>
-            `;
+            showError(container.id, 'No data available');
         });
         return;
     }
@@ -200,27 +238,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const themeData = patterns.common_themes || {};
 
     // Mobile responsiveness helper
-    function updateChartOptions(isMobile) {
-        const baseOptions = {...chartOptions};
-        if (isMobile) {
-            baseOptions.scales.x.ticks.maxTicksLimit = 5;
-        }
-        return baseOptions;
+    const isMobile = window.innerWidth < 768;
+    const mobileOptions = {...chartOptions};
+    if (isMobile) {
+        mobileOptions.scales.x.ticks.maxTicksLimit = 5;
     }
 
-    const isMobile = window.innerWidth < 768;
-    const mobileOptions = updateChartOptions(isMobile);
-
-    // Mood Chart
-    const moodCtx = safeInitializeChart('moodChart', 'moodChartLoader');
-    if (moodCtx) {
-        initializeChart(moodCtx, {
+    // Initialize Mood Chart
+    if (Object.keys(moodData).length) {
+        initializeChart('moodChart', 'moodChartLoader', {
             type: 'doughnut',
             data: {
                 labels: Object.keys(moodData),
                 datasets: [{
                     data: Object.values(moodData),
-                    backgroundColor: chartColors.primary.concat(chartColors.background),
+                    backgroundColor: chartColors.primary,
                     borderColor: chartColors.border,
                     borderWidth: 2
                 }]
@@ -242,10 +274,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Dream Frequency Chart
-    const frequencyCtx = safeInitializeChart('frequencyChart', 'frequencyChartLoader');
-    if (frequencyCtx) {
-        initializeChart(frequencyCtx, {
+    // Initialize Dream Frequency Chart
+    if (Object.keys(dreamDates).length) {
+        initializeChart('frequencyChart', 'frequencyChartLoader', {
             type: 'line',
             data: {
                 labels: Object.keys(dreamDates),
@@ -262,10 +293,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Theme Chart
-    const themeCtx = safeInitializeChart('themeChart', 'themeChartLoader');
-    if (themeCtx) {
-        initializeChart(themeCtx, {
+    // Initialize Theme Chart
+    if (Object.keys(themeData).length) {
+        initializeChart('themeChart', 'themeChartLoader', {
             type: 'bar',
             data: {
                 labels: Object.keys(themeData),
@@ -290,11 +320,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Handle resize events
+    let resizeTimeout;
     window.addEventListener('resize', () => {
-        const newIsMobile = window.innerWidth < 768;
-        if (newIsMobile !== isMobile) {
-            location.reload();
-        }
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            const newIsMobile = window.innerWidth < 768;
+            if (newIsMobile !== isMobile) {
+                location.reload();
+            }
+        }, 250);
     });
 });
 </script>
