@@ -1,6 +1,6 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from models import db, User
 import os
 import logging
 
@@ -14,24 +14,18 @@ app.config['SECRET_KEY'] = os.urandom(24)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Add debug logging for static file serving
-logger.debug(f"Static folder path: {app.static_folder}")
-
 # Initialize extensions
-db = SQLAlchemy(app)
+db.init_app(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message = 'Please log in to access this page.'
 
-# User loader callback
 @login_manager.user_loader
 def load_user(user_id):
-    from models import User
     return User.query.get(int(user_id))
 
 # Import routes at the end to avoid circular imports
-with app.app_context():
-    from routes import *
+from routes import *
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
