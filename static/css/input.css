@@ -19,21 +19,50 @@
         @apply bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300;
     }
 
-    /* Icon styling */
-    .heroicon {
-        @apply w-6 h-6 inline-block align-middle mr-2;
-    }
-
-    .heroicon-sm {
-        @apply w-5 h-5;
-    }
-
     /* Chart container styling */
     .chart-container {
-        @apply bg-gray-900/40 backdrop-blur-sm border border-white/10 rounded-lg p-4 transition-all duration-300;
+        @apply p-6 transition-all duration-300;
     }
 
     .chart-container:hover {
-        @apply transform -translate-y-1 shadow-lg border-purple-500/30;
+        @apply transform -translate-y-1 shadow-lg;
+    }
+
+    /* Chart loader animation */
+    .chart-loader {
+        @apply transition-all duration-300;
+    }
+
+    .chart-loader.hidden {
+        @apply hidden;
+    }
+
+    /* Chart canvas */
+    canvas {
+        @apply w-full max-h-[400px] transition-all duration-300;
+    }
+
+    /* Markdown content styling */
+    .markdown-content {
+        @apply prose prose-invert prose-sm max-w-none;
+    }
+
+    .markdown-content h1,
+    .markdown-content h2,
+    .markdown-content h3,
+    .markdown-content h4 {
+        @apply text-purple-400 font-semibold;
+    }
+
+    .markdown-content ul {
+        @apply list-disc list-inside;
+    }
+
+    .markdown-content p {
+        @apply mb-4;
+    }
+
+    .markdown-content blockquote {
+        @apply border-l-4 border-purple-500/30 pl-4 italic;
     }
 }

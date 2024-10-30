@@ -2,81 +2,123 @@
 {% block title %}Dream Patterns{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-12 mb-4">
-            <h2><heroicon-outline-chart-bar class="heroicon"></heroicon-outline-chart-bar> Your Dream Patterns</h2>
-            <p class="lead">Discover insights and patterns across your dream journal</p>
-        </div>
+<div class="container mx-auto px-4">
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-300">
+            <svg class="w-8 h-8 inline-block align-text-top mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+            </svg>
+            Your Dream Patterns
+        </h2>
+        <p class="text-xl text-gray-300">Discover insights and patterns across your dream journal</p>
     </div>
 
     {% if not patterns %}
-    <div class="alert alert-info">
-        <p class="mb-0"><heroicon-outline-information-circle class="heroicon"></heroicon-outline-information-circle> Start logging your dreams to see patterns and insights emerge.</p>
+    <div class="dream-card p-6">
+        <p class="flex items-center">
+            <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+            </svg>
+            Start logging your dreams to see patterns and insights emerge.
+        </p>
     </div>
     {% else %}
-    <div class="row">
-        <!-- Statistics Cards -->
-        <div class="col-md-4 mb-4">
-            <div class="card bg-dark h-100">
-                <div class="card-body">
-                    <h4 class="card-title"><heroicon-outline-presentation-chart-bar class="heroicon"></heroicon-outline-presentation-chart-bar> Dream Statistics</h4>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><heroicon-outline-book-open class="heroicon-sm"></heroicon-outline-book-open> Total Dreams: {{ patterns.dream_count }}</li>
-                        <li class="mb-2"><heroicon-outline-calendar class="heroicon-sm"></heroicon-outline-calendar> Time Span: {{ patterns.time_span.start }} to {{ patterns.time_span.end }}</li>
-                    </ul>
-                </div>
-            </div>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <!-- Statistics Card -->
+        <div class="dream-card p-6">
+            <h4 class="text-xl font-semibold mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                </svg>
+                Dream Statistics
+            </h4>
+            <ul class="space-y-2">
+                <li class="flex items-center">
+                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                    </svg>
+                    Total Dreams: {{ patterns.dream_count }}
+                </li>
+                <li class="flex items-center">
+                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                    </svg>
+                    {{ patterns.time_span.start }} to {{ patterns.time_span.end }}
+                </li>
+            </ul>
         </div>
 
         <!-- Mood Chart -->
-        <div class="col-md-8 mb-4">
-            <div class="card bg-dark h-100">
-                <div class="card-body chart-container">
-                    <h4 class="card-title"><heroicon-outline-face-smile class="heroicon"></heroicon-outline-face-smile> Mood Distribution</h4>
-                    <canvas id="moodChart"></canvas>
+        <div class="dream-card col-span-3">
+            <div class="chart-container">
+                <h4 class="text-xl font-semibold mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+                    </svg>
+                    Mood Distribution
+                </h4>
+                <div class="chart-loader animate-pulse" id="moodChartLoader">
+                    <div class="h-64 bg-gray-800/50 rounded-lg"></div>
                 </div>
+                <canvas id="moodChart" class="hidden"></canvas>
             </div>
         </div>
 
         <!-- Dream Frequency Chart -->
-        <div class="col-md-12 mb-4">
-            <div class="card bg-dark">
-                <div class="card-body chart-container">
-                    <h4 class="card-title"><heroicon-outline-chart-line class="heroicon"></heroicon-outline-chart-line> Dream Frequency</h4>
-                    <canvas id="frequencyChart"></canvas>
+        <div class="dream-card col-span-full">
+            <div class="chart-container">
+                <h4 class="text-xl font-semibold mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                    </svg>
+                    Dream Frequency
+                </h4>
+                <div class="chart-loader animate-pulse" id="frequencyChartLoader">
+                    <div class="h-64 bg-gray-800/50 rounded-lg"></div>
                 </div>
+                <canvas id="frequencyChart" class="hidden"></canvas>
             </div>
         </div>
 
         <!-- Theme Chart -->
-        <div class="col-md-12 mb-4">
-            <div class="card bg-dark">
-                <div class="card-body chart-container">
-                    <h4 class="card-title"><heroicon-outline-tag class="heroicon"></heroicon-outline-tag> Common Themes</h4>
-                    <canvas id="themeChart"></canvas>
+        <div class="dream-card col-span-full">
+            <div class="chart-container">
+                <h4 class="text-xl font-semibold mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" />
+                    </svg>
+                    Common Themes
+                </h4>
+                <div class="chart-loader animate-pulse" id="themeChartLoader">
+                    <div class="h-64 bg-gray-800/50 rounded-lg"></div>
                 </div>
+                <canvas id="themeChart" class="hidden"></canvas>
             </div>
         </div>
     </div>
 
     <!-- AI Analysis Section -->
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="mb-0"><heroicon-outline-cpu-chip class="heroicon"></heroicon-outline-cpu-chip> AI Pattern Analysis</h3>
-                    {% if not patterns.is_premium %}
-                    <a href="{{ url_for('subscription') }}" class="btn btn-outline-primary">
-                        <heroicon-outline-sparkles class="heroicon-sm"></heroicon-outline-sparkles> Upgrade for Full Analysis
-                    </a>
-                    {% endif %}
-                </div>
-                <div class="card-body">
-                    <div class="markdown-content">
-                        {{ patterns.ai_analysis|markdown|safe }}
-                    </div>
-                </div>
+    <div class="dream-card">
+        <div class="flex items-center justify-between border-b border-white/10 p-6">
+            <h3 class="text-2xl font-semibold flex items-center">
+                <svg class="w-7 h-7 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" />
+                </svg>
+                AI Pattern Analysis
+            </h3>
+            {% if not patterns.is_premium %}
+            <a href="{{ url_for('subscription') }}" class="dream-button">
+                <svg class="w-5 h-5 inline-block align-text-top mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+                </svg>
+                Upgrade for Full Analysis
+            </a>
+            {% endif %}
+        </div>
+        <div class="p-6">
+            <div class="markdown-content">
+                {{ patterns.ai_analysis|markdown|safe }}
             </div>
         </div>
     </div>
@@ -88,21 +130,68 @@
 {% if patterns %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-const colors = {
-    primary: 'rgba(138, 43, 226, 0.7)',
-    secondary: 'rgba(70, 130, 180, 0.7)',
-    accent: 'rgba(147, 112, 219, 0.4)',
-    pastels: [
-        'rgba(255, 182, 193, 0.7)', // soft pink
-        'rgba(173, 216, 230, 0.7)', // light blue
-        'rgba(221, 160, 221, 0.7)', // soft purple
-        'rgba(144, 238, 144, 0.7)', // light green
-    ]
+const chartColors = {
+    primary: ['rgba(138, 43, 226, 0.7)', 'rgba(70, 130, 180, 0.7)'],
+    background: ['rgba(147, 112, 219, 0.4)', 'rgba(123, 104, 238, 0.4)'],
+    border: 'rgba(255, 255, 255, 0.1)'
 };
+
+const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+        legend: {
+            labels: {
+                color: 'white',
+                padding: 20,
+                font: {
+                    family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+                }
+            }
+        }
+    },
+    scales: {
+        y: {
+            beginAtZero: true,
+            grid: {
+                color: chartColors.border
+            },
+            ticks: {
+                color: 'white',
+                font: {
+                    family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+                }
+            }
+        },
+        x: {
+            grid: {
+                color: chartColors.border
+            },
+            ticks: {
+                color: 'white',
+                font: {
+                    family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+                }
+            }
+        }
+    }
+};
+
+function initializeChart(canvasId, loaderIdOrNull = null) {
+    const canvas = document.getElementById(canvasId);
+    if (loaderIdOrNull) {
+        const loader = document.getElementById(loaderIdOrNull);
+        setTimeout(() => {
+            loader.classList.add('hidden');
+            canvas.classList.remove('hidden');
+        }, 1000);
+    }
+    return canvas.getContext('2d');
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     // Mood Chart
-    const moodCtx = document.getElementById('moodChart').getContext('2d');
+    const moodCtx = initializeChart('moodChart', 'moodChartLoader');
     const moodData = {{ patterns.mood_patterns|tojson }};
     
     new Chart(moodCtx, {
@@ -111,13 +200,14 @@ document.addEventListener('DOMContentLoaded', function() {
             labels: Object.keys(moodData),
             datasets: [{
                 data: Object.values(moodData),
-                backgroundColor: colors.pastels,
-                borderColor: 'rgba(255, 255, 255, 0.1)',
+                backgroundColor: chartColors.primary.concat(chartColors.background),
+                borderColor: chartColors.border,
                 borderWidth: 2
             }]
         },
         options: {
-            responsive: true,
+            ...chartOptions,
+            cutout: '60%',
             plugins: {
                 legend: {
                     position: 'right',
@@ -131,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Dream Frequency Chart
-    const frequencyCtx = document.getElementById('frequencyChart').getContext('2d');
+    const frequencyCtx = initializeChart('frequencyChart', 'frequencyChartLoader');
     const dates = Object.keys({{ patterns.dream_dates|tojson }});
     const frequency = Object.values({{ patterns.dream_dates|tojson }});
     
@@ -142,46 +232,17 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets: [{
                 label: 'Dreams per Day',
                 data: frequency,
-                borderColor: colors.primary,
-                backgroundColor: colors.accent,
+                borderColor: chartColors.primary[0],
+                backgroundColor: chartColors.background[0],
                 fill: true,
                 tension: 0.4
             }]
         },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        color: 'white',
-                        stepSize: 1
-                    },
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
-                    }
-                },
-                x: {
-                    ticks: {
-                        color: 'white'
-                    },
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    labels: {
-                        color: 'white'
-                    }
-                }
-            }
-        }
+        options: chartOptions
     });
 
     // Theme Chart
-    const themeCtx = document.getElementById('themeChart').getContext('2d');
+    const themeCtx = initializeChart('themeChart', 'themeChartLoader');
     const themeData = {{ patterns.common_themes|tojson }};
     
     new Chart(themeCtx, {
@@ -191,33 +252,14 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets: [{
                 label: 'Occurrences',
                 data: Object.values(themeData),
-                backgroundColor: colors.pastels,
-                borderColor: 'rgba(255, 255, 255, 0.1)',
+                backgroundColor: chartColors.primary,
+                borderColor: chartColors.border,
                 borderWidth: 2,
                 borderRadius: 8
             }]
         },
         options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        color: 'white'
-                    },
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
-                    }
-                },
-                x: {
-                    ticks: {
-                        color: 'white'
-                    },
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
-                    }
-                }
-            },
+            ...chartOptions,
             plugins: {
                 legend: {
                     display: false
