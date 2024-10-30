@@ -13,16 +13,7 @@
         <p class="text-xl text-gray-300">Discover insights and patterns across your dream journal</p>
     </div>
 
-    {% if not patterns %}
-    <div class="dream-card p-6">
-        <p class="flex items-center">
-            <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-            </svg>
-            Start logging your dreams to see patterns and insights emerge.
-        </p>
-    </div>
-    {% else %}
+    {% if patterns and patterns.dream_count > 0 %}
     <div class="space-y-6">
         <!-- Mood Distribution -->
         <div class="dream-card">
@@ -82,6 +73,19 @@
             </div>
         </div>
     </div>
+    {% else %}
+    <div class="dream-card p-6">
+        <div class="text-center">
+            <svg class="w-16 h-16 mx-auto mb-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+            </svg>
+            <h3 class="text-xl font-semibold mb-2">No Dream Patterns Yet</h3>
+            <p class="text-gray-400 mb-4">Start logging your dreams to see patterns and insights emerge.</p>
+            <a href="{{ url_for('dream_new') }}" class="dream-button">
+                Log Your First Dream
+            </a>
+        </div>
+    </div>
     {% endif %}
 </div>
 {% endblock %}
@@ -90,6 +94,8 @@
 {% if patterns %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+const patterns = {{ patterns|tojson if patterns else 'null' }};
+
 const chartColors = {
     primary: ['rgba(138, 43, 226, 0.7)', 'rgba(70, 130, 180, 0.7)'],
     background: ['rgba(147, 112, 219, 0.4)', 'rgba(123, 104, 238, 0.4)'],
@@ -161,11 +167,37 @@ function safeInitializeChart(canvasId, loaderIdOrNull = null) {
     return canvas.getContext('2d');
 }
 
+function initializeChart(ctx, config) {
+    try {
+        return new Chart(ctx, config);
+    } catch (error) {
+        console.warn(`Failed to initialize chart: ${error.message}`);
+        return null;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     if (!patterns) {
-        console.warn('No pattern data available');
+        document.querySelectorAll('.chart-container').forEach(container => {
+            container.innerHTML = `
+                <div class="flex items-center justify-center h-64 bg-gray-800/50 rounded-lg">
+                    <div class="text-center">
+                        <svg class="w-12 h-12 mx-auto mb-3 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                        </svg>
+                        <p class="text-gray-400">No data available</p>
+                        <p class="text-sm text-gray-500">Start logging dreams to see patterns</p>
+                    </div>
+                </div>
+            `;
+        });
         return;
     }
+
+    // Initialize charts only if data exists
+    const moodData = patterns.mood_patterns || {};
+    const dreamDates = patterns.dream_dates || {};
+    const themeData = patterns.common_themes || {};
 
     // Mobile responsiveness helper
     function updateChartOptions(isMobile) {
@@ -182,8 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mood Chart
     const moodCtx = safeInitializeChart('moodChart', 'moodChartLoader');
     if (moodCtx) {
-        const moodData = {{ patterns.mood_patterns|tojson }};
-        new Chart(moodCtx, {
+        initializeChart(moodCtx, {
             type: 'doughnut',
             data: {
                 labels: Object.keys(moodData),
@@ -214,16 +245,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Dream Frequency Chart
     const frequencyCtx = safeInitializeChart('frequencyChart', 'frequencyChartLoader');
     if (frequencyCtx) {
-        const dates = Object.keys({{ patterns.dream_dates|tojson }});
-        const frequency = Object.values({{ patterns.dream_dates|tojson }});
-        
-        new Chart(frequencyCtx, {
+        initializeChart(frequencyCtx, {
             type: 'line',
             data: {
-                labels: dates,
+                labels: Object.keys(dreamDates),
                 datasets: [{
                     label: 'Dreams per Day',
-                    data: frequency,
+                    data: Object.values(dreamDates),
                     borderColor: chartColors.primary[0],
                     backgroundColor: chartColors.background[0],
                     fill: true,
@@ -237,9 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Theme Chart
     const themeCtx = safeInitializeChart('themeChart', 'themeChartLoader');
     if (themeCtx) {
-        const themeData = {{ patterns.common_themes|tojson }};
-        
-        new Chart(themeCtx, {
+        initializeChart(themeCtx, {
             type: 'bar',
             data: {
                 labels: Object.keys(themeData),
