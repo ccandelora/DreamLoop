@@ -15,7 +15,7 @@
     margin-bottom: 1.5rem;
     padding: 1rem;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
 }
 
 .analysis-heading {
@@ -89,4 +89,20 @@
 .card.bg-dark .card-header {
     background-color: rgba(255, 255, 255, 0.05);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* AI Analysis card specific styling */
+.card.bg-dark .analysis-section {
+    border: none;
+    background: rgba(255, 255, 255, 0.02);
+    margin: 0.5rem 0;
+    padding: 0.75rem;
+}
+
+.card.bg-dark .analysis-section:first-child {
+    margin-top: 0;
+}
+
+.card.bg-dark .analysis-section:last-child {
+    margin-bottom: 0;
 }
