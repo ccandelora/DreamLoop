@@ -2,73 +2,78 @@
 {% block title %}Log New Dream{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h2>Log New Dream</h2>
-                </div>
-                <div class="card-body">
-                    <form method="POST">
-                        <div class="mb-3">
-                            <label for="title" class="form-label">Dream Title</label>
-                            <input type="text" class="form-control" id="title" name="title" required>
+<div class="flex justify-center">
+    <div class="w-full max-w-3xl">
+        <div class="bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-lg border border-white/10">
+            <div class="border-b border-white/10 px-6 py-4">
+                <h2 class="text-2xl font-semibold">Log New Dream</h2>
+            </div>
+            <div class="p-6">
+                <form method="POST">
+                    <div class="mb-4">
+                        <label for="title" class="block text-sm font-medium mb-2">Dream Title</label>
+                        <input type="text" class="w-full bg-gray-800/50 border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-dream-primary focus:border-transparent" 
+                               id="title" name="title" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="content" class="block text-sm font-medium mb-2">Dream Description</label>
+                        <textarea class="w-full bg-gray-800/50 border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-dream-primary focus:border-transparent min-h-[150px]" 
+                                  id="content" name="content" required></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="mood" class="block text-sm font-medium mb-2">Mood</label>
+                        <select class="w-full bg-gray-800/50 border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-dream-primary focus:border-transparent" 
+                                id="mood" name="mood" required>
+                            <option value="">Select mood...</option>
+                            <option value="happy">Happy</option>
+                            <option value="sad">Sad</option>
+                            <option value="scared">Scared</option>
+                            <option value="peaceful">Peaceful</option>
+                            <option value="anxious">Anxious</option>
+                            <option value="excited">Excited</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="tags" class="block text-sm font-medium mb-2">Tags (comma-separated)</label>
+                        <input type="text" class="w-full bg-gray-800/50 border border-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-dream-primary focus:border-transparent" 
+                               id="tags" name="tags" placeholder="flying, chase, water, etc">
+                    </div>
+                    
+                    <div class="mb-6 space-y-3">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="w-4 h-4 bg-gray-800 border-gray-700 rounded focus:ring-dream-primary" 
+                                   id="is_public" name="is_public" value="true">
+                            <label class="ml-2 text-sm font-medium" for="is_public">Share with Community</label>
                         </div>
-                        
-                        <div class="mb-3">
-                            <label for="content" class="form-label">Dream Description</label>
-                            <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+                        <div class="flex items-center">
+                            <input type="checkbox" class="w-4 h-4 bg-gray-800 border-gray-700 rounded focus:ring-dream-primary" 
+                                   id="is_anonymous" name="is_anonymous" value="true">
+                            <label class="ml-2 text-sm font-medium" for="is_anonymous">Post Anonymously</label>
+                            <span class="ml-2 text-xs text-gray-400">When checked, your username will be hidden from other users</span>
                         </div>
-                        
-                        <div class="mb-3">
-                            <label for="mood" class="form-label">Mood</label>
-                            <select class="form-select" id="mood" name="mood" required>
-                                <option value="">Select mood...</option>
-                                <option value="happy">Happy</option>
-                                <option value="sad">Sad</option>
-                                <option value="scared">Scared</option>
-                                <option value="peaceful">Peaceful</option>
-                                <option value="anxious">Anxious</option>
-                                <option value="excited">Excited</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="tags" class="form-label">Tags (comma-separated)</label>
-                            <input type="text" class="form-control" id="tags" name="tags" 
-                                   placeholder="flying, chase, water, etc">
-                        </div>
-                        
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="is_public" name="is_public" value="true">
-                                <label class="form-check-label" for="is_public">Share with Community</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="is_anonymous" name="is_anonymous" value="true">
-                                <label class="form-check-label" for="is_anonymous">Post Anonymously</label>
-                                <small class="form-text text-muted d-block">When checked, your username will be hidden from other users</small>
-                            </div>
-                        </div>
+                    </div>
 
-                        {% if current_user.subscription_type == 'free' %}
-                        <div class="alert alert-info">
-                            <p class="mb-0">
-                                AI Analysis Available: {{ 3 - current_user.monthly_ai_analysis_count }} of 3
-                                {% if current_user.monthly_ai_analysis_count >= 3 %}
-                                <br>
-                                <a href="{{ url_for('subscription') }}" class="alert-link">Upgrade to Premium</a> for unlimited analyses
-                                {% endif %}
-                            </p>
-                        </div>
-                        {% endif %}
-                        
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Log Dream</button>
-                        </div>
-                    </form>
-                </div>
+                    {% if current_user.subscription_type == 'free' %}
+                    <div class="mb-6 bg-gray-900/50 border border-dream-primary/30 rounded-lg p-4">
+                        <p class="text-sm">
+                            AI Analysis Available: {{ 3 - current_user.monthly_ai_analysis_count }} of 3
+                            {% if current_user.monthly_ai_analysis_count >= 3 %}
+                            <br>
+                            <a href="{{ url_for('subscription') }}" class="text-dream-secondary hover:text-dream-secondary/80 transition-colors">
+                                Upgrade to Premium
+                            </a> for unlimited analyses
+                            {% endif %}
+                        </p>
+                    </div>
+                    {% endif %}
+                    
+                    <button type="submit" class="w-full bg-dream-primary hover:bg-dream-primary/80 text-white font-semibold py-3 px-4 rounded-lg transition-all">
+                        Log Dream
+                    </button>
+                </form>
             </div>
         </div>
     </div>
