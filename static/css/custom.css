@@ -1,117 +1,49 @@
-/* Existing styles */
-.card {
-    margin-bottom: 1.5rem;
-}
-
-.badge {
-    margin-right: 0.5rem;
-}
-
-textarea {
-    resize: vertical;
-}
-
-.dream-entry {
-    transition: transform 0.2s;
-}
-
-.dream-entry:hover {
-    transform: translateY(-2px);
-}
-
-/* Premium Upgrade Banner Styles */
-.premium-upgrade-banner {
-    border-left: 4px solid var(--bs-primary);
-    background-color: black;
-}
-
-.premium-upgrade-banner .alert-heading {
-    color: var(--bs-primary);
-}
-
-.premium-upgrade-banner .feature-list {
-    background: rgba(var(--bs-primary-rgb), 0.1);
-    padding: 1rem;
-    border-radius: 0.5rem;
-}
-
-.premium-upgrade-banner .feature-list li {
-    margin-bottom: 0.5rem;
-}
-
-.premium-upgrade-banner .upgrade-button {
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-/* Dream Patterns Analysis Styles */
-.card-body .lead {
-    white-space: pre-line;
-    line-height: 1.6;
-    margin-bottom: 0;
-}
-
-/* Card styling for dark theme */
-.card {
-    background-color: var(--bs-dark);
-    border: 1px solid rgba(255, 255, 255, 0.125);
-}
-
-.card-header {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.125);
-}
-
-.list-group-item {
-    background-color: var(--bs-dark);
-    border-color: rgba(255, 255, 255, 0.125);
-}
-
-.list-group-item:hover {
-    background-color: var(--bs-dark);
-    filter: brightness(1.1);
-}
-
-/* Logo styling */
+/* Navbar and Logo styling */
 .navbar-brand-logo {
     height: 40px;
     width: auto;
-    margin-right: 0.5rem;
-    display: inline-block;
-    vertical-align: middle;
-    object-fit: contain;
 }
 
-.navbar-brand {
-    display: flex;
-    align-items: center;
-    font-size: 1.5rem;
-    padding: 0;
-}
-
-/* Landing page logo */
 .landing-logo {
     max-width: 200px;
-    width: 100%;
     height: auto;
-    margin-bottom: 1.5rem;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    object-fit: contain;
+    margin-bottom: 2rem;
 }
 
-/* body */
-body {
-    background-color: black;
+/* AI Analysis styling */
+.analysis-sections {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.analysis-section {
+    padding: 0.5rem 0;
+}
+
+.analysis-summary {
+    font-size: 1.2rem;
+    color: var(--bs-info);
+    margin-bottom: 1rem;
+}
+
+.analysis-detail {
+    border-left: 3px solid var(--bs-info);
+    padding-left: 1rem;
+    margin: 0.5rem 0;
+    opacity: 0.9;
+}
+
+.analysis-detail:hover {
+    opacity: 1;
+}
+
+/* Card dark theme enhancements */
+.card.bg-dark {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.card.bg-dark .card-header {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }

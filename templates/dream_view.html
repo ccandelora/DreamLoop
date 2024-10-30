@@ -24,11 +24,38 @@
                     
                     {% if dream.ai_analysis %}
                     <div class="card bg-dark mb-3">
-                        <div class="card-header">
-                            <h5 class="mb-0">AI Analysis</h5>
+                        <div class="card-header d-flex align-items-center">
+                            <i class="bi bi-robot me-2"></i>
+                            <h5 class="mb-0">AI Dream Analysis</h5>
                         </div>
                         <div class="card-body">
-                            <p class="mb-0">{{ dream.ai_analysis }}</p>
+                            <div class="analysis-sections">
+                                {% set analysis_parts = dream.ai_analysis.split('\n\n') %}
+                                {% for part in analysis_parts %}
+                                    {% if part.strip() %}
+                                        <div class="analysis-section mb-3">
+                                            {% if loop.first %}
+                                                <div class="analysis-summary">
+                                                    {{ part }}
+                                                </div>
+                                            {% else %}
+                                                <div class="analysis-detail">
+                                                    {{ part }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            {% if current_user.subscription_type == 'free' %}
+                            <div class="mt-3 pt-3 border-top">
+                                <small class="text-muted">
+                                    <i class="bi bi-info-circle"></i>
+                                    Want deeper analysis? 
+                                    <a href="{{ url_for('subscription') }}" class="text-info">Upgrade to Premium</a>
+                                </small>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                     {% endif %}
@@ -98,4 +125,16 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth transition for analysis sections
+    const analysisDetails = document.querySelectorAll('.analysis-detail');
+    analysisDetails.forEach(detail => {
+        detail.style.transition = 'opacity 0.3s ease-in-out';
+    });
+});
+</script>
 {% endblock %}
