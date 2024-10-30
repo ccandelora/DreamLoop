@@ -14,8 +14,11 @@ class User(UserMixin, db.Model):
     subscription_end_date = db.Column(db.DateTime)
     monthly_ai_analysis_count = db.Column(db.Integer, default=0)
     last_analysis_reset = db.Column(db.DateTime, default=datetime.utcnow)
-    dreams = db.relationship('Dream', backref='user', lazy='dynamic')
+    
+    # Relationships
+    dreams = db.relationship('Dream', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
+    created_groups = db.relationship('DreamGroup', backref='creator', lazy='dynamic')
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -48,7 +51,6 @@ class DreamGroup(db.Model):
     description = db.Column(db.Text)
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    creator = db.relationship('User', foreign_keys=[created_by], backref='created_groups')
     members = db.relationship('User', secondary='group_membership', backref=db.backref('groups', lazy=True))
 
 class GroupMembership(db.Model):

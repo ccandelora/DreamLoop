@@ -58,11 +58,16 @@ def register():
                    last_analysis_reset=datetime.utcnow())
         user.set_password(password)
         
-        db.session.add(user)
-        db.session.commit()
-        
-        flash('Registration successful! Please login.')
-        return redirect(url_for('login'))
+        try:
+            db.session.add(user)
+            db.session.commit()
+            flash('Registration successful! Please login.')
+            return redirect(url_for('login'))
+        except Exception as e:
+            logger.error(f"Error during registration: {str(e)}")
+            db.session.rollback()
+            flash('An error occurred during registration. Please try again.')
+            return render_template('register.html')
         
     return render_template('register.html')
 
@@ -98,34 +103,46 @@ def add_comment(dream_id):
         flash('Comment cannot be empty.')
         return redirect(url_for('dream_view', dream_id=dream_id))
     
-    comment = Comment(
-        content=content,
-        user_id=current_user.id,
-        dream_id=dream_id,
-        created_at=datetime.utcnow()
-    )
-    
-    db.session.add(comment)
-    db.session.commit()
-    
-    flash('Comment added successfully!')
+    try:
+        comment = Comment(
+            content=content,
+            user_id=current_user.id,
+            dream_id=dream_id,
+            created_at=datetime.utcnow()
+        )
+        
+        db.session.add(comment)
+        db.session.commit()
+        flash('Comment added successfully!')
+        
+    except Exception as e:
+        logger.error(f"Error adding comment: {str(e)}")
+        db.session.rollback()
+        flash('An error occurred while adding your comment.')
+        
     return redirect(url_for('dream_view', dream_id=dream_id))
 
 @app.route('/dream/<int:dream_id>/comment/<int:comment_id>/delete', methods=['POST'])
 @login_required
 def delete_comment(dream_id, comment_id):
     """Delete a comment."""
-    comment = Comment.query.get_or_404(comment_id)
-    dream = Dream.query.get_or_404(dream_id)
-    
-    if comment.user_id != current_user.id and dream.user_id != current_user.id:
-        flash('You do not have permission to delete this comment.')
-        return redirect(url_for('dream_view', dream_id=dream_id))
-    
-    db.session.delete(comment)
-    db.session.commit()
-    
-    flash('Comment deleted successfully!')
+    try:
+        comment = Comment.query.get_or_404(comment_id)
+        dream = Dream.query.get_or_404(dream_id)
+        
+        if comment.user_id != current_user.id and dream.user_id != current_user.id:
+            flash('You do not have permission to delete this comment.')
+            return redirect(url_for('dream_view', dream_id=dream_id))
+        
+        db.session.delete(comment)
+        db.session.commit()
+        flash('Comment deleted successfully!')
+        
+    except Exception as e:
+        logger.error(f"Error deleting comment: {str(e)}")
+        db.session.rollback()
+        flash('An error occurred while deleting the comment.')
+        
     return redirect(url_for('dream_view', dream_id=dream_id))
 
 @app.route('/dream/new', methods=['GET', 'POST'])
@@ -148,17 +165,23 @@ def dream_new():
             user_id=current_user.id
         )
         
-        # Perform AI analysis if user has available analyses
-        if current_user.subscription_type == 'premium' or current_user.monthly_ai_analysis_count < 3:
-            dream.ai_analysis = analyze_dream(content)
-            if current_user.subscription_type == 'free':
-                current_user.monthly_ai_analysis_count += 1
-        
-        db.session.add(dream)
-        db.session.commit()
-        
-        flash('Dream logged successfully!')
-        return redirect(url_for('dream_view', dream_id=dream.id))
+        try:
+            # Perform AI analysis if user has available analyses
+            if current_user.subscription_type == 'premium' or current_user.monthly_ai_analysis_count < 3:
+                dream.ai_analysis = analyze_dream(content)
+                if current_user.subscription_type == 'free':
+                    current_user.monthly_ai_analysis_count += 1
+            
+            db.session.add(dream)
+            db.session.commit()
+            flash('Dream logged successfully!')
+            return redirect(url_for('dream_view', dream_id=dream.id))
+            
+        except Exception as e:
+            logger.error(f"Error creating dream: {str(e)}")
+            db.session.rollback()
+            flash('An error occurred while saving your dream.')
+            return render_template('dream_new.html')
         
     return render_template('dream_new.html')
 
