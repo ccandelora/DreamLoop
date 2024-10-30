@@ -11,30 +11,23 @@
 }
 
 /* AI Analysis styling */
-.analysis-sections {
-    font-size: 1.1rem;
-    line-height: 1.6;
-}
-
 .analysis-section {
-    padding: 0.5rem 0;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
 }
 
-.analysis-summary {
-    font-size: 1.2rem;
+.analysis-heading {
     color: var(--bs-info);
+    font-size: 1.25rem;
     margin-bottom: 1rem;
+    font-weight: 500;
 }
 
-.analysis-detail {
-    border-left: 3px solid var(--bs-info);
-    padding-left: 1rem;
-    margin: 0.5rem 0;
-    opacity: 0.9;
-}
-
-.analysis-detail:hover {
-    opacity: 1;
+.analysis-content {
+    line-height: 1.6;
+    color: var(--bs-light);
 }
 
 /* Card dark theme enhancements */
