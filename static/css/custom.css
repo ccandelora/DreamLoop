@@ -10,28 +10,30 @@
     margin-bottom: 2rem;
 }
 
-/* AI Analysis styling */
-.analysis-section {
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.02);
+/* Dream view specific styles */
+.dream-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
 }
 
-.analysis-heading {
-    color: var(--bs-info);
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-    font-weight: 500;
+.dream-metadata .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
-.analysis-content {
-    line-height: 1.6;
-    color: var(--bs-light);
+.comment {
+    transition: transform 0.2s ease;
 }
 
-/* Markdown content styling */
+.comment:hover {
+    transform: translateX(5px);
+}
+
+/* Enhanced markdown content styling */
 .markdown-content {
-    line-height: 1.6;
+    font-size: 0.95rem;
+    line-height: 1.7;
 }
 
 .markdown-content h1,
@@ -88,19 +90,4 @@
 .card.bg-dark .card-header {
     background-color: rgba(255, 255, 255, 0.05);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* AI Analysis card specific styling */
-.card.bg-dark .analysis-section {
-    background: rgba(255, 255, 255, 0.02);
-    margin: 1rem 0;
-    padding: 1.25rem;
-}
-
-.card.bg-dark .analysis-section:first-child {
-    margin-top: 0;
-}
-
-.card.bg-dark .analysis-section:last-child {
-    margin-bottom: 0;
 }

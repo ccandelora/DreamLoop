@@ -4,115 +4,45 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-8 mx-auto">
-            <!-- Dream Content -->
+        <!-- Left column (8 columns on desktop) -->
+        <div class="col-lg-8">
+            <!-- Dream content card -->
             <div class="card mb-4">
                 <div class="card-header">
                     <h2 class="mb-0">{{ dream.title }}</h2>
                 </div>
                 <div class="card-body">
-                    <p class="lead">{{ dream.content }}</p>
+                    <div class="dream-content mb-4">
+                        <p class="lead">{{ dream.content }}</p>
+                    </div>
                     
-                    <div class="mb-3">
-                        <span class="badge bg-primary">{{ dream.mood }}</span>
-                        {% if dream.tags %}
+                    <div class="dream-metadata">
+                        <div class="badges mb-3">
+                            <span class="badge bg-primary">{{ dream.mood }}</span>
                             {% for tag in dream.tags.split(',') %}
-                            <span class="badge bg-secondary">{{ tag.strip() }}</span>
+                                <span class="badge bg-secondary">{{ tag.strip() }}</span>
                             {% endfor %}
-                        {% endif %}
-                    </div>
-                    
-                    {% if dream.ai_analysis %}
-                    <div class="card bg-dark mb-3">
-                        <div class="card-header d-flex align-items-center">
-                            <i class="bi bi-robot me-2"></i>
-                            <h5 class="mb-0">AI Dream Analysis</h5>
                         </div>
-                        <div class="card-body">
-                            <div class="analysis-sections">
-                                {% set analysis_parts = dream.ai_analysis.split('\n\n') %}
-                                {% for part in analysis_parts %}
-                                    {% if part.strip() %}
-                                        <div class="analysis-section mb-3">
-                                            {% if loop.first %}
-                                                <div class="analysis-summary markdown-content">
-                                                    {{ part|markdown|safe }}
-                                                </div>
-                                            {% else %}
-                                                <div class="analysis-detail markdown-content">
-                                                    {{ part|markdown|safe }}
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                            {% if current_user.subscription_type == 'free' %}
-                            <div class="mt-3 pt-3 border-top">
-                                <small class="text-muted">
-                                    <i class="bi bi-info-circle"></i>
-                                    Want deeper analysis? 
-                                    <a href="{{ url_for('subscription') }}" class="text-info">Upgrade to Premium</a>
-                                </small>
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% endif %}
-                    
-                    <div class="text-muted">
-                        <small>
+                        
+                        <small class="text-muted d-block mb-3">
                             {% if dream.is_anonymous and dream.user_id != current_user.id %}
-                                Posted anonymously on {{ dream.date.strftime('%Y-%m-%d %H:%M') }}
+                                Posted anonymously
                             {% else %}
-                                Posted by {{ dream.author.username }} on {{ dream.date.strftime('%Y-%m-%d %H:%M') }}
+                                By {{ dream.author.username }}
                             {% endif %}
-                            {% if dream.is_public %}
-                            <span class="badge bg-success ms-2">Public</span>
-                            {% else %}
-                            <span class="badge bg-secondary ms-2">Private</span>
-                            {% endif %}
-                            {% if dream.is_anonymous %}
-                            <span class="badge bg-info ms-2">Anonymous</span>
-                            {% endif %}
+                            on {{ dream.date.strftime('%B %d, %Y at %I:%M %p') }}
                         </small>
                     </div>
                 </div>
             </div>
 
-            <!-- Comments Section -->
+            <!-- Comments section -->
             <div class="card">
                 <div class="card-header">
                     <h3 class="mb-0">Comments</h3>
                 </div>
                 <div class="card-body">
-                    {% if dream.comments.all() %}
-                    <div class="mb-4">
-                        {% for comment in dream.comments %}
-                        <div class="card bg-dark mb-3">
-                            <div class="card-body">
-                                <p class="mb-2">{{ comment.content }}</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted">
-                                        By {{ comment.author.username }} on {{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}
-                                    </small>
-                                    {% if comment.user_id == current_user.id or dream.user_id == current_user.id %}
-                                    <form method="POST" action="{{ url_for('delete_comment', dream_id=dream.id, comment_id=comment.id) }}" class="d-inline">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this comment?')">
-                                            Delete
-                                        </button>
-                                    </form>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    <p class="text-muted">No comments yet.</p>
-                    {% endif %}
-
-                    <!-- Comment Form -->
+                    <!-- Comment form at the top -->
                     <form method="POST" action="{{ url_for('add_comment', dream_id=dream.id) }}" class="mb-4">
                         <div class="mb-3">
                             <label for="content" class="form-label">Add a Comment</label>
@@ -120,8 +50,65 @@
                         </div>
                         <button type="submit" class="btn btn-primary">Post Comment</button>
                     </form>
+
+                    <hr>
+
+                    <!-- Comments list -->
+                    {% if dream.comments.all() %}
+                        {% for comment in dream.comments %}
+                        <div class="comment mb-3">
+                            <div class="card bg-dark">
+                                <div class="card-body">
+                                    <p class="mb-2">{{ comment.content }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">
+                                            {{ comment.author.username }} • {{ comment.created_at.strftime('%B %d at %I:%M %p') }}
+                                        </small>
+                                        {% if comment.user_id == current_user.id or dream.user_id == current_user.id %}
+                                        <form method="POST" action="{{ url_for('delete_comment', dream_id=dream.id, comment_id=comment.id) }}" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No comments yet. Be the first to comment!</p>
+                    {% endif %}
                 </div>
             </div>
+        </div>
+
+        <!-- Right column (4 columns on desktop) -->
+        <div class="col-lg-4">
+            <!-- AI Analysis card -->
+            {% if dream.ai_analysis %}
+            <div class="card sticky-top" style="top: 2rem;">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <i class="bi bi-robot me-2"></i>
+                        AI Analysis
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="markdown-content">
+                        {{ dream.ai_analysis|markdown|safe }}
+                    </div>
+                    
+                    {% if current_user.subscription_type == 'free' %}
+                    <div class="mt-3 pt-3 border-top">
+                        <small class="text-muted">
+                            <i class="bi bi-info-circle"></i>
+                            Want deeper analysis? 
+                            <a href="{{ url_for('subscription') }}" class="text-info">Upgrade to Premium</a>
+                        </small>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -130,10 +117,10 @@
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Add smooth transition for analysis sections
-    const analysisDetails = document.querySelectorAll('.analysis-detail');
-    analysisDetails.forEach(detail => {
-        detail.style.transition = 'opacity 0.3s ease-in-out';
+    // Add smooth transition for comment hover effect
+    const comments = document.querySelectorAll('.comment');
+    comments.forEach(comment => {
+        comment.style.transition = 'transform 0.2s ease';
     });
 });
 </script>
