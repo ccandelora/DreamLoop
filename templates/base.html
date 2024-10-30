@@ -11,9 +11,9 @@
 <body class="text-white bg-gray-900">
     <nav class="bg-gradient-to-r from-indigo-900/80 to-purple-900/80 backdrop-blur-lg border-b border-white/10 fixed w-full top-0 z-50">
         <div class="max-w-7xl mx-auto px-4">
-            <div class="flex items-center justify-between h-16">
-                <a href="{{ url_for('index') }}" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-300">
-                    DreamLoop
+            <div class="flex items-center justify-between h-14 sm:h-16">
+                <a href="{{ url_for('index') }}" class="flex items-center">
+                    <img src="{{ url_for('static', filename='images/dreamlooplogo.svg') }}" alt="DreamLoop Logo" class="h-8 w-auto">
                 </a>
                 <button class="lg:hidden z-50" type="button" onclick="toggleMenu()">
                     <span class="sr-only">Open menu</span>
@@ -89,7 +89,7 @@
         </div>
     </nav>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-20">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         {% for message in messages %}
@@ -103,7 +103,9 @@
         {% endif %}
         {% endwith %}
         
-        {% block content %}{% endblock %}
+        <div class="container mx-auto px-4 py-4 sm:py-6">
+            {% block content %}{% endblock %}
+        </div>
     </div>
 
     <script>
@@ -114,7 +116,7 @@
             menu.classList.toggle('flex-col');
             menu.classList.toggle('w-full');
             menu.classList.toggle('fixed');
-            menu.classList.toggle('top-16');
+            menu.classList.toggle('top-14');  // Updated to match new mobile nav height
             menu.classList.toggle('left-0');
             menu.classList.toggle('bg-gradient-to-r');
             menu.classList.toggle('from-indigo-900/80');
