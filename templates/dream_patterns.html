@@ -83,10 +83,15 @@
 {% block scripts %}
 {% if patterns %}
 <script>
-(function() {
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof Chart === 'undefined') {
+        console.error('Chart.js is not loaded');
+        return;
+    }
+
     const patterns = {{ patterns|tojson if patterns else 'null' }};
     if (!patterns) {
-        console.warn('Pattern data is not available');
+        console.warn('No pattern data available');
         return;
     }
 
@@ -96,169 +101,169 @@
         border: 'rgba(255, 255, 255, 0.1)'
     };
 
-    const defaultOptions = {
-        responsive: true,
-        maintainAspectRatio: true,
-        plugins: {
-            legend: {
-                labels: {
-                    color: 'rgba(255, 255, 255, 0.8)',
-                    padding: 20,
-                    font: {
-                        family: '-apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
-                    }
-                }
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                grid: {
-                    color: chartColors.border
-                },
-                ticks: {
-                    color: 'rgba(255, 255, 255, 0.8)',
-                    font: {
-                        family: '-apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
-                    }
-                }
-            },
-            x: {
-                grid: {
-                    color: chartColors.border
-                },
-                ticks: {
-                    color: 'rgba(255, 255, 255, 0.8)',
-                    maxRotation: 45,
-                    minRotation: 45,
-                    autoSkip: true,
-                    maxTicksLimit: 8,
-                    font: {
-                        family: '-apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
-                    }
-                }
-            }
-        }
-    };
-
-    function createChartContainer(containerId) {
-        const container = document.getElementById(containerId);
-        if (!container) return null;
-
-        container.innerHTML = '<canvas></canvas>';
-        return container.querySelector('canvas').getContext('2d');
-    }
-
-    function initializeChart(containerId, config) {
-        const ctx = createChartContainer(containerId);
-        if (!ctx) {
-            console.warn(`Could not initialize chart: ${containerId}`);
-            return null;
-        }
-
+    function initializeChartSafely(elementId, chartConfig) {
         try {
+            const container = document.getElementById(elementId);
+            if (!container) {
+                console.warn(`Container ${elementId} not found`);
+                return null;
+            }
+
+            // Clear existing chart if any
+            container.innerHTML = '<canvas></canvas>';
+            const canvas = container.querySelector('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            if (!ctx) {
+                console.warn(`Could not get context for ${elementId}`);
+                return null;
+            }
+
+            const defaultOptions = {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'rgba(255, 255, 255, 0.8)',
+                            padding: 20,
+                            font: {
+                                family: '-apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+                            }
+                        }
+                    }
+                },
+                scales: chartConfig.type !== 'doughnut' ? {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: chartColors.border
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.8)',
+                            font: {
+                                family: '-apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: chartColors.border
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.8)',
+                            maxRotation: 45,
+                            minRotation: 45,
+                            autoSkip: true,
+                            maxTicksLimit: 8,
+                            font: {
+                                family: '-apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+                            }
+                        }
+                    }
+                } : {}
+            };
+
             return new Chart(ctx, {
-                ...config,
+                ...chartConfig,
                 options: {
                     ...defaultOptions,
-                    ...config.options
+                    ...chartConfig.options
                 }
             });
         } catch (error) {
-            console.error(`Error initializing chart ${containerId}:`, error);
+            console.error(`Error initializing chart ${elementId}:`, error);
             return null;
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize Mood Distribution Chart
-        if (patterns.mood_patterns && Object.keys(patterns.mood_patterns).length > 0) {
-            initializeChart('moodChartContainer', {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(patterns.mood_patterns),
-                    datasets: [{
-                        data: Object.values(patterns.mood_patterns),
-                        backgroundColor: chartColors.primary,
-                        borderColor: chartColors.border,
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    cutout: '60%',
-                    plugins: {
-                        legend: {
-                            position: window.innerWidth < 768 ? 'bottom' : 'right'
-                        }
+    // Initialize Mood Distribution Chart
+    if (patterns.mood_patterns && Object.keys(patterns.mood_patterns).length > 0) {
+        initializeChartSafely('moodChartContainer', {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(patterns.mood_patterns),
+                datasets: [{
+                    data: Object.values(patterns.mood_patterns),
+                    backgroundColor: chartColors.primary,
+                    borderColor: chartColors.border,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                cutout: '60%',
+                plugins: {
+                    legend: {
+                        position: window.innerWidth < 768 ? 'bottom' : 'right'
                     }
                 }
-            });
-        }
-
-        // Initialize Dream Frequency Chart
-        if (patterns.dream_dates && Object.keys(patterns.dream_dates).length > 0) {
-            initializeChart('frequencyChartContainer', {
-                type: 'line',
-                data: {
-                    labels: Object.keys(patterns.dream_dates),
-                    datasets: [{
-                        label: 'Dreams per Day',
-                        data: Object.values(patterns.dream_dates),
-                        borderColor: chartColors.primary[0],
-                        backgroundColor: chartColors.background[0],
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: chartColors.primary[0],
-                        pointBorderColor: 'rgba(255, 255, 255, 0.8)',
-                        pointRadius: 4,
-                        pointHoverRadius: 6
-                    }]
-                }
-            });
-        }
-
-        // Initialize Theme Distribution Chart
-        if (patterns.common_themes && Object.keys(patterns.common_themes).length > 0) {
-            initializeChart('themeChartContainer', {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(patterns.common_themes),
-                    datasets: [{
-                        label: 'Occurrences',
-                        data: Object.values(patterns.common_themes),
-                        backgroundColor: chartColors.primary,
-                        borderColor: chartColors.border,
-                        borderWidth: 2,
-                        borderRadius: 8,
-                        maxBarThickness: 40
-                    }]
-                },
-                options: {
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-        }
-
-        // Handle window resize
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                const charts = Chart.instances;
-                charts.forEach(chart => {
-                    if (chart.options.plugins.legend.position) {
-                        chart.options.plugins.legend.position = window.innerWidth < 768 ? 'bottom' : 'right';
-                        chart.update();
-                    }
-                });
-            }, 250);
+            }
         });
+    }
+
+    // Initialize Dream Frequency Chart
+    if (patterns.dream_dates && Object.keys(patterns.dream_dates).length > 0) {
+        initializeChartSafely('frequencyChartContainer', {
+            type: 'line',
+            data: {
+                labels: Object.keys(patterns.dream_dates),
+                datasets: [{
+                    label: 'Dreams per Day',
+                    data: Object.values(patterns.dream_dates),
+                    borderColor: chartColors.primary[0],
+                    backgroundColor: chartColors.background[0],
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: chartColors.primary[0],
+                    pointBorderColor: 'rgba(255, 255, 255, 0.8)',
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            }
+        });
+    }
+
+    // Initialize Theme Distribution Chart
+    if (patterns.common_themes && Object.keys(patterns.common_themes).length > 0) {
+        initializeChartSafely('themeChartContainer', {
+            type: 'bar',
+            data: {
+                labels: Object.keys(patterns.common_themes),
+                datasets: [{
+                    label: 'Occurrences',
+                    data: Object.values(patterns.common_themes),
+                    backgroundColor: chartColors.primary,
+                    borderColor: chartColors.border,
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    maxBarThickness: 40
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+    // Handle responsive legend position
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            const charts = Chart.instances;
+            charts.forEach(chart => {
+                if (chart.options.plugins.legend.position) {
+                    chart.options.plugins.legend.position = window.innerWidth < 768 ? 'bottom' : 'right';
+                    chart.update();
+                }
+            });
+        }, 250);
     });
-})();
+});
 </script>
 {% endif %}
 {% endblock %}
