@@ -15,4 +15,5 @@ dependencies = [
     "stripe>=11.1.1",
     "sqlalchemy",
     "werkzeug",
+    "markdown>=3.7",
 ]

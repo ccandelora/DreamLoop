@@ -35,12 +35,12 @@
                                     {% if part.strip() %}
                                         <div class="analysis-section mb-3">
                                             {% if loop.first %}
-                                                <div class="analysis-summary">
-                                                    {{ part }}
+                                                <div class="analysis-summary markdown-content">
+                                                    {{ part|markdown|safe }}
                                                 </div>
                                             {% else %}
-                                                <div class="analysis-detail">
-                                                    {{ part }}
+                                                <div class="analysis-detail markdown-content">
+                                                    {{ part|markdown|safe }}
                                                 </div>
                                             {% endif %}
                                         </div>
