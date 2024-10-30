@@ -2,7 +2,88 @@
 {% block title %}Dream Patterns{% endblock %}
 
 {% block content %}
-<!-- Previous content remains the same -->
+<div class="container mx-auto px-4">
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-300">
+            <svg class="w-8 h-8 inline-block align-text-top mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+            </svg>
+            Your Dream Patterns
+        </h2>
+        <p class="text-xl text-gray-300">Discover insights and patterns across your dream journal</p>
+    </div>
+
+    {% if not patterns %}
+    <div class="dream-card p-6">
+        <p class="flex items-center">
+            <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+            </svg>
+            Start logging your dreams to see patterns and insights emerge.
+        </p>
+    </div>
+    {% else %}
+    <div class="space-y-6">
+        <!-- Mood Distribution -->
+        <div class="dream-card">
+            <h3 class="text-xl font-semibold p-4 border-b border-white/10">Mood Distribution</h3>
+            <div class="chart-container">
+                <div id="moodChartLoader" class="animate-pulse">
+                    <div class="h-64 bg-gray-800/50 rounded-lg"></div>
+                </div>
+                <canvas id="moodChart" class="hidden"></canvas>
+            </div>
+        </div>
+
+        <!-- Dream Frequency -->
+        <div class="dream-card">
+            <h3 class="text-xl font-semibold p-4 border-b border-white/10">Dream Frequency</h3>
+            <div class="chart-container">
+                <div id="frequencyChartLoader" class="animate-pulse">
+                    <div class="h-64 bg-gray-800/50 rounded-lg"></div>
+                </div>
+                <canvas id="frequencyChart" class="hidden"></canvas>
+            </div>
+        </div>
+
+        <!-- Common Themes -->
+        <div class="dream-card">
+            <h3 class="text-xl font-semibold p-4 border-b border-white/10">Common Themes</h3>
+            <div class="chart-container">
+                <div id="themeChartLoader" class="animate-pulse">
+                    <div class="h-64 bg-gray-800/50 rounded-lg"></div>
+                </div>
+                <canvas id="themeChart" class="hidden"></canvas>
+            </div>
+        </div>
+
+        <!-- AI Analysis Section -->
+        <div class="dream-card">
+            <div class="flex items-center justify-between border-b border-white/10 p-6">
+                <h3 class="text-2xl font-semibold flex items-center">
+                    <svg class="w-7 h-7 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" />
+                    </svg>
+                    AI Pattern Analysis
+                </h3>
+                {% if not patterns.is_premium %}
+                <a href="{{ url_for('subscription') }}" class="dream-button">
+                    <svg class="w-5 h-5 inline-block align-text-top mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+                    </svg>
+                    Upgrade for Full Analysis
+                </a>
+                {% endif %}
+            </div>
+            <div class="p-6">
+                <div class="markdown-content">
+                    {{ patterns.ai_analysis|markdown|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -60,19 +141,32 @@ const chartOptions = {
     }
 };
 
-function initializeChart(canvasId, loaderIdOrNull = null) {
+function safeInitializeChart(canvasId, loaderIdOrNull = null) {
     const canvas = document.getElementById(canvasId);
+    if (!canvas) {
+        console.warn(`Canvas element ${canvasId} not found`);
+        return null;
+    }
+    
     if (loaderIdOrNull) {
         const loader = document.getElementById(loaderIdOrNull);
-        setTimeout(() => {
-            loader.classList.add('hidden');
-            canvas.classList.remove('hidden');
-        }, 1000);
+        if (loader) {
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                canvas.classList.remove('hidden');
+            }, 1000);
+        }
     }
+    
     return canvas.getContext('2d');
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    if (!patterns) {
+        console.warn('No pattern data available');
+        return;
+    }
+
     // Mobile responsiveness helper
     function updateChartOptions(isMobile) {
         const baseOptions = {...chartOptions};
@@ -86,83 +180,88 @@ document.addEventListener('DOMContentLoaded', function() {
     const mobileOptions = updateChartOptions(isMobile);
 
     // Mood Chart
-    const moodCtx = initializeChart('moodChart', 'moodChartLoader');
-    const moodData = {{ patterns.mood_patterns|tojson }};
-    
-    new Chart(moodCtx, {
-        type: 'doughnut',
-        data: {
-            labels: Object.keys(moodData),
-            datasets: [{
-                data: Object.values(moodData),
-                backgroundColor: chartColors.primary.concat(chartColors.background),
-                borderColor: chartColors.border,
-                borderWidth: 2
-            }]
-        },
-        options: {
-            ...mobileOptions,
-            cutout: '60%',
-            plugins: {
-                legend: {
-                    position: isMobile ? 'bottom' : 'right',
-                    labels: {
-                        color: 'white',
-                        padding: isMobile ? 10 : 20,
-                        boxWidth: isMobile ? 12 : 20
+    const moodCtx = safeInitializeChart('moodChart', 'moodChartLoader');
+    if (moodCtx) {
+        const moodData = {{ patterns.mood_patterns|tojson }};
+        new Chart(moodCtx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(moodData),
+                datasets: [{
+                    data: Object.values(moodData),
+                    backgroundColor: chartColors.primary.concat(chartColors.background),
+                    borderColor: chartColors.border,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                ...mobileOptions,
+                cutout: '60%',
+                plugins: {
+                    legend: {
+                        position: isMobile ? 'bottom' : 'right',
+                        labels: {
+                            color: 'white',
+                            padding: isMobile ? 10 : 20,
+                            boxWidth: isMobile ? 12 : 20
+                        }
                     }
                 }
             }
-        }
-    });
+        });
+    }
 
     // Dream Frequency Chart
-    const frequencyCtx = initializeChart('frequencyChart', 'frequencyChartLoader');
-    const dates = Object.keys({{ patterns.dream_dates|tojson }});
-    const frequency = Object.values({{ patterns.dream_dates|tojson }});
-    
-    new Chart(frequencyCtx, {
-        type: 'line',
-        data: {
-            labels: dates,
-            datasets: [{
-                label: 'Dreams per Day',
-                data: frequency,
-                borderColor: chartColors.primary[0],
-                backgroundColor: chartColors.background[0],
-                fill: true,
-                tension: 0.4
-            }]
-        },
-        options: mobileOptions
-    });
+    const frequencyCtx = safeInitializeChart('frequencyChart', 'frequencyChartLoader');
+    if (frequencyCtx) {
+        const dates = Object.keys({{ patterns.dream_dates|tojson }});
+        const frequency = Object.values({{ patterns.dream_dates|tojson }});
+        
+        new Chart(frequencyCtx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Dreams per Day',
+                    data: frequency,
+                    borderColor: chartColors.primary[0],
+                    backgroundColor: chartColors.background[0],
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: mobileOptions
+        });
+    }
 
     // Theme Chart
-    const themeCtx = initializeChart('themeChart', 'themeChartLoader');
-    const themeData = {{ patterns.common_themes|tojson }};
-    
-    new Chart(themeCtx, {
-        type: 'bar',
-        data: {
-            labels: Object.keys(themeData),
-            datasets: [{
-                label: 'Occurrences',
-                data: Object.values(themeData),
-                backgroundColor: chartColors.primary,
-                borderColor: chartColors.border,
-                borderWidth: 2,
-                borderRadius: 8
-            }]
-        },
-        options: {
-            ...mobileOptions,
-            plugins: {
-                legend: {
-                    display: false
+    const themeCtx = safeInitializeChart('themeChart', 'themeChartLoader');
+    if (themeCtx) {
+        const themeData = {{ patterns.common_themes|tojson }};
+        
+        new Chart(themeCtx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(themeData),
+                datasets: [{
+                    label: 'Occurrences',
+                    data: Object.values(themeData),
+                    backgroundColor: chartColors.primary,
+                    borderColor: chartColors.border,
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                ...mobileOptions,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
                 }
             }
-        }
-    });
+        });
+    }
 
     // Handle resize events
     window.addEventListener('resize', () => {
