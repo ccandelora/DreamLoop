@@ -15,12 +15,15 @@ import markdown
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app.jinja_env.filters['markdown'] = lambda text: markdown.markdown(text) if text else ''
+app.jinja_env.filters['markdown'] = lambda text: markdown.markdown(
+    text) if text else ''
+
 
 @app.route('/')
 def index():
     """Home page."""
     return render_template('index.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -37,6 +40,7 @@ def login():
 
         flash('Invalid username or password')
     return render_template('login.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -74,12 +78,14 @@ def register():
 
     return render_template('register.html')
 
+
 @app.route('/logout')
 @login_required
 def logout():
     """User logout."""
     logout_user()
     return redirect(url_for('index'))
+
 
 @app.route('/dream/<int:dream_id>')
 @login_required
@@ -90,6 +96,7 @@ def dream_view(dream_id):
         flash('You do not have permission to view this dream.')
         return redirect(url_for('index'))
     return render_template('dream_view.html', dream=dream)
+
 
 @app.route('/dream/new', methods=['GET', 'POST'])
 @login_required
@@ -114,7 +121,8 @@ def dream_new():
         try:
             if current_user.subscription_type == 'premium' or current_user.monthly_ai_analysis_count < 3:
                 is_premium = current_user.subscription_type == 'premium'
-                dream.ai_analysis = analyze_dream(content, is_premium=is_premium)
+                dream.ai_analysis = analyze_dream(content,
+                                                  is_premium=is_premium)
                 if current_user.subscription_type == 'free':
                     current_user.monthly_ai_analysis_count += 1
 
@@ -131,14 +139,17 @@ def dream_new():
 
     return render_template('dream_new.html')
 
+
 @app.route('/dream_patterns')
 @login_required
 def dream_patterns():
     """View dream patterns with enhanced analysis for premium users."""
     dreams = current_user.dreams.all()
     is_premium = current_user.subscription_type == 'premium'
-    patterns = analyze_dream_patterns(dreams, is_premium=is_premium) if dreams else None
+    patterns = analyze_dream_patterns(
+        dreams, is_premium=is_premium) if dreams else None
     return render_template('dream_patterns.html', patterns=patterns)
+
 
 @app.route('/subscription')
 @login_required
@@ -148,11 +159,13 @@ def subscription():
     return render_template('subscription.html',
                            stripe_publishable_key=stripe_publishable_key)
 
+
 @app.route('/community_dreams')
 def community_dreams():
     """View community dreams."""
     dreams = Dream.query.filter_by(is_public=True).all()
     return render_template('community_dreams.html', dreams=dreams)
+
 
 @app.route('/dream_groups')
 @login_required
@@ -160,6 +173,14 @@ def dream_groups():
     """View all dream groups."""
     groups = DreamGroup.query.all()
     return render_template('dream_groups.html', groups=groups)
+
+
+@app.route('/create_group')
+@login_required
+def create_group():
+    """Create Group Page."""
+    return render_template('create_group.html')
+
 
 @app.route('/dream/<int:dream_id>/comment', methods=['POST'])
 @login_required
@@ -193,7 +214,9 @@ def add_comment(dream_id):
 
     return redirect(url_for('dream_view', dream_id=dream_id))
 
-@app.route('/dream/<int:dream_id>/comment/<int:comment_id>/delete', methods=['POST'])
+
+@app.route('/dream/<int:dream_id>/comment/<int:comment_id>/delete',
+           methods=['POST'])
 @login_required
 def delete_comment(dream_id, comment_id):
     """Delete a comment."""
