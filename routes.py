@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db
-from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply
+from models import User, Dream, Comment, DreamGroup, GroupMembership
 from datetime import datetime, timedelta
 import logging
 import os

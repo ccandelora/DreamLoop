@@ -13,7 +13,7 @@ class User(UserMixin, db.Model):
     monthly_ai_analysis_count = db.Column(db.Integer, default=0)
     last_analysis_reset = db.Column(db.DateTime, default=datetime.utcnow)
     dreams = db.relationship('Dream', backref='user', lazy='dynamic')
-    comments = db.relationship('Comment', backref='author', lazy='dynamic')
+    comments = db.relationship('Comment', backref='commenter', lazy='dynamic')
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -55,19 +55,3 @@ class GroupMembership(db.Model):
     group_id = db.Column(db.Integer, db.ForeignKey('dream_group.id'), primary_key=True)
     is_admin = db.Column(db.Boolean, default=False)
     joined_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-class ForumPost(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    group_id = db.Column(db.Integer, db.ForeignKey('dream_group.id'), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    replies = db.relationship('ForumReply', backref='post', lazy=True)
-
-class ForumReply(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey('forum_post.id'), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
