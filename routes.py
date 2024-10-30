@@ -176,3 +176,10 @@ def subscription():
     """Subscription management page."""
     stripe_publishable_key = os.environ.get('STRIPE_PUBLISHABLE_KEY')
     return render_template('subscription.html', stripe_publishable_key=stripe_publishable_key)
+
+@app.route('/dream_groups')
+@login_required
+def dream_groups():
+    """View all dream groups."""
+    groups = DreamGroup.query.all()
+    return render_template('dream_groups.html', groups=groups)

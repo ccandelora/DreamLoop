@@ -6,7 +6,7 @@ import random
 from ai_helper import analyze_dream
 
 
-def create_users(num_users=10):
+def create_users(num_users=5):
     """Create sample users with a mix of free and premium subscriptions."""
     users = []
     for i in range(num_users):
@@ -50,7 +50,7 @@ def create_dreams(users):
         num_dreams = random.randint(3, 5)
         for _ in range(num_dreams):
             title, content = random.choice(dream_templates)
-            content = f"{content} {random.randint(1, 1000)}"  # Make content unique
+            content = f"{content} {random.randint(1, 50)}"  # Make content unique
 
             dream = Dream(user_id=user.id,
                           title=title,
@@ -178,7 +178,7 @@ def seed_database():
     try:
         # Create data in order of dependencies
         print("Creating users...")
-        users = create_users(10)
+        users = create_users(5)
 
         print("Creating dreams...")
         dreams = create_dreams(users)
