@@ -39,7 +39,6 @@ class Comment(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     dream_id = db.Column(db.Integer, db.ForeignKey('dream.id'), nullable=False)
-    author = db.relationship('User', backref=db.backref('authored_comments', lazy='dynamic'))
 
 class DreamGroup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
