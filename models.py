@@ -13,7 +13,7 @@ class User(UserMixin, db.Model):
     monthly_ai_analysis_count = db.Column(db.Integer, default=0)
     last_analysis_reset = db.Column(db.DateTime, default=datetime.utcnow)
     dreams = db.relationship('Dream', backref='user', lazy='dynamic')
-    comments = db.relationship('Comment', backref='commenter', lazy='dynamic')
+    comments = db.relationship('Comment', backref='user', lazy='dynamic')
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
