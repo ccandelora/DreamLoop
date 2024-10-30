@@ -15,7 +15,6 @@ import markdown
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Add markdown filter to Jinja environment
 app.jinja_env.filters['markdown'] = lambda text: markdown.markdown(text) if text else ''
 
 @app.route('/')
@@ -113,9 +112,9 @@ def dream_new():
                       user_id=current_user.id)
 
         try:
-            # Perform AI analysis if user has available analyses
             if current_user.subscription_type == 'premium' or current_user.monthly_ai_analysis_count < 3:
-                dream.ai_analysis = analyze_dream(content)
+                is_premium = current_user.subscription_type == 'premium'
+                dream.ai_analysis = analyze_dream(content, is_premium=is_premium)
                 if current_user.subscription_type == 'free':
                     current_user.monthly_ai_analysis_count += 1
 
@@ -135,9 +134,10 @@ def dream_new():
 @app.route('/dream_patterns')
 @login_required
 def dream_patterns():
-    """View dream patterns."""
+    """View dream patterns with enhanced analysis for premium users."""
     dreams = current_user.dreams.all()
-    patterns = analyze_dream_patterns(dreams) if dreams else None
+    is_premium = current_user.subscription_type == 'premium'
+    patterns = analyze_dream_patterns(dreams, is_premium=is_premium) if dreams else None
     return render_template('dream_patterns.html', patterns=patterns)
 
 @app.route('/subscription')

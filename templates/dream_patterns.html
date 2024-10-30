@@ -1,151 +1,95 @@
 {% extends "base.html" %}
-{% block title %}Dream Patterns Analysis{% endblock %}
+{% block title %}Dream Patterns{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-10">
-        {% include 'partials/_premium_ad.html' %}
-        
-        <div class="card mb-4">
-            <div class="card-header">
-                <h2>Your Dream Patterns</h2>
-                <p class="text-muted">Analysis based on your last {{ dreams|length }} dreams</p>
-            </div>
-            <div class="card-body">
-                <div id="patterns-analysis">
-                    <!-- Content will be populated by JavaScript -->
+<div class="container">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h2>Your Dream Patterns</h2>
+            <p class="lead">Discover insights and patterns across your dream journal</p>
+        </div>
+    </div>
+
+    {% if not patterns %}
+    <div class="alert alert-info">
+        <p class="mb-0">Start logging your dreams to see patterns and insights emerge.</p>
+    </div>
+    {% else %}
+    <div class="row">
+        <!-- Statistics Cards -->
+        <div class="col-md-4 mb-4">
+            <div class="card bg-dark h-100">
+                <div class="card-body">
+                    <h4 class="card-title">Dream Statistics</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">Total Dreams: {{ patterns.dream_count }}</li>
+                        <li class="mb-2">Time Span: {{ patterns.time_span.start }} to {{ patterns.time_span.end }}</li>
+                    </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Statistics Section -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h3>Dream Statistics</h3>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card bg-dark">
-                            <div class="card-body text-center">
-                                <h4>Total Dreams</h4>
-                                <p class="lead">{{ dreams|length }}</p>
+        <!-- Mood Patterns -->
+        <div class="col-md-4 mb-4">
+            <div class="card bg-dark h-100">
+                <div class="card-body">
+                    <h4 class="card-title">Mood Patterns</h4>
+                    <ul class="list-unstyled">
+                        {% for mood, count in patterns.mood_patterns.items() %}
+                        <li class="mb-2">
+                            {{ mood|title }}: {{ count }} dreams
+                            <div class="progress" style="height: 5px;">
+                                <div class="progress-bar" role="progressbar" 
+                                     style="width: {{ (count / patterns.dream_count * 100)|round }}%"></div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card bg-dark">
-                            <div class="card-body text-center">
-                                <h4>Unique Tags</h4>
-                                <p class="lead" id="unique-tags">Calculating...</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card bg-dark">
-                            <div class="card-body text-center">
-                                <h4>Most Common Mood</h4>
-                                <p class="lead" id="common-mood">Analyzing...</p>
-                            </div>
-                        </div>
-                    </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-header">
-                <h3>Dreams Timeline</h3>
-            </div>
-            <div class="card-body">
-                <div class="list-group">
-                    {% for dream in dreams %}
-                    <a href="{{ url_for('dream_view', dream_id=dream.id) }}" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">{{ dream.title }}</h5>
-                            <small>{{ dream.date.strftime('%Y-%m-%d') }}</small>
-                        </div>
-                        <p class="mb-1">{{ dream.content[:100] }}...</p>
-                        <small>
-                            <span class="badge bg-secondary">{{ dream.mood }}</span>
-                            {% if dream.tags %}
-                                {% for tag in dream.tags.split(',') %}
-                                <span class="badge bg-info">{{ tag.strip() }}</span>
-                                {% endfor %}
-                            {% endif %}
-                        </small>
-                    </a>
-                    {% endfor %}
+        <!-- Common Themes -->
+        <div class="col-md-4 mb-4">
+            <div class="card bg-dark h-100">
+                <div class="card-body">
+                    <h4 class="card-title">Common Themes</h4>
+                    <ul class="list-unstyled">
+                        {% for theme, count in patterns.common_themes.items() %}
+                        <li class="mb-2">
+                            {{ theme }}: {{ count }} occurrences
+                            <div class="progress" style="height: 5px;">
+                                <div class="progress-bar bg-info" role="progressbar" 
+                                     style="width: {{ (count / patterns.dream_count * 100)|round }}%"></div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- AI Analysis Section -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">AI Pattern Analysis</h3>
+                    {% if not patterns.is_premium %}
+                    <a href="{{ url_for('subscription') }}" class="btn btn-outline-primary">
+                        Upgrade for Full Analysis
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <div class="markdown-content">
+                        {{ patterns.ai_analysis|markdown|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const patternsContainer = document.getElementById('patterns-analysis');
-    const uniqueTagsElement = document.getElementById('unique-tags');
-    const commonMoodElement = document.getElementById('common-mood');
-    
-    function calculateStatistics() {
-        // Calculate unique tags
-        const allTags = new Set();
-        document.querySelectorAll('.badge.bg-info').forEach(tag => {
-            allTags.add(tag.textContent.trim());
-        });
-        uniqueTagsElement.textContent = allTags.size;
-
-        // Calculate most common mood
-        const moodCounts = {};
-        document.querySelectorAll('.badge.bg-secondary').forEach(mood => {
-            const moodText = mood.textContent.trim();
-            moodCounts[moodText] = (moodCounts[moodText] || 0) + 1;
-        });
-        const commonMood = Object.entries(moodCounts)
-            .sort((a, b) => b[1] - a[1])[0];
-        if (commonMood) {
-            commonMoodElement.textContent = `${commonMood[0]} (${commonMood[1]}x)`;
-        }
-    }
-
-    try {
-        const patterns = {{ patterns|safe }};
-        
-        if (!patterns || typeof patterns !== 'object') {
-            throw new Error('Invalid pattern data');
-        }
-
-        // Build HTML sections
-        let html = '';
-        for (const [key, value] of Object.entries(patterns)) {
-            if (value && typeof value === 'string') {
-                const formattedTitle = key.replace(/([A-Z])/g, ' $1').trim();
-                html += `
-                    <div class="mb-4">
-                        <h3 class="text-primary">${formattedTitle}</h3>
-                        <div class="card">
-                            <div class="card-body">
-                                <p class="lead">${value}</p>
-                            </div>
-                        </div>
-                    </div>`;
-            }
-        }
-
-        patternsContainer.innerHTML = html || '<div class="alert alert-warning">No pattern analysis available yet.</div>';
-        calculateStatistics();
-        
-    } catch (e) {
-        console.error('Error processing patterns data:', e);
-        patternsContainer.innerHTML = `
-            <div class="alert alert-warning">
-                <p>Still analyzing your dream patterns. Please try again in a moment.</p>
-                <small class="text-muted">If this persists, try logging more dreams first.</small>
-            </div>`;
-    }
-});
-</script>
 {% endblock %}
