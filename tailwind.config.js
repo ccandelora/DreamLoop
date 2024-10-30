@@ -1,4 +1,9 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
+  content: [
+    './templates/**/*.html',
+    './static/**/*.{js,css}'
+  ],
   theme: {
     extend: {
       colors: {
@@ -12,5 +17,7 @@ module.exports = {
         'dream-gradient': 'radial-gradient(circle at top right, rgba(138, 43, 226, 0.1), transparent), radial-gradient(circle at bottom left, rgba(70, 130, 180, 0.1), transparent)'
       }
     }
-  }
+  },
+  plugins: [],
+  darkMode: 'class'
 }

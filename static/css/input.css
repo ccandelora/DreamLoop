@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --dream-primary: rgba(138, 43, 226, 0.7);
+        --dream-secondary: rgba(70, 130, 180, 0.7);
+        --dream-accent: rgba(147, 112, 219, 0.4);
+    }
+}
+
+@layer components {
+    /* Icon styling */
+    .heroicon {
+        @apply w-6 h-6 inline-block align-middle mr-2;
+    }
+
+    .heroicon-sm {
+        @apply w-5 h-5;
+    }
+
+    /* Chart container styling */
+    .chart-container {
+        @apply bg-gray-800/50 backdrop-blur-sm border border-white/10 rounded-lg p-4 transition-all duration-300;
+    }
+
+    .chart-container:hover {
+        @apply transform -translate-y-1 shadow-lg border-dream-primary/50;
+    }
+
+    /* Custom badge styling */
+    .badge-dream {
+        @apply px-3 py-1 rounded-full text-sm font-medium transition-all duration-300;
+    }
+
+    .badge-dream:hover {
+        @apply transform scale-105;
+    }
+}
+
+@layer utilities {
+    .bg-dream-gradient {
+        background: radial-gradient(circle at top right, var(--dream-primary), transparent),
+                    radial-gradient(circle at bottom left, var(--dream-secondary), transparent);
+    }
+}

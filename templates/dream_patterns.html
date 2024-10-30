@@ -5,14 +5,14 @@
 <div class="container">
     <div class="row">
         <div class="col-12 mb-4">
-            <h2>Your Dream Patterns</h2>
+            <h2><heroicon-outline-chart-bar class="heroicon"></heroicon-outline-chart-bar> Your Dream Patterns</h2>
             <p class="lead">Discover insights and patterns across your dream journal</p>
         </div>
     </div>
 
     {% if not patterns %}
     <div class="alert alert-info">
-        <p class="mb-0">Start logging your dreams to see patterns and insights emerge.</p>
+        <p class="mb-0"><heroicon-outline-information-circle class="heroicon"></heroicon-outline-information-circle> Start logging your dreams to see patterns and insights emerge.</p>
     </div>
     {% else %}
     <div class="row">
@@ -20,51 +20,41 @@
         <div class="col-md-4 mb-4">
             <div class="card bg-dark h-100">
                 <div class="card-body">
-                    <h4 class="card-title">Dream Statistics</h4>
+                    <h4 class="card-title"><heroicon-outline-presentation-chart-bar class="heroicon"></heroicon-outline-presentation-chart-bar> Dream Statistics</h4>
                     <ul class="list-unstyled">
-                        <li class="mb-2">Total Dreams: {{ patterns.dream_count }}</li>
-                        <li class="mb-2">Time Span: {{ patterns.time_span.start }} to {{ patterns.time_span.end }}</li>
+                        <li class="mb-2"><heroicon-outline-book-open class="heroicon-sm"></heroicon-outline-book-open> Total Dreams: {{ patterns.dream_count }}</li>
+                        <li class="mb-2"><heroicon-outline-calendar class="heroicon-sm"></heroicon-outline-calendar> Time Span: {{ patterns.time_span.start }} to {{ patterns.time_span.end }}</li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Mood Patterns -->
-        <div class="col-md-4 mb-4">
+        <!-- Mood Chart -->
+        <div class="col-md-8 mb-4">
             <div class="card bg-dark h-100">
-                <div class="card-body">
-                    <h4 class="card-title">Mood Patterns</h4>
-                    <ul class="list-unstyled">
-                        {% for mood, count in patterns.mood_patterns.items() %}
-                        <li class="mb-2">
-                            {{ mood|title }}: {{ count }} dreams
-                            <div class="progress" style="height: 5px;">
-                                <div class="progress-bar" role="progressbar" 
-                                     style="width: {{ (count / patterns.dream_count * 100)|round }}%"></div>
-                            </div>
-                        </li>
-                        {% endfor %}
-                    </ul>
+                <div class="card-body chart-container">
+                    <h4 class="card-title"><heroicon-outline-face-smile class="heroicon"></heroicon-outline-face-smile> Mood Distribution</h4>
+                    <canvas id="moodChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Common Themes -->
-        <div class="col-md-4 mb-4">
-            <div class="card bg-dark h-100">
-                <div class="card-body">
-                    <h4 class="card-title">Common Themes</h4>
-                    <ul class="list-unstyled">
-                        {% for theme, count in patterns.common_themes.items() %}
-                        <li class="mb-2">
-                            {{ theme }}: {{ count }} occurrences
-                            <div class="progress" style="height: 5px;">
-                                <div class="progress-bar bg-info" role="progressbar" 
-                                     style="width: {{ (count / patterns.dream_count * 100)|round }}%"></div>
-                            </div>
-                        </li>
-                        {% endfor %}
-                    </ul>
+        <!-- Dream Frequency Chart -->
+        <div class="col-md-12 mb-4">
+            <div class="card bg-dark">
+                <div class="card-body chart-container">
+                    <h4 class="card-title"><heroicon-outline-chart-line class="heroicon"></heroicon-outline-chart-line> Dream Frequency</h4>
+                    <canvas id="frequencyChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Theme Chart -->
+        <div class="col-md-12 mb-4">
+            <div class="card bg-dark">
+                <div class="card-body chart-container">
+                    <h4 class="card-title"><heroicon-outline-tag class="heroicon"></heroicon-outline-tag> Common Themes</h4>
+                    <canvas id="themeChart"></canvas>
                 </div>
             </div>
         </div>
@@ -75,10 +65,10 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="mb-0">AI Pattern Analysis</h3>
+                    <h3 class="mb-0"><heroicon-outline-cpu-chip class="heroicon"></heroicon-outline-cpu-chip> AI Pattern Analysis</h3>
                     {% if not patterns.is_premium %}
                     <a href="{{ url_for('subscription') }}" class="btn btn-outline-primary">
-                        Upgrade for Full Analysis
+                        <heroicon-outline-sparkles class="heroicon-sm"></heroicon-outline-sparkles> Upgrade for Full Analysis
                     </a>
                     {% endif %}
                 </div>
@@ -92,4 +82,150 @@
     </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+{% if patterns %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const colors = {
+    primary: 'rgba(138, 43, 226, 0.7)',
+    secondary: 'rgba(70, 130, 180, 0.7)',
+    accent: 'rgba(147, 112, 219, 0.4)',
+    pastels: [
+        'rgba(255, 182, 193, 0.7)', // soft pink
+        'rgba(173, 216, 230, 0.7)', // light blue
+        'rgba(221, 160, 221, 0.7)', // soft purple
+        'rgba(144, 238, 144, 0.7)', // light green
+    ]
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Mood Chart
+    const moodCtx = document.getElementById('moodChart').getContext('2d');
+    const moodData = {{ patterns.mood_patterns|tojson }};
+    
+    new Chart(moodCtx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(moodData),
+            datasets: [{
+                data: Object.values(moodData),
+                backgroundColor: colors.pastels,
+                borderColor: 'rgba(255, 255, 255, 0.1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        color: 'white',
+                        padding: 20
+                    }
+                }
+            }
+        }
+    });
+
+    // Dream Frequency Chart
+    const frequencyCtx = document.getElementById('frequencyChart').getContext('2d');
+    const dates = Object.keys({{ patterns.dream_dates|tojson }});
+    const frequency = Object.values({{ patterns.dream_dates|tojson }});
+    
+    new Chart(frequencyCtx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Dreams per Day',
+                data: frequency,
+                borderColor: colors.primary,
+                backgroundColor: colors.accent,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: 'white',
+                        stepSize: 1
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: 'white'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'white'
+                    }
+                }
+            }
+        }
+    });
+
+    // Theme Chart
+    const themeCtx = document.getElementById('themeChart').getContext('2d');
+    const themeData = {{ patterns.common_themes|tojson }};
+    
+    new Chart(themeCtx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(themeData),
+            datasets: [{
+                label: 'Occurrences',
+                data: Object.values(themeData),
+                backgroundColor: colors.pastels,
+                borderColor: 'rgba(255, 255, 255, 0.1)',
+                borderWidth: 2,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: 'white'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: 'white'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+});
+</script>
+{% endif %}
 {% endblock %}

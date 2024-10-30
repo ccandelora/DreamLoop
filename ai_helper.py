@@ -3,7 +3,7 @@ import google.generativeai as genai
 import logging
 import json
 from collections import Counter
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -93,6 +93,15 @@ def analyze_dream_patterns(dreams, is_premium=False):
         moods = [dream.mood for dream in dreams]
         tags = [tag.strip() for dream in dreams for tag in dream.tags.split(',') if dream.tags]
         
+        # Calculate dream frequency
+        dream_dates = {}
+        for dream in dreams:
+            date_str = dream.date.strftime('%Y-%m-%d')
+            dream_dates[date_str] = dream_dates.get(date_str, 0) + 1
+        
+        # Sort dates for the chart
+        sorted_dates = dict(sorted(dream_dates.items()))
+        
         # Basic pattern analysis
         mood_frequency = Counter(moods)
         tag_frequency = Counter(tags)
@@ -158,6 +167,7 @@ def analyze_dream_patterns(dreams, is_premium=False):
                 'start': min(dream.date for dream in dreams).strftime('%Y-%m-%d'),
                 'end': max(dream.date for dream in dreams).strftime('%Y-%m-%d')
             },
+            'dream_dates': sorted_dates,
             'ai_analysis': ai_pattern_analysis,
             'is_premium': is_premium
         }
