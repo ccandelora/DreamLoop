@@ -18,7 +18,7 @@ class User(UserMixin, db.Model):
     # Relationships
     dreams = db.relationship('Dream', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
-    created_groups = db.relationship('DreamGroup', backref='creator', lazy='dynamic')
+    groups = db.relationship('DreamGroup', secondary='group_membership', backref=db.backref('members', lazy='dynamic'))
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -41,9 +41,9 @@ class Dream(db.Model):
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     dream_id = db.Column(db.Integer, db.ForeignKey('dream.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class DreamGroup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -51,7 +51,6 @@ class DreamGroup(db.Model):
     description = db.Column(db.Text)
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    members = db.relationship('User', secondary='group_membership', backref=db.backref('groups', lazy=True))
 
 class GroupMembership(db.Model):
     __tablename__ = 'group_membership'
