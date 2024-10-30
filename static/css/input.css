@@ -24,6 +24,20 @@
         @apply p-6 transition-all duration-300;
     }
 
+    .chart-container canvas {
+        @apply w-full max-h-[300px];
+    }
+
+    @media (max-width: 768px) {
+        .chart-container {
+            @apply p-4 mb-6;
+        }
+
+        .chart-container canvas {
+            @apply max-h-[200px];
+        }
+    }
+
     .chart-container:hover {
         @apply transform -translate-y-1 shadow-lg;
     }
@@ -35,11 +49,6 @@
 
     .chart-loader.hidden {
         @apply hidden;
-    }
-
-    /* Chart canvas */
-    canvas {
-        @apply w-full max-h-[400px] transition-all duration-300;
     }
 
     /* Markdown content styling */

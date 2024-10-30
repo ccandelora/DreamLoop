@@ -81,7 +81,7 @@ def create_comments(users, dreams):
 
     for dream in dreams:
         if dream.is_public:
-            num_comments = random.randint(0, 3)
+            num_comments = random.randint(0, 2)
             for _ in range(num_comments):
                 commenter = random.choice(users)
                 comment = Comment(content=random.choice(comment_templates),
@@ -118,7 +118,7 @@ def create_groups(users):
                            description=description,
                            created_by=creator.id,
                            created_at=datetime.utcnow() -
-                           timedelta(days=random.randint(0, 30)))
+                           timedelta(days=random.randint(0, 10)))
         groups.append(group)
 
     try:
@@ -145,7 +145,7 @@ def create_memberships(users, groups):
         memberships.append(creator_membership)
 
         # Add random members
-        num_members = random.randint(5, 15)
+        num_members = random.randint(5, 6)
         potential_members = [u for u in users if u.id != group.created_by]
         selected_members = random.sample(
             potential_members, min(num_members, len(potential_members)))
