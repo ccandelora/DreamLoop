@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark bg-dream-gradient min-h-screen">
+<html lang="en" class="bg-dream-gradient min-h-screen">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +8,8 @@
     <link href="{{ url_for('static', filename='css/output.css') }}" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
 </head>
-<body class="text-white bg-gray-900">
-    <nav class="bg-gradient-to-r from-indigo-900/80 to-purple-900/80 backdrop-blur-lg border-b border-white/10 fixed w-full top-0 z-50">
+<body class="text-gray-100">
+    <nav class="bg-white/5 backdrop-blur-lg border-b border-white/10 fixed w-full top-0 z-50">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex items-center justify-between h-14 sm:h-16">
                 <a href="{{ url_for('index') }}" class="flex items-center">
@@ -43,14 +43,14 @@
                     </a>
                     <a href="{{ url_for('subscription') }}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md transition-colors">
                         {% if current_user.subscription_type == 'free' %}
-                        <span class="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm px-3 py-1 rounded-full">
+                        <span class="bg-gradient-to-r from-purple-500/80 to-pink-500/80 text-white text-sm px-3 py-1 rounded-full">
                             <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
                             </svg>
                             Upgrade to Premium
                         </span>
                         {% else %}
-                        <span class="bg-green-600/70 text-white text-sm px-3 py-1 rounded-full">
+                        <span class="bg-green-600/50 text-white text-sm px-3 py-1 rounded-full">
                             <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
@@ -87,7 +87,7 @@
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         {% for message in messages %}
-        <div class="bg-gray-900/40 backdrop-blur-sm border border-purple-500/30 text-white px-4 py-3 rounded-lg mb-4">
+        <div class="bg-white/5 backdrop-blur-sm border border-purple-500/30 text-white px-4 py-3 rounded-lg mb-4">
             <svg class="h-5 w-5 inline-block align-text-bottom mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
@@ -112,9 +112,7 @@
             menu.classList.toggle('fixed');
             menu.classList.toggle('top-14');
             menu.classList.toggle('left-0');
-            menu.classList.toggle('bg-gradient-to-r');
-            menu.classList.toggle('from-indigo-900/80');
-            menu.classList.toggle('to-purple-900/80');
+            menu.classList.toggle('bg-white/5');
             menu.classList.toggle('backdrop-blur-lg');
             menu.classList.toggle('p-4');
             menu.classList.toggle('space-y-2');

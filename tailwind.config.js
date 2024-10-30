@@ -14,10 +14,11 @@ module.exports = {
         }
       },
       backgroundImage: {
-        'dream-gradient': 'radial-gradient(circle at top right, rgb(139, 92, 246, 0.1), transparent), radial-gradient(circle at bottom left, rgb(236, 72, 153, 0.1), transparent)'
+        'dream-gradient': 'radial-gradient(circle at top right, rgba(139, 92, 246, 0.03), transparent), radial-gradient(circle at bottom left, rgba(236, 72, 153, 0.03), transparent)'
       }
     }
   },
-  plugins: [],
-  darkMode: 'class'
+  plugins: [
+    require('@tailwindcss/typography')
+  ]
 }
