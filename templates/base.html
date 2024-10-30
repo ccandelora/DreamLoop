@@ -26,7 +26,7 @@
     </script>
 </head>
 <body class="text-white bg-gray-900">
-    <nav class="bg-gray-800/90 backdrop-blur-sm mb-8">
+    <nav class="bg-gray-800/90 backdrop-blur-sm mb-8 fixed w-full top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <a href="{{ url_for('index') }}" class="flex items-center space-x-2">
@@ -34,7 +34,7 @@
                          class="h-10 w-auto transform transition-transform hover:scale-105">
                     <span class="text-xl font-semibold">DreamLoop</span>
                 </a>
-                <button class="lg:hidden" type="button" onclick="toggleMenu()">
+                <button class="lg:hidden z-50" type="button" onclick="toggleMenu()">
                     <span class="sr-only">Open menu</span>
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
@@ -63,7 +63,7 @@
         </div>
     </nav>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         {% for message in messages %}
@@ -84,13 +84,14 @@
             menu.classList.toggle('flex');
             menu.classList.toggle('flex-col');
             menu.classList.toggle('w-full');
-            menu.classList.toggle('absolute');
+            menu.classList.toggle('fixed');
             menu.classList.toggle('top-16');
             menu.classList.toggle('left-0');
             menu.classList.toggle('bg-gray-800/90');
             menu.classList.toggle('backdrop-blur-sm');
             menu.classList.toggle('p-4');
             menu.classList.toggle('space-y-2');
+            menu.classList.toggle('z-40');
         }
     </script>
     {% block scripts %}{% endblock %}
