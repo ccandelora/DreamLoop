@@ -35,6 +35,7 @@ class Dream(db.Model):
     mood = db.Column(db.String(50))
     tags = db.Column(db.String(200))
     is_public = db.Column(db.Boolean, default=False)
+    is_anonymous = db.Column(db.Boolean, default=False)
     ai_analysis = db.Column(db.Text)
     comments = db.relationship('Comment', backref='dream', lazy='dynamic', cascade='all, delete-orphan')
 

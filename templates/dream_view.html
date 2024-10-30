@@ -35,11 +35,18 @@
                     
                     <div class="text-muted">
                         <small>
-                            Logged on {{ dream.date.strftime('%Y-%m-%d %H:%M') }}
+                            {% if dream.is_anonymous and dream.user_id != current_user.id %}
+                                Posted anonymously on {{ dream.date.strftime('%Y-%m-%d %H:%M') }}
+                            {% else %}
+                                Posted by {{ dream.author.username }} on {{ dream.date.strftime('%Y-%m-%d %H:%M') }}
+                            {% endif %}
                             {% if dream.is_public %}
                             <span class="badge bg-success ms-2">Public</span>
                             {% else %}
                             <span class="badge bg-secondary ms-2">Private</span>
+                            {% endif %}
+                            {% if dream.is_anonymous %}
+                            <span class="badge bg-info ms-2">Anonymous</span>
                             {% endif %}
                         </small>
                     </div>

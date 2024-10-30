@@ -40,9 +40,16 @@
                                    placeholder="flying, chase, water, etc">
                         </div>
                         
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="is_public" name="is_public" value="true">
-                            <label class="form-check-label" for="is_public">Share with Community</label>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="is_public" name="is_public" value="true">
+                                <label class="form-check-label" for="is_public">Share with Community</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="is_anonymous" name="is_anonymous" value="true">
+                                <label class="form-check-label" for="is_anonymous">Post Anonymously</label>
+                                <small class="form-text text-muted d-block">When checked, your username will be hidden from other users</small>
+                            </div>
                         </div>
 
                         {% if current_user.subscription_type == 'free' %}

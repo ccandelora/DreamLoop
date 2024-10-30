@@ -88,6 +88,70 @@ def dream_view(dream_id):
         return redirect(url_for('index'))
     return render_template('dream_view.html', dream=dream)
 
+@app.route('/dream/new', methods=['GET', 'POST'])
+@login_required
+def dream_new():
+    """Create a new dream entry."""
+    if request.method == 'POST':
+        title = request.form.get('title')
+        content = request.form.get('content')
+        mood = request.form.get('mood')
+        tags = request.form.get('tags')
+        is_public = bool(request.form.get('is_public'))
+        is_anonymous = bool(request.form.get('is_anonymous'))
+        
+        dream = Dream(
+            title=title,
+            content=content,
+            mood=mood,
+            tags=tags,
+            is_public=is_public,
+            is_anonymous=is_anonymous,
+            user_id=current_user.id
+        )
+        
+        try:
+            # Perform AI analysis if user has available analyses
+            if current_user.subscription_type == 'premium' or current_user.monthly_ai_analysis_count < 3:
+                dream.ai_analysis = analyze_dream(content)
+                if current_user.subscription_type == 'free':
+                    current_user.monthly_ai_analysis_count += 1
+            
+            db.session.add(dream)
+            db.session.commit()
+            flash('Dream logged successfully!')
+            return redirect(url_for('dream_view', dream_id=dream.id))
+            
+        except Exception as e:
+            logger.error(f"Error creating dream: {str(e)}")
+            db.session.rollback()
+            flash('An error occurred while saving your dream.')
+            return render_template('dream_new.html')
+        
+    return render_template('dream_new.html')
+
+@app.route('/dream_patterns')
+@login_required
+def dream_patterns():
+    """View dream patterns."""
+    dreams = current_user.dreams.all()
+    patterns = analyze_dream_patterns(dreams) if dreams else None
+    return render_template('dream_patterns.html', patterns=patterns)
+
+@app.route('/subscription')
+@login_required
+def subscription():
+    """Subscription management page."""
+    stripe_publishable_key = os.environ.get('STRIPE_PUBLISHABLE_KEY')
+    return render_template('subscription.html', stripe_publishable_key=stripe_publishable_key)
+
+@app.route('/dream_groups')
+@login_required
+def dream_groups():
+    """View all dream groups."""
+    groups = DreamGroup.query.all()
+    return render_template('dream_groups.html', groups=groups)
+
 @app.route('/dream/<int:dream_id>/comment', methods=['POST'])
 @login_required
 def add_comment(dream_id):
@@ -144,65 +208,3 @@ def delete_comment(dream_id, comment_id):
         flash('An error occurred while deleting the comment.')
         
     return redirect(url_for('dream_view', dream_id=dream_id))
-
-@app.route('/dream/new', methods=['GET', 'POST'])
-@login_required
-def dream_new():
-    """Create a new dream entry."""
-    if request.method == 'POST':
-        title = request.form.get('title')
-        content = request.form.get('content')
-        mood = request.form.get('mood')
-        tags = request.form.get('tags')
-        is_public = bool(request.form.get('is_public'))
-        
-        dream = Dream(
-            title=title,
-            content=content,
-            mood=mood,
-            tags=tags,
-            is_public=is_public,
-            user_id=current_user.id
-        )
-        
-        try:
-            # Perform AI analysis if user has available analyses
-            if current_user.subscription_type == 'premium' or current_user.monthly_ai_analysis_count < 3:
-                dream.ai_analysis = analyze_dream(content)
-                if current_user.subscription_type == 'free':
-                    current_user.monthly_ai_analysis_count += 1
-            
-            db.session.add(dream)
-            db.session.commit()
-            flash('Dream logged successfully!')
-            return redirect(url_for('dream_view', dream_id=dream.id))
-            
-        except Exception as e:
-            logger.error(f"Error creating dream: {str(e)}")
-            db.session.rollback()
-            flash('An error occurred while saving your dream.')
-            return render_template('dream_new.html')
-        
-    return render_template('dream_new.html')
-
-@app.route('/dream_patterns')
-@login_required
-def dream_patterns():
-    """View dream patterns."""
-    dreams = current_user.dreams.all()
-    patterns = analyze_dream_patterns(dreams) if dreams else None
-    return render_template('dream_patterns.html', patterns=patterns)
-
-@app.route('/subscription')
-@login_required
-def subscription():
-    """Subscription management page."""
-    stripe_publishable_key = os.environ.get('STRIPE_PUBLISHABLE_KEY')
-    return render_template('subscription.html', stripe_publishable_key=stripe_publishable_key)
-
-@app.route('/dream_groups')
-@login_required
-def dream_groups():
-    """View all dream groups."""
-    groups = DreamGroup.query.all()
-    return render_template('dream_groups.html', groups=groups)
