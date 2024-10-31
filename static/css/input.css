@@ -2,21 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-wide;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  }
+  
+  p {
+    @apply text-dream-text-secondary leading-relaxed;
+  }
+  
+  .form-label {
+    @apply text-dream-text-primary font-medium;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dream-card-title {
+    @apply text-xl font-semibold text-dream-text-primary mb-2;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  }
+  
+  .dream-card-content {
+    @apply text-dream-text-secondary leading-relaxed;
+  }
+}
+
 @layer components {
     .dream-card {
-        @apply bg-white/3 backdrop-blur-sm border border-white/5 rounded-lg shadow-lg transition-all duration-300;
+        @apply bg-white/30 backdrop-blur-lg border border-white/20 rounded-lg shadow-lg transition-all duration-300;
     }
 
     .dream-card:hover {
-        @apply transform -translate-y-1 border-purple-500/10 bg-white/5;
+        @apply transform -translate-y-1 border-purple-500/40 bg-white/35;
     }
 
     .dream-input {
-        @apply w-full bg-white/3 border border-gray-400/20 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500/30 focus:border-transparent;
+        @apply w-full bg-white/20 border border-gray-400/50 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500/60 focus:border-transparent;
     }
 
     .dream-button {
-        @apply bg-gradient-to-r from-purple-500/60 to-pink-500/60 hover:from-purple-600/70 hover:to-pink-600/70 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300;
+        @apply bg-gradient-to-r from-purple-500/90 to-pink-500/90 hover:from-purple-600/95 hover:to-pink-600/95 text-dream-text-primary font-semibold py-2 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl;
     }
 
     /* Chart container styling */
@@ -44,11 +69,7 @@
 
     /* Chart loader animation */
     .chart-loader {
-        @apply transition-all duration-300;
-    }
-
-    .chart-loader.hidden {
-        @apply hidden;
+        @apply transition-opacity duration-300;
     }
 
     /* Markdown content styling */
@@ -60,18 +81,23 @@
     .markdown-content h2,
     .markdown-content h3,
     .markdown-content h4 {
-        @apply text-purple-400 font-semibold;
-    }
-
-    .markdown-content ul {
-        @apply list-disc list-inside;
+        @apply text-dream-text-primary font-semibold mb-4;
+        text-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
     }
 
     .markdown-content p {
-        @apply mb-4;
+        @apply text-dream-text-secondary leading-relaxed mb-4;
+    }
+
+    .markdown-content ul {
+        @apply list-disc list-inside text-dream-text-secondary space-y-2;
     }
 
     .markdown-content blockquote {
-        @apply border-l-4 border-purple-500/20 pl-4 italic;
+        @apply border-l-4 border-purple-500/50 pl-4 italic text-dream-text-muted;
+    }
+
+    .feature-box {
+        @apply bg-white/35 backdrop-blur-lg rounded-lg p-6 transition-all duration-300 hover:bg-white/40 hover:transform hover:-translate-y-1 shadow-lg hover:shadow-xl border border-white/30 hover:border-purple-500/40;
     }
 }

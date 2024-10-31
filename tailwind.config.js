@@ -10,11 +10,16 @@ module.exports = {
         dream: {
           primary: '#8B5CF6',    // Violet
           secondary: '#EC4899',  // Pink
-          accent: '#6366F1'      // Indigo
+          accent: '#6366F1',     // Indigo
+          text: {
+            primary: '#FFFFFF',    // Pure white for maximum contrast
+            secondary: '#E5E7EB',  // Lighter gray for better visibility
+            muted: '#9CA3AF'      // Brighter muted text
+          }
         }
       },
       backgroundImage: {
-        'dream-gradient': 'radial-gradient(circle at top right, rgba(139, 92, 246, 0.03), transparent), radial-gradient(circle at bottom left, rgba(236, 72, 153, 0.03), transparent)'
+        'dream-gradient': 'radial-gradient(circle at top right, rgba(139, 92, 246, 0.015), transparent), radial-gradient(circle at bottom left, rgba(236, 72, 153, 0.015), transparent)'
       }
     }
   },
