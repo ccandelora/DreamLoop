@@ -394,12 +394,12 @@ def reply_to_post(post_id):
     content = request.form.get('content')
     if not content:
         flash('Reply cannot be empty.')
-        return redirect(url_for('forum_post', post_id=post_id))
+        return redirect(url_for('dream_group', group_id=post.group_id))
         
     try:
         reply = ForumReply(
             content=content,
-            user_id=current_user.id,
+            author_id=current_user.id,
             post_id=post_id,
             created_at=datetime.utcnow()
         )
@@ -411,7 +411,7 @@ def reply_to_post(post_id):
         db.session.rollback()
         flash('An error occurred while adding your reply.')
         
-    return redirect(url_for('forum_post', post_id=post_id))
+    return redirect(url_for('dream_group', group_id=post.group_id))
 
 @app.route('/dream/<int:dream_id>/comment', methods=['POST'])
 @login_required
