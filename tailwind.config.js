@@ -12,14 +12,14 @@ module.exports = {
           secondary: '#EC4899',  // Pink
           accent: '#6366F1',     // Indigo
           text: {
-            primary: '#FFFFFF',    // Pure white for maximum contrast
-            secondary: '#E5E7EB',  // Lighter gray for better visibility
-            muted: '#9CA3AF'      // Brighter muted text
+            primary: 'rgba(15, 23, 42, 0.9)',    // Very dark blue/gray
+            secondary: 'rgba(30, 41, 59, 0.8)',   // Dark blue/gray
+            muted: 'rgba(51, 65, 85, 0.7)'       // Medium blue/gray
           }
         }
       },
       backgroundImage: {
-        'dream-gradient': 'radial-gradient(circle at top right, rgba(139, 92, 246, 0.03), transparent), radial-gradient(circle at bottom left, rgba(236, 72, 153, 0.03), transparent)'
+        'dream-gradient': 'radial-gradient(circle at top right, rgba(139, 92, 246, 0.02), transparent), radial-gradient(circle at bottom left, rgba(236, 72, 153, 0.02), transparent)'
       }
     }
   },

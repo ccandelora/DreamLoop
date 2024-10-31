@@ -4,79 +4,78 @@
 
 @layer base {
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-wide text-white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    @apply font-semibold tracking-wide text-slate-900;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.1);
   }
   
   p {
-    @apply text-gray-100 leading-relaxed;
+    @apply text-slate-800 leading-relaxed;
   }
   
   .form-label {
-    @apply text-white font-medium;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    @apply text-slate-900 font-medium;
   }
 }
 
 @layer components {
-    .dream-card {
-        @apply bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg shadow-lg transition-all duration-300;
-    }
+  .dream-card {
+    @apply bg-white/90 backdrop-blur-lg border border-white/20 rounded-lg shadow-lg transition-all duration-300;
+  }
 
-    .dream-card:hover {
-        @apply transform -translate-y-1 border-purple-500/30 bg-white/15;
-    }
+  .dream-card:hover {
+    @apply transform -translate-y-1 border-purple-500/30;
+  }
 
-    .dream-input {
-        @apply w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent;
-    }
+  .dream-input {
+    @apply w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent;
+  }
 
-    .dream-button {
-        @apply bg-gradient-to-r from-purple-500/80 to-pink-500/80 hover:from-purple-600/90 hover:to-pink-600/90 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl;
-    }
+  .dream-button {
+    @apply bg-gradient-to-r from-purple-500/90 to-pink-500/90 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl;
+  }
 
-    .navbar {
-        @apply bg-white/10 backdrop-blur-lg border-b border-white/20;
-    }
+  .navbar {
+    @apply bg-white/90 backdrop-blur-lg border-b border-slate-200;
+  }
 
-    .mobile-menu {
-        @apply bg-white/10 backdrop-blur-lg;
-    }
+  .mobile-menu {
+    @apply bg-white/90 backdrop-blur-lg;
+  }
 
-    .feature-box {
-        @apply bg-white/10 backdrop-blur-lg rounded-lg p-6;
-    }
+  .feature-box {
+    @apply bg-white/80 backdrop-blur-lg rounded-lg p-6;
+  }
 
-    /* Form inputs */
-    .form-input {
-        @apply bg-white/10 border border-white/20;
-    }
+  /* Form inputs */
+  .form-input {
+    @apply bg-white/80 border border-slate-200;
+  }
 
-    /* Chart container styling */
+  /* Chart container styling */
+  .chart-container {
+    @apply p-6 transition-all duration-300;
+  }
+
+  .chart-container canvas {
+    @apply w-full max-h-[300px];
+  }
+
+  @media (max-width: 768px) {
     .chart-container {
-        @apply p-6 transition-all duration-300;
+      @apply p-4 mb-6;
     }
 
     .chart-container canvas {
-        @apply w-full max-h-[300px];
+      @apply max-h-[200px];
     }
+  }
 
-    @media (max-width: 768px) {
-        .chart-container {
-            @apply p-4 mb-6;
-        }
+  /* Markdown content styling */
+  .markdown-content {
+    @apply prose prose-slate max-w-none;
+  }
 
-        .chart-container canvas {
-            @apply max-h-[200px];
-        }
-    }
-
-    /* Markdown content styling */
-    .markdown-content {
-        @apply prose prose-invert prose-sm max-w-none;
-    }
-
-    .markdown-content blockquote {
-        @apply border-l-4 border-purple-500/30 pl-4 italic text-gray-300 bg-white/10;
-    }
+  .markdown-content blockquote {
+    @apply border-l-4 border-purple-500/30 pl-4 italic text-slate-700 bg-white/80;
+  }
 }

@@ -4,10 +4,10 @@
 {% block content %}
 <div class="container mx-auto px-4">
     <div class="mb-8">
-        <h2 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-300">
+        <h2 class="text-3xl font-bold text-slate-900">
             Your Dream Patterns
         </h2>
-        <p class="text-xl text-dream-text-primary">
+        <p class="text-xl text-slate-700">
             Discover insights and patterns across your dream journal
         </p>
     </div>
@@ -16,37 +16,43 @@
     <div class="space-y-6">
         <!-- Mood Distribution -->
         <div class="dream-card">
-            <h3 class="text-xl font-semibold p-4 border-b border-white/10">
+            <h3 class="text-xl font-semibold p-4 border-b border-slate-200">
                 Mood Distribution
             </h3>
             <div class="p-6">
-                <canvas id="moodChart" class="w-full max-h-[300px]"></canvas>
+                <div class="chart-container">
+                    <canvas id="moodChart"></canvas>
+                </div>
             </div>
         </div>
 
         <!-- Dream Frequency -->
         <div class="dream-card">
-            <h3 class="text-xl font-semibold p-4 border-b border-white/10">
+            <h3 class="text-xl font-semibold p-4 border-b border-slate-200">
                 Dream Frequency
             </h3>
             <div class="p-6">
-                <canvas id="frequencyChart" class="w-full max-h-[300px]"></canvas>
+                <div class="chart-container">
+                    <canvas id="frequencyChart"></canvas>
+                </div>
             </div>
         </div>
 
         <!-- Common Themes -->
         <div class="dream-card">
-            <h3 class="text-xl font-semibold p-4 border-b border-white/10">
+            <h3 class="text-xl font-semibold p-4 border-b border-slate-200">
                 Common Themes
             </h3>
             <div class="p-6">
-                <canvas id="themeChart" class="w-full max-h-[300px]"></canvas>
+                <div class="chart-container">
+                    <canvas id="themeChart"></canvas>
+                </div>
             </div>
         </div>
 
         <!-- Pattern Analysis -->
         <div class="dream-card">
-            <h3 class="text-xl font-semibold p-4 border-b border-white/10">
+            <h3 class="text-xl font-semibold p-4 border-b border-slate-200">
                 Pattern Analysis
             </h3>
             <div class="p-4">
@@ -59,13 +65,13 @@
     {% else %}
     <div class="dream-card p-6">
         <div class="text-center">
-            <svg class="h-16 w-16 mx-auto mb-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="h-16 w-16 mx-auto mb-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
                 </path>
             </svg>
-            <h3 class="text-xl font-semibold mb-2">No Dream Patterns Yet</h3>
-            <p class="text-gray-400 mb-4">
+            <h3 class="text-xl font-semibold mb-2 text-slate-900">No Dream Patterns Yet</h3>
+            <p class="text-slate-600 mb-4">
                 Start logging your dreams to see patterns and insights emerge.
             </p>
             <a href="{{ url_for('dream_new') }}" class="dream-button">
@@ -80,158 +86,158 @@
 {% block scripts %}
 {% if patterns %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const chartConfig = {
-            colors: {
-                primary: [
-                    'rgba(147, 51, 234, 0.7)',
-                    'rgba(236, 72, 153, 0.7)',
-                    'rgba(99, 102, 241, 0.7)'
-                ],
-                background: 'rgba(255, 255, 255, 0.05)'
-            }
-        };
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for Chart.js to load
+    if (typeof Chart === 'undefined') {
+        console.error('Chart.js not loaded');
+        return;
+    }
 
-        // Initialize charts only if data exists
-        const patterns = {{ patterns|tojson if patterns else 'null' }};
-        
-        if (!patterns) {
-            console.warn('No pattern data available');
+    // Safe JSON parsing with error handling
+    let patterns;
+    try {
+        patterns = {{ patterns|tojson if patterns else 'null' }};
+        if (!patterns || !patterns.dream_count) {
+            console.info('No pattern data available');
             return;
         }
+    } catch (error) {
+        console.error('Error parsing pattern data:', error);
+        return;
+    }
 
-        // Safe chart initialization
-        function initChart(canvasId, config) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) {
-                console.warn(`Canvas ${canvasId} not found`);
-                return;
-            }
-            
-            try {
-                const ctx = canvas.getContext('2d');
-                return new Chart(ctx, config);
-            } catch (error) {
-                console.error(`Error initializing chart ${canvasId}:`, error);
-            }
-        }
-
-        // Initialize each chart if data exists
-        if (patterns.mood_patterns) {
-            initChart('moodChart', {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(patterns.mood_patterns),
-                    datasets: [{
-                        data: Object.values(patterns.mood_patterns),
-                        backgroundColor: chartConfig.colors.primary
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: 'rgba(255, 255, 255, 0.8)'
-                            }
-                        }
+    // Chart configuration
+    const chartConfig = {
+        colors: {
+            primary: [
+                'rgba(147, 51, 234, 0.7)',  // Purple
+                'rgba(236, 72, 153, 0.7)',  // Pink
+                'rgba(99, 102, 241, 0.7)',  // Indigo
+                'rgba(79, 70, 229, 0.7)',   // Blue
+                'rgba(16, 185, 129, 0.7)'   // Green
+            ],
+            background: 'rgba(255, 255, 255, 0.5)'
+        },
+        defaultOptions: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'rgb(51, 65, 85)'  // slate-700
                     }
                 }
-            });
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(51, 65, 85, 0.1)'
+                    },
+                    ticks: {
+                        color: 'rgb(51, 65, 85)'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(51, 65, 85, 0.1)'
+                    },
+                    ticks: {
+                        color: 'rgb(51, 65, 85)'
+                    }
+                }
+            }
         }
+    };
 
-        if (patterns.dream_dates) {
-            initChart('frequencyChart', {
+    // Safe chart initialization with error handling
+    function initializeChart(canvasId, config) {
+        try {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) {
+                throw new Error(`Canvas element ${canvasId} not found`);
+            }
+
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                throw new Error(`Could not get 2D context for ${canvasId}`);
+            }
+
+            // Set canvas parent height for proper sizing
+            canvas.parentElement.style.height = '300px';
+
+            return new Chart(ctx, {
+                ...config,
+                options: {
+                    ...chartConfig.defaultOptions,
+                    ...config.options
+                }
+            });
+        } catch (error) {
+            console.error(`Error initializing chart ${canvasId}:`, error);
+            return null;
+        }
+    }
+
+    // Initialize charts with proper error handling
+    const chartsToInit = [
+        {
+            id: 'moodChart',
+            data: patterns.mood_patterns,
+            config: {
+                type: 'doughnut',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: chartConfig.colors.primary
+                    }]
+                }
+            }
+        },
+        {
+            id: 'frequencyChart',
+            data: patterns.dream_dates,
+            config: {
                 type: 'line',
                 data: {
-                    labels: Object.keys(patterns.dream_dates),
+                    labels: [],
                     datasets: [{
                         label: 'Dreams per Day',
-                        data: Object.values(patterns.dream_dates),
+                        data: [],
                         borderColor: chartConfig.colors.primary[0],
                         backgroundColor: chartConfig.colors.background,
                         fill: true,
                         tension: 0.4
                     }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: 'rgba(255, 255, 255, 0.8)'
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
-                            },
-                            ticks: {
-                                color: 'rgba(255, 255, 255, 0.8)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
-                            },
-                            ticks: {
-                                color: 'rgba(255, 255, 255, 0.8)'
-                            }
-                        }
-                    }
                 }
-            });
-        }
-
-        if (patterns.common_themes) {
-            initChart('themeChart', {
+            }
+        },
+        {
+            id: 'themeChart',
+            data: patterns.common_themes,
+            config: {
                 type: 'bar',
                 data: {
-                    labels: Object.keys(patterns.common_themes),
+                    labels: [],
                     datasets: [{
                         label: 'Occurrences',
-                        data: Object.values(patterns.common_themes),
+                        data: [],
                         backgroundColor: chartConfig.colors.primary
                     }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: 'rgba(255, 255, 255, 0.8)'
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
-                            },
-                            ticks: {
-                                color: 'rgba(255, 255, 255, 0.8)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
-                            },
-                            ticks: {
-                                color: 'rgba(255, 255, 255, 0.8)'
-                            }
-                        }
-                    }
                 }
-            });
+            }
+        }
+    ];
+
+    chartsToInit.forEach(chart => {
+        if (chart.data && Object.keys(chart.data).length > 0) {
+            chart.config.data.labels = Object.keys(chart.data);
+            chart.config.data.datasets[0].data = Object.values(chart.data);
+            initializeChart(chart.id, chart.config);
         }
     });
+});
 </script>
 {% endif %}
 {% endblock %}

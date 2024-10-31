@@ -6,8 +6,8 @@
     {% if current_user.is_authenticated %}
     <div class="row mb-4">
         <div class="col-md-8">
-            <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-300">Welcome back, {{ current_user.username }}!</h1>
-            <p class="lead">Track your dreams, discover patterns, and connect with fellow dreamers.</p>
+            <h1 class="text-3xl font-bold text-slate-900">Welcome back, {{ current_user.username }}!</h1>
+            <p class="lead text-slate-700">Track your dreams, discover patterns, and connect with fellow dreamers.</p>
         </div>
         <div class="col-md-4 text-end">
             <a href="{{ url_for('dream_new') }}" class="dream-button">Log New Dream</a>
@@ -18,26 +18,26 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="dream-card p-6">
             <div class="text-center">
-                <h3 class="text-2xl font-bold text-purple-400">{{ current_user.dreams.all()|length }}</h3>
-                <p class="text-dream-text-primary">Dreams Logged</p>
+                <h3 class="text-2xl font-bold text-purple-600">{{ current_user.dreams.all()|length }}</h3>
+                <p class="text-slate-700">Dreams Logged</p>
             </div>
         </div>
         <div class="dream-card p-6">
             <div class="text-center">
-                <h3 class="text-2xl font-bold text-pink-400">{{ current_user.groups|length }}</h3>
-                <p class="text-dream-text-primary">Groups Joined</p>
+                <h3 class="text-2xl font-bold text-pink-600">{{ current_user.groups|length }}</h3>
+                <p class="text-slate-700">Groups Joined</p>
             </div>
         </div>
         <div class="dream-card p-6">
             <div class="text-center">
-                <h3 class="text-2xl font-bold text-indigo-400">
+                <h3 class="text-2xl font-bold text-indigo-600">
                     {% if current_user.subscription_type == 'free' %}
                     {{ 3 - current_user.monthly_ai_analysis_count }}
                     {% else %}
                     ∞
                     {% endif %}
                 </h3>
-                <p class="text-dream-text-primary">AI Analyses Remaining</p>
+                <p class="text-slate-700">AI Analyses Remaining</p>
             </div>
         </div>
     </div>
@@ -46,35 +46,35 @@
     <div class="min-h-[80vh] flex items-center">
         <div class="w-full">
             <div class="text-center mb-16">
-                <h1 class="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-300 mb-6">
+                <h1 class="text-5xl font-bold text-slate-900 mb-6">
                     Unlock Your Dream Journey
                 </h1>
-                <p class="text-xl text-dream-text-primary mb-8">
+                <p class="text-xl text-slate-700 mb-8">
                     Document your dreams, receive AI-powered analysis, and connect with a community of dreamers.
                     Start your journey of self-discovery today.
                 </p>
                 <div class="flex justify-center gap-6">
                     <a href="{{ url_for('register') }}" class="dream-button">Get Started</a>
-                    <a href="{{ url_for('login') }}" class="px-6 py-2 border-2 border-purple-500/50 rounded-lg hover:bg-purple-500/30 transition-all text-dream-text-primary hover:border-purple-500/70">
+                    <a href="{{ url_for('login') }}" class="px-6 py-2 border-2 border-purple-500/50 rounded-lg hover:bg-purple-500/10 transition-all text-slate-700 hover:border-purple-500/70">
                         Login
                     </a>
                 </div>
             </div>
 
             <div class="dream-card p-8">
-                <h3 class="text-2xl font-bold text-purple-400 mb-6">✨ Key Features</h3>
+                <h3 class="text-2xl font-bold text-slate-900 mb-6">✨ Key Features</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div class="feature-box">
-                        <p class="text-lg mb-3 text-dream-text-primary">🌙 AI-Powered Dream Analysis</p>
-                        <p class="text-dream-text-secondary">Get deep insights into your dreams</p>
+                        <p class="text-lg mb-3 text-slate-800">🌙 AI-Powered Dream Analysis</p>
+                        <p class="text-slate-600">Get deep insights into your dreams</p>
                     </div>
                     <div class="feature-box">
-                        <p class="text-lg mb-3 text-dream-text-primary">📊 Pattern Recognition</p>
-                        <p class="text-dream-text-secondary">Discover recurring themes</p>
+                        <p class="text-lg mb-3 text-slate-800">📊 Pattern Recognition</p>
+                        <p class="text-slate-600">Discover recurring themes</p>
                     </div>
                     <div class="feature-box">
-                        <p class="text-lg mb-3 text-dream-text-primary">👥 Dream-Sharing Community</p>
-                        <p class="text-dream-text-secondary">Connect with fellow dreamers</p>
+                        <p class="text-lg mb-3 text-slate-800">👥 Dream-Sharing Community</p>
+                        <p class="text-slate-600">Connect with fellow dreamers</p>
                     </div>
                 </div>
             </div>
