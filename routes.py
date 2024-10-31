@@ -21,6 +21,9 @@ app.jinja_env.filters['markdown'] = lambda text: markdown.markdown(text) if text
 @app.route('/')
 def index():
     """Home page."""
+    if current_user.is_authenticated:
+        # Pass the Dream model to the template context
+        return render_template('index.html', Dream=Dream)
     return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
