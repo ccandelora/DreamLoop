@@ -18,7 +18,7 @@ class User(UserMixin, db.Model):
     # Relationships
     dreams = db.relationship('Dream', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
-    forum_posts = db.relationship('ForumPost', backref='author', lazy='dynamic')
+    forum_posts = db.relationship('ForumPost', backref='author', lazy='dynamic', foreign_keys='ForumPost.author_id')
     forum_replies = db.relationship('ForumReply', backref='author', lazy='dynamic')
     groups = db.relationship('DreamGroup', secondary='group_membership', backref=db.backref('members', lazy='dynamic'))
     
@@ -47,6 +47,11 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     dream_id = db.Column(db.Integer, db.ForeignKey('dream.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    __table_args__ = (
+        db.Index('idx_comment_dream_id', 'dream_id'),
+        db.Index('idx_comment_user_id', 'user_id')
+    )
 
 class DreamGroup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -57,6 +62,10 @@ class DreamGroup(db.Model):
     
     # Relationships
     forum_posts = db.relationship('ForumPost', backref='group', lazy='dynamic', cascade='all, delete-orphan')
+    
+    __table_args__ = (
+        db.Index('idx_dreamgroup_created_by', 'created_by'),
+    )
 
 class GroupMembership(db.Model):
     __tablename__ = 'group_membership'
@@ -64,17 +73,27 @@ class GroupMembership(db.Model):
     group_id = db.Column(db.Integer, db.ForeignKey('dream_group.id'), primary_key=True)
     is_admin = db.Column(db.Boolean, default=False)
     joined_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    __table_args__ = (
+        db.Index('idx_groupmembership_user_group', 'user_id', 'group_id'),
+    )
 
 class ForumPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey('dream_group.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
     replies = db.relationship('ForumReply', backref='post', lazy='dynamic', cascade='all, delete-orphan')
+    
+    __table_args__ = (
+        db.Index('idx_forumpost_author_id', 'author_id'),
+        db.Index('idx_forumpost_group_id', 'group_id'),
+        db.Index('idx_forumpost_created_at', 'created_at')
+    )
 
 class ForumReply(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -82,3 +101,9 @@ class ForumReply(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('forum_post.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    __table_args__ = (
+        db.Index('idx_forumreply_post_id', 'post_id'),
+        db.Index('idx_forumreply_user_id', 'user_id'),
+        db.Index('idx_forumreply_created_at', 'created_at')
+    )

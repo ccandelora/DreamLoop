@@ -362,7 +362,7 @@ def create_forum_post(group_id):
             post = ForumPost(
                 title=title,
                 content=content,
-                user_id=current_user.id,
+                author_id=current_user.id,
                 group_id=group_id,
                 created_at=datetime.utcnow()
             )
