@@ -30,16 +30,9 @@
         @keyframes spinner {
             to {transform: rotate(360deg);}
         }
-        .nav-link {
-            @apply text-slate-700 hover:text-slate-900 px-3 py-2 rounded-lg transition-all hover:bg-slate-100/50;
-        }
-        .mobile-nav-link {
-            @apply block px-4 py-2 text-base text-slate-700 hover:text-slate-900 hover:bg-slate-100/50 rounded-lg transition-all;
-        }
     </style>
 
     <!-- Deferred CSS loading -->
-    <link rel="stylesheet" href="https://unpkg.com/@heroicons/24/outline/style.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/loading.css') }}" media="print" onload="this.media='all'">
     
@@ -57,7 +50,7 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="bg-white/80 backdrop-blur-lg border-b border-slate-200 fixed w-full top-0 z-50">
+    <nav class="bg-white/80 backdrop-blur-lg border-b border-slate-200 fixed w-full top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <!-- Logo and brand -->
@@ -72,31 +65,47 @@
                 <!-- Navigation Links (Desktop) -->
                 {% if current_user.is_authenticated %}
                 <div class="hidden lg:flex lg:items-center lg:space-x-6">
-                    <a href="{{ url_for('dream_new') }}" class="nav-link">Log Dream</a>
-                    <a href="{{ url_for('dream_patterns') }}" class="nav-link">Patterns</a>
-                    <a href="{{ url_for('community_dreams') }}" class="nav-link">Community</a>
-                    <a href="{{ url_for('dream_groups') }}" class="nav-link">Groups</a>
-                    <div class="relative group">
-                        <button class="nav-link flex items-center">
-                            <span>{{ current_user.username }}</span>
-                            <svg class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div class="absolute right-0 w-48 py-2 mt-2 bg-white/90 backdrop-blur-lg rounded-lg shadow-xl hidden group-hover:block">
-                            <a href="{{ url_for('subscription') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">
-                                Subscription
-                            </a>
-                            <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-sm text-red-600 hover:bg-slate-100">
-                                Logout
-                            </a>
-                        </div>
-                    </div>
+                    <a href="{{ url_for('dream_new') }}" class="nav-link">
+                        <svg class="h-5 w-5 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                        Log Dream
+                    </a>
+                    <a href="{{ url_for('dream_patterns') }}" class="nav-link">
+                        <svg class="h-5 w-5 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        Patterns
+                    </a>
+                    <a href="{{ url_for('community_dreams') }}" class="nav-link">
+                        <svg class="h-5 w-5 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        Community
+                    </a>
+                    <a href="{{ url_for('dream_groups') }}" class="nav-link">
+                        <svg class="h-5 w-5 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                        Groups
+                    </a>
+                    <a href="{{ url_for('subscription') }}" class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-all">
+                        <svg class="h-5 w-5 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                        </svg>
+                        Upgrade to Premium
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="nav-link text-red-600 hover:text-red-700">
+                        <svg class="h-5 w-5 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        Logout
+                    </a>
                 </div>
                 {% else %}
                 <div class="hidden lg:flex lg:items-center lg:space-x-4">
                     <a href="{{ url_for('login') }}" class="nav-link">Login</a>
-                    <a href="{{ url_for('register') }}" class="dream-button">Get Started</a>
+                    <a href="{{ url_for('register') }}" class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-all">Get Started</a>
                 </div>
                 {% endif %}
 
@@ -114,18 +123,49 @@
         <!-- Mobile menu -->
         <div class="hidden lg:hidden" id="mobileMenu">
             {% if current_user.is_authenticated %}
-            <div class="px-4 pt-2 pb-3 space-y-1">
-                <a href="{{ url_for('dream_new') }}" class="mobile-nav-link">Log Dream</a>
-                <a href="{{ url_for('dream_patterns') }}" class="mobile-nav-link">Patterns</a>
-                <a href="{{ url_for('community_dreams') }}" class="mobile-nav-link">Community</a>
-                <a href="{{ url_for('dream_groups') }}" class="mobile-nav-link">Groups</a>
-                <a href="{{ url_for('subscription') }}" class="mobile-nav-link">Subscription</a>
-                <a href="{{ url_for('logout') }}" class="mobile-nav-link text-red-600">Logout</a>
+            <div class="px-4 pt-2 pb-3 space-y-2">
+                <a href="{{ url_for('dream_new') }}" class="mobile-nav-link">
+                    <svg class="h-5 w-5 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                    Log Dream
+                </a>
+                <a href="{{ url_for('dream_patterns') }}" class="mobile-nav-link">
+                    <svg class="h-5 w-5 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    Patterns
+                </a>
+                <a href="{{ url_for('community_dreams') }}" class="mobile-nav-link">
+                    <svg class="h-5 w-5 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    Community
+                </a>
+                <a href="{{ url_for('dream_groups') }}" class="mobile-nav-link">
+                    <svg class="h-5 w-5 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                    Groups
+                </a>
+                <div class="border-t border-slate-200 my-2"></div>
+                <a href="{{ url_for('subscription') }}" class="mobile-nav-link bg-purple-500 text-white hover:bg-purple-600">
+                    <svg class="h-5 w-5 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                    </svg>
+                    Upgrade to Premium
+                </a>
+                <a href="{{ url_for('logout') }}" class="mobile-nav-link text-red-600 hover:text-red-700">
+                    <svg class="h-5 w-5 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    Logout
+                </a>
             </div>
             {% else %}
-            <div class="px-4 pt-2 pb-3 space-y-1">
+            <div class="px-4 pt-2 pb-3 space-y-2">
                 <a href="{{ url_for('login') }}" class="mobile-nav-link">Login</a>
-                <a href="{{ url_for('register') }}" class="mobile-nav-link">Register</a>
+                <a href="{{ url_for('register') }}" class="mobile-nav-link bg-purple-500 text-white hover:bg-purple-600">Get Started</a>
             </div>
             {% endif %}
         </div>
