@@ -2,30 +2,28 @@
 {% block title %}Create Dream Group{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h2>Create New Dream Group</h2>
-                </div>
-                <div class="card-body">
-                    <form method="POST">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Group Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
-                        </div>
-                        
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Create Group</button>
-                        </div>
-                    </form>
-                </div>
+<div class="container mx-auto">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white/80 backdrop-blur-lg border border-slate-200 rounded-lg shadow-lg">
+            <div class="border-b border-slate-200 px-6 py-4">
+                <h2 class="text-2xl font-semibold text-slate-900">Create New Dream Group</h2>
+            </div>
+            <div class="p-6">
+                <form method="POST">
+                    <div class="mb-4">
+                        <label for="name" class="block text-sm font-medium mb-2 text-slate-900">Group Name</label>
+                        <input type="text" class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent" 
+                               id="name" name="name" required>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="description" class="block text-sm font-medium mb-2 text-slate-900">Description</label>
+                        <textarea class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent min-h-[150px]" 
+                                id="description" name="description" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="dream-button w-full">Create Group</button>
+                </form>
             </div>
         </div>
     </div>
