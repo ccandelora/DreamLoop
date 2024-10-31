@@ -8,8 +8,8 @@
         <div class="lg:col-span-2">
             <div class="dream-card overflow-hidden">
                 <!-- Dream Header -->
-                <div class="border-b border-slate-200 p-6">
-                    <h2 class="text-3xl font-bold text-slate-900 mb-2">{{ dream.title }}</h2>
+                <div class="border-b border-slate-200 p-8">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-3">{{ dream.title }}</h2>
                     <div class="flex flex-wrap items-center gap-2 text-sm text-slate-600">
                         <span>
                             {% if dream.is_anonymous and dream.user_id != current_user.id %}
@@ -24,13 +24,13 @@
                 </div>
 
                 <!-- Dream Content -->
-                <div class="p-6">
-                    <div class="prose prose-slate max-w-none mb-6">
+                <div class="p-8 space-y-6">
+                    <div class="prose prose-slate max-w-none">
                         {{ dream.content }}
                     </div>
 
                     <!-- Dream Metadata -->
-                    <div class="flex flex-wrap gap-2 mb-4">
+                    <div class="flex flex-wrap gap-2">
                         <span class="dream-tag dream-tag-mood">
                             {{ dream.mood }}
                         </span>
@@ -45,17 +45,17 @@
 
             <!-- Comments Section -->
             <div class="dream-card mt-8">
-                <div class="border-b border-slate-200 p-6">
+                <div class="border-b border-slate-200 p-8">
                     <h3 class="text-xl font-semibold text-slate-900">Comments</h3>
                 </div>
 
                 <!-- Comment Form -->
-                <div class="p-6 border-b border-slate-200">
+                <div class="p-8 space-y-6 border-b border-slate-200">
                     <form method="POST" action="{{ url_for('add_comment', dream_id=dream.id) }}">
-                        <div class="mb-4">
-                            <label for="content" class="block text-sm font-medium text-slate-900 mb-2">Add a Comment</label>
+                        <div class="space-y-3">
+                            <label for="content" class="block text-sm font-medium text-slate-900">Add a Comment</label>
                             <textarea
-                                class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
+                                class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
                                 id="content"
                                 name="content"
                                 rows="3"
@@ -63,35 +63,39 @@
                                 placeholder="Share your thoughts..."
                             ></textarea>
                         </div>
-                        <button type="submit" class="dream-button">Post Comment</button>
+                        <div class="mt-4">
+                            <button type="submit" class="dream-button">Post Comment</button>
+                        </div>
                     </form>
                 </div>
 
                 <!-- Comments List -->
-                <div class="divide-y divide-slate-200">
-                    {% if dream.comments.all() %}
-                        {% for comment in dream.comments %}
-                        <div class="p-6 hover:bg-slate-50/50 transition-colors">
-                            <div class="mb-2 text-slate-800">{{ comment.content }}</div>
-                            <div class="flex justify-between items-center text-sm">
-                                <div class="text-slate-600">
-                                    {{ comment.author.username }} • {{ comment.created_at.strftime('%B %d at %I:%M %p') }}
+                <div class="p-8 space-y-6">
+                    <div class="space-y-4">
+                        {% if dream.comments.all() %}
+                            {% for comment in dream.comments %}
+                            <div class="bg-white/50 rounded-lg p-6 space-y-3">
+                                <div class="text-slate-800">{{ comment.content }}</div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <div class="text-slate-600">
+                                        {{ comment.author.username }} • {{ comment.created_at.strftime('%B %d at %I:%M %p') }}
+                                    </div>
+                                    {% if comment.user_id == current_user.id or dream.user_id == current_user.id %}
+                                    <form method="POST" action="{{ url_for('delete_comment', dream_id=dream.id, comment_id=comment.id) }}" class="inline">
+                                        <button type="submit" class="text-red-600 hover:text-red-700 transition-colors">
+                                            Delete
+                                        </button>
+                                    </form>
+                                    {% endif %}
                                 </div>
-                                {% if comment.user_id == current_user.id or dream.user_id == current_user.id %}
-                                <form method="POST" action="{{ url_for('delete_comment', dream_id=dream.id, comment_id=comment.id) }}" class="inline">
-                                    <button type="submit" class="text-red-600 hover:text-red-700 transition-colors">
-                                        Delete
-                                    </button>
-                                </form>
-                                {% endif %}
                             </div>
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="p-6 text-center text-slate-600">
-                            No comments yet. Be the first to comment!
-                        </div>
-                    {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center text-slate-600">
+                                No comments yet. Be the first to comment!
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,7 +104,7 @@
         <div class="lg:col-span-1">
             {% if dream.ai_analysis %}
             <div class="dream-card sticky top-20">
-                <div class="border-b border-slate-200 p-6">
+                <div class="border-b border-slate-200 p-8">
                     <h3 class="text-xl font-semibold text-slate-900 flex items-center gap-2">
                         <svg class="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -109,23 +113,22 @@
                         AI Analysis
                     </h3>
                 </div>
-                <div class="p-6">
-                    <div class="prose prose-slate max-w-none">
+                <div class="p-8 space-y-6">
+                    <div class="prose prose-slate max-w-none prose-headings:text-slate-900 prose-headings:font-semibold prose-p:text-slate-700 prose-strong:text-slate-900">
                         {{ dream.ai_analysis|markdown|safe }}
                     </div>
                     
                     {% if current_user.subscription_type == 'free' %}
-                    <div class="mt-6 pt-4 border-t border-slate-200">
-                        <div class="bg-purple-50/50 rounded-lg p-4">
-                            <p class="text-sm text-slate-700">
-                                <span class="font-semibold">Want deeper insights?</span><br>
-                                Upgrade to Premium for comprehensive dream analysis and pattern recognition.
-                            </p>
-                            <a href="{{ url_for('subscription') }}" 
-                               class="mt-2 inline-block text-sm text-purple-600 hover:text-purple-700 font-medium transition-colors">
-                                Learn More →
-                            </a>
-                        </div>
+                    <div class="section-divider"></div>
+                    <div class="bg-purple-50/50 rounded-lg p-6">
+                        <p class="text-sm text-slate-700">
+                            <span class="font-semibold">Want deeper insights?</span><br>
+                            Upgrade to Premium for comprehensive dream analysis and pattern recognition.
+                        </p>
+                        <a href="{{ url_for('subscription') }}" 
+                           class="mt-3 inline-block text-sm text-purple-600 hover:text-purple-700 font-medium transition-colors">
+                            Learn More →
+                        </a>
                     </div>
                     {% endif %}
                 </div>
@@ -139,12 +142,6 @@
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Smooth transitions for interactive elements
-    const comments = document.querySelectorAll('.comment');
-    comments.forEach(comment => {
-        comment.style.transition = 'all 0.2s ease-in-out';
-    });
-
     // Initialize markdown content if needed
     const markdownContent = document.querySelectorAll('.prose');
     markdownContent.forEach(content => {

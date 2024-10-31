@@ -34,21 +34,8 @@
     @apply bg-gradient-to-r from-purple-500/90 to-pink-500/90 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl border border-purple-500/70;
   }
 
-  .navbar {
-    @apply bg-white/90 backdrop-blur-lg border-b border-slate-200;
-  }
-
-  .mobile-menu {
-    @apply bg-white/90 backdrop-blur-lg;
-  }
-
-  .feature-box {
-    @apply bg-white/80 backdrop-blur-lg rounded-lg p-6;
-  }
-
-  /* Form inputs */
-  .form-input {
-    @apply bg-white/80 border border-slate-200;
+  .section-divider {
+    @apply border-t border-slate-200 my-6;
   }
 
   /* Tag styling */
@@ -64,31 +51,22 @@
     @apply bg-indigo-500/20 text-indigo-700 hover:bg-indigo-500/30;
   }
 
-  /* Chart container styling */
-  .chart-container {
-    @apply p-6 transition-all duration-300;
-  }
-
-  .chart-container canvas {
-    @apply w-full max-h-[300px];
-  }
-
-  @media (max-width: 768px) {
-    .chart-container {
-      @apply p-4 mb-6;
-    }
-
-    .chart-container canvas {
-      @apply max-h-[200px];
-    }
-  }
-
   /* Markdown content styling */
   .markdown-content {
     @apply prose prose-slate max-w-none;
   }
 
   .markdown-content blockquote {
-    @apply border-l-4 border-purple-500/30 pl-4 italic text-slate-700 bg-white/80;
+    @apply border-l-4 border-purple-500/30 pl-4 italic bg-white/80;
+  }
+
+  /* AI Analysis styling */
+  .ai-analysis {
+    @apply prose prose-slate max-w-none prose-headings:text-slate-900 prose-headings:font-semibold prose-p:text-slate-700 prose-strong:text-slate-900;
+  }
+
+  /* Comment styling */
+  .comment-card {
+    @apply bg-white/50 rounded-lg p-6 space-y-3 transition-all duration-200 hover:bg-white/60;
   }
 }

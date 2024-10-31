@@ -57,4 +57,41 @@
     height: 32px;
 }
 
-/* Rest of the existing CSS remains the same */
+/* Section divider */
+.section-divider {
+    @apply border-t border-slate-200 my-6;
+}
+
+/* Dream content styling */
+.prose.prose-slate {
+    @apply text-slate-700;
+}
+
+.prose.prose-slate h1,
+.prose.prose-slate h2,
+.prose.prose-slate h3,
+.prose.prose-slate h4 {
+    @apply text-slate-900 font-semibold;
+}
+
+.prose.prose-slate strong {
+    @apply text-slate-900;
+}
+
+.prose.prose-slate blockquote {
+    @apply border-l-4 border-purple-500/30 pl-4 italic bg-white/80;
+}
+
+/* Dream card hover effects */
+.dream-card {
+    @apply transition-all duration-300;
+}
+
+.dream-card:hover {
+    @apply shadow-lg;
+}
+
+/* Comment hover effects */
+.comment-hover {
+    @apply transition-all duration-200 hover:bg-slate-50/50;
+}
