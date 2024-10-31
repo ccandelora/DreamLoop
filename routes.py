@@ -151,6 +151,7 @@ def subscription():
                            stripe_publishable_key=stripe_publishable_key)
 
 @app.route('/community_dreams')
+@login_required
 def community_dreams():
     """View community dreams with sorting and filtering."""
     sort = request.args.get('sort', 'recent')

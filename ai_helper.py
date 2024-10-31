@@ -13,11 +13,12 @@ logger = logging.getLogger(__name__)
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 genai.configure(api_key=GEMINI_API_KEY)
 
+
 def analyze_dream(content, is_premium=False):
     """Analyze a dream with different depth based on subscription type."""
     try:
         model = genai.GenerativeModel('gemini-pro')
-        
+
         if is_premium:
             # Enhanced prompt for premium users
             prompt = f"""As an expert dream analyst, provide a comprehensive analysis of the following dream:
@@ -82,6 +83,7 @@ def analyze_dream(content, is_premium=False):
         logger.error(f"Error in dream analysis: {str(e)}")
         return "Unable to analyze dream at this time. Please try again later."
 
+
 def analyze_dream_patterns(dreams, is_premium=False):
     """Analyze patterns across multiple dreams with enhanced insights for premium users."""
     try:
@@ -91,26 +93,30 @@ def analyze_dream_patterns(dreams, is_premium=False):
         # Collect dream data
         dream_texts = [dream.content for dream in dreams]
         moods = [dream.mood for dream in dreams]
-        tags = [tag.strip() for dream in dreams for tag in dream.tags.split(',') if dream.tags]
-        
+        tags = [
+            tag.strip() for dream in dreams for tag in dream.tags.split(',')
+            if dream.tags
+        ]
+
         # Calculate dream frequency
         dream_dates = {}
         for dream in dreams:
             date_str = dream.date.strftime('%Y-%m-%d')
             dream_dates[date_str] = dream_dates.get(date_str, 0) + 1
-        
+
         # Sort dates for the chart
         sorted_dates = dict(sorted(dream_dates.items()))
-        
+
         # Basic pattern analysis
         mood_frequency = Counter(moods)
         tag_frequency = Counter(tags)
-        
+
         if is_premium:
             # Enhanced analysis for premium users
             model = genai.GenerativeModel('gemini-pro')
-            combined_dreams = "\n---\n".join(dream_texts[-10:])  # Analyze last 10 dreams
-            
+            combined_dreams = "\n---\n".join(
+                dream_texts[-10:])  # Analyze last 10 dreams
+
             prompt = f"""As an expert dream analyst, analyze these recent dreams for deep patterns and insights:
 
             Dreams:
@@ -142,21 +148,31 @@ def analyze_dream_patterns(dreams, is_premium=False):
             * Meditation and mindfulness practices
 
             Format the response in markdown with clear sections."""
-            
+
             response = model.generate_content(prompt)
             ai_pattern_analysis = response.text
         else:
             # Basic analysis for free users with upgrade message
-            ai_pattern_analysis = """### Basic Pattern Summary
-* A simple overview of your most common dream themes
-* Basic mood patterns across your dreams
+            model = genai.GenerativeModel('gemini-pro')
+            combined_dreams = "\n---\n".join(
+                dream_texts[-3:])  # Analyze last 3 dreams
+            prompt = f"""As an expert dream analyst, analyze these recent dreams for deep patterns and insights:
 
-💫 **Upgrade to Premium to Unlock:**
-* Deep psychological pattern analysis
-* Personal growth recommendations
-* Symbol network insights
-* Customized journaling prompts
-* Comprehensive emotional journey tracking"""
+            Dreams:
+            {combined_dreams}
+            Include only:
+            # Basic Pattern Summary
+            * A simple overview of your most common dream themes
+            * Basic mood patterns across your dreams
+
+            End with: 💫 **Upgrade to Premium to Unlock:**
+                        * Deep psychological pattern analysis
+                        * Personal growth recommendations
+                        * Symbol network insights
+                        * Customized journaling prompts
+                        * Comprehensive emotional journey tracking"""
+            response = model.generate_content(prompt)
+            ai_pattern_analysis = response.text
 
         # Construct the analysis result
         analysis = {
@@ -164,14 +180,15 @@ def analyze_dream_patterns(dreams, is_premium=False):
             'common_themes': dict(tag_frequency.most_common(5)),
             'dream_count': len(dreams),
             'time_span': {
-                'start': min(dream.date for dream in dreams).strftime('%Y-%m-%d'),
+                'start':
+                min(dream.date for dream in dreams).strftime('%Y-%m-%d'),
                 'end': max(dream.date for dream in dreams).strftime('%Y-%m-%d')
             },
             'dream_dates': sorted_dates,
             'ai_analysis': ai_pattern_analysis,
             'is_premium': is_premium
         }
-        
+
         return analysis
     except Exception as e:
         logger.error(f"Error in pattern analysis: {str(e)}")
