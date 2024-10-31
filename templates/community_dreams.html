@@ -49,11 +49,11 @@
                 <!-- Dream Metadata -->
                 <div class="space-y-3">
                     <div class="flex flex-wrap gap-2">
-                        <span class="bg-purple-500/20 text-purple-700 px-3 py-1 rounded-full text-sm">
+                        <span class="dream-tag dream-tag-mood">
                             {{ dream.mood }}
                         </span>
                         {% for tag in dream.tags.split(',') %}
-                        <span class="bg-slate-500/20 text-slate-700 px-3 py-1 rounded-full text-sm">
+                        <span class="dream-tag dream-tag-regular">
                             {{ tag.strip() }}
                         </span>
                         {% endfor %}

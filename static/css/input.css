@@ -51,6 +51,19 @@
     @apply bg-white/80 border border-slate-200;
   }
 
+  /* Tag styling */
+  .dream-tag {
+    @apply px-3 py-1 rounded-full text-sm font-medium transition-all duration-200;
+  }
+    
+  .dream-tag-mood {
+    @apply bg-purple-500/20 text-purple-700 hover:bg-purple-500/30;
+  }
+    
+  .dream-tag-regular {
+    @apply bg-indigo-500/20 text-indigo-700 hover:bg-indigo-500/30;
+  }
+
   /* Chart container styling */
   .chart-container {
     @apply p-6 transition-all duration-300;
