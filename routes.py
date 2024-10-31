@@ -16,12 +16,15 @@ from sqlalchemy import desc, func
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app.jinja_env.filters['markdown'] = lambda text: markdown.markdown(text) if text else ''
+app.jinja_env.filters['markdown'] = lambda text: markdown.markdown(
+    text) if text else ''
+
 
 @app.route('/')
 def index():
     """Home page."""
     return render_template('index.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -38,6 +41,7 @@ def login():
 
         flash('Invalid username or password')
     return render_template('login.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -75,12 +79,14 @@ def register():
 
     return render_template('register.html')
 
+
 @app.route('/logout')
 @login_required
 def logout():
     """User logout."""
     logout_user()
     return redirect(url_for('index'))
+
 
 @app.route('/dream/<int:dream_id>')
 @login_required
@@ -91,6 +97,7 @@ def dream_view(dream_id):
         flash('You do not have permission to view this dream.')
         return redirect(url_for('index'))
     return render_template('dream_view.html', dream=dream)
+
 
 @app.route('/dream/new', methods=['GET', 'POST'])
 @login_required
@@ -133,14 +140,17 @@ def dream_new():
 
     return render_template('dream_new.html')
 
+
 @app.route('/dream_patterns')
 @login_required
 def dream_patterns():
     """View dream patterns with enhanced analysis for premium users."""
     dreams = current_user.dreams.all()
     is_premium = current_user.subscription_type == 'premium'
-    patterns = analyze_dream_patterns(dreams, is_premium=is_premium) if dreams else None
+    patterns = analyze_dream_patterns(
+        dreams, is_premium=is_premium) if dreams else None
     return render_template('dream_patterns.html', patterns=patterns)
+
 
 @app.route('/subscription')
 @login_required
@@ -149,6 +159,7 @@ def subscription():
     stripe_publishable_key = os.environ.get('STRIPE_PUBLISHABLE_KEY')
     return render_template('subscription.html',
                            stripe_publishable_key=stripe_publishable_key)
+
 
 @app.route('/community_dreams')
 @login_required
@@ -165,12 +176,15 @@ def community_dreams():
     if sort == 'recent':
         query = query.order_by(Dream.date.desc())
     elif sort == 'popular':
-        query = query.outerjoin(Comment).group_by(Dream.id).order_by(desc(func.count(Comment.id)))
+        query = query.outerjoin(Comment).group_by(Dream.id).order_by(
+            desc(func.count(Comment.id)))
     elif sort == 'commented':
-        query = query.outerjoin(Comment).group_by(Dream.id).order_by(desc(func.max(Comment.created_at)))
+        query = query.outerjoin(Comment).group_by(Dream.id).order_by(
+            desc(func.max(Comment.created_at)))
 
     dreams = query.all()
     return render_template('community_dreams.html', dreams=dreams)
+
 
 @app.route('/dream_groups')
 @login_required
@@ -179,11 +193,69 @@ def dream_groups():
     groups = DreamGroup.query.all()
     return render_template('dream_groups.html', groups=groups)
 
-@app.route('/create_group')
+
+@app.route('/create_group', methods=['GET', 'POST'])
 @login_required
 def create_group():
+    """Create a new dream group."""
+    if request.method == 'POST':
+        name = request.form.get('name')
+        description = request.form.get('description')
+
+        dream_group = DreamGroup(name=name,
+                                 description=description,
+                                 created_by=current_user.id)
+        group_membership = GroupMembership(user_id=current_user.id,
+                                           group_id=dream_group.id,
+                                           is_admin=True,
+                                           joined_at=datetime.utcnow())
+
+        try:
+            db.session.add(dream_group)
+            db.session.add(group_membership)
+            db.session.commit()
+            flash('Dream Group created successfully!')
+            return redirect(url_for('dream_group', dream_group_id=dream_group.id))
+
+        except Exception as e:
+            logger.error(f"Error creating dream group: {str(e)}")
+            db.session.rollback()
+            flash('An error occurred while saving your dream group.')
+            return render_template('create_group.html')
     """Create Group Page."""
     return render_template('create_group.html')
+
+
+@app.route('/join_group/<int:group_id>', methods=['GET', 'POST'])
+@login_required
+def join_group(group_id):
+    """Join a dream group."""
+    group = DreamGroup.query.get_or_404(group_id)
+
+    if request.method == 'POST':
+        user_id = current_user.id
+        membership = GroupMembership.query.filter_by(
+            user_id=user_id, group_id=group_id).first()
+
+        if membership:
+            flash('You are already a member of this group.')
+            return redirect(url_for('dream_group', dream_group=group_id))
+
+        membership = GroupMembership(user_id=user_id, group_id=group_id)
+        db.session.add(membership)
+        db.session.commit()
+        flash('You have joined the group successfully!')
+        return redirect(url_for('dream_group', dream_group=group_id))
+
+@app.route('/dream_group/<int:dream_group_id>')
+@login_required
+def dream_group(dream_group_id):
+    """View a specific dream group."""
+    group = DreamGroup.query.get_or_404(dream_group_id)
+    members = GroupMembership.query.filter_by(group_id=group.id).all()
+    return render_template('dream_group.html', group=group, members=members)
+    
+
 
 @app.route('/dream/<int:dream_id>/comment', methods=['POST'])
 @login_required
@@ -217,7 +289,9 @@ def add_comment(dream_id):
 
     return redirect(url_for('dream_view', dream_id=dream_id))
 
-@app.route('/dream/<int:dream_id>/comment/<int:comment_id>/delete', methods=['POST'])
+
+@app.route('/dream/<int:dream_id>/comment/<int:comment_id>/delete',
+           methods=['POST'])
 @login_required
 def delete_comment(dream_id, comment_id):
     """Delete a comment."""
