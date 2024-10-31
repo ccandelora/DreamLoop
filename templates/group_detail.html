@@ -2,149 +2,162 @@
 {% block title %}{{ group.name }}{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row mb-4">
-        <div class="col">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ url_for('dream_groups') }}">Groups</a></li>
-                    <li class="breadcrumb-item active">{{ group.name }}</li>
-                </ol>
-            </nav>
-        </div>
-    </div>
-
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h2>{{ group.name }}</h2>
-            <span class="badge bg-primary">{{ group.theme }}</span>
-            <p class="mt-3">{{ group.description }}</p>
-        </div>
-        <div class="col-md-4 text-end">
-            {% if is_member %}
-            <a href="{{ url_for('create_forum_post', group_id=group.id) }}" class="btn btn-primary">New Discussion</a>
-            {% if is_admin %}
-            <a href="{{ url_for('edit_group', group_id=group.id) }}" class="btn btn-outline-secondary">Edit Group</a>
-            {% endif %}
-            {% else %}
-            <form method="POST" action="{{ url_for('join_group', group_id=group.id) }}">
-                <button type="submit" class="btn btn-primary">Join Group</button>
-            </form>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Group Content Tabs -->
-    <ul class="nav nav-tabs mb-4" id="groupTabs" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="dreams-tab" data-bs-toggle="tab" href="#dreams" role="tab">Shared Dreams</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="discussions-tab" data-bs-toggle="tab" href="#discussions" role="tab">Discussions</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="members-tab" data-bs-toggle="tab" href="#members" role="tab">Members</a>
-        </li>
-    </ul>
-
-    <div class="tab-content" id="groupTabContent">
-        <!-- Dreams Tab -->
-        <div class="tab-pane fade show active" id="dreams" role="tabpanel">
-            {% if is_member %}
-            <div class="mb-4">
-                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#shareDreamModal">
-                    Share a Dream
-                </button>
-            </div>
-            {% endif %}
-            
-            <div class="row row-cols-1 row-cols-md-2 g-4">
-                {% for dream in group.dreams %}
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ dream.title }}</h5>
-                            <p class="card-text">{{ dream.content[:200] }}...</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">by {{ dream.author.username }}</small>
-                                <a href="{{ url_for('dream_view', dream_id=dream.id) }}" class="btn btn-sm btn-outline-primary">Read More</a>
-                            </div>
-                        </div>
+<div class="container mx-auto">
+    <!-- Group Header -->
+    <div class="dream-card mb-8">
+        <div class="p-8">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-900 mb-3">{{ group.name }}</h2>
+                    <p class="text-slate-700 mb-4">{{ group.description }}</p>
+                    <div class="text-sm text-slate-600">
+                        Created by {{ creator.username }} on {{ group.created_at.strftime('%B %d, %Y') }}
                     </div>
                 </div>
-                {% endfor %}
+                {% if is_admin %}
+                <a href="{{ url_for('edit_group', group_id=group.id) }}" class="dream-button">
+                    Edit Group
+                </a>
+                {% endif %}
             </div>
         </div>
-
-        <!-- Discussions Tab -->
-        <div class="tab-pane fade" id="discussions" role="tabpanel">
-            {% if is_member %}
-            <div class="mb-4">
-                <a href="{{ url_for('create_forum_post', group_id=group.id) }}" class="btn btn-outline-primary">
-                    Start New Discussion
-                </a>
-            </div>
-            {% endif %}
-
-            <div class="list-group">
-                {% for post in group.forum_posts %}
-                <a href="{{ url_for('forum_post', post_id=post.id) }}" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ post.title }}</h5>
-                        <small>{{ post.created_at.strftime('%Y-%m-%d') }}</small>
+        
+        <!-- Group Stats -->
+        <div class="border-t border-slate-200 px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-6">
+                    <div class="text-sm">
+                        <span class="text-slate-600">Members:</span>
+                        <span class="font-semibold text-slate-900">{{ members|length }}</span>
                     </div>
-                    <p class="mb-1">{{ post.content[:200] }}...</p>
-                    <small>by {{ post.author.username }} • {{ post.replies.count() }} replies</small>
-                </a>
-                {% endfor %}
+                    <div class="text-sm">
+                        <span class="text-slate-600">Discussions:</span>
+                        <span class="font-semibold text-slate-900">{{ discussions|length }}</span>
+                    </div>
+                </div>
+                {% if current_user not in group.members %}
+                <form method="POST" action="{{ url_for('join_group', group_id=group.id) }}">
+                    <button type="submit" class="dream-button">Join Group</button>
+                </form>
+                {% else %}
+                <form method="POST" action="{{ url_for('leave_group', group_id=group.id) }}" 
+                      onsubmit="return confirm('Are you sure you want to leave this group?');">
+                    <button type="submit" class="px-4 py-2 border-2 border-red-500/50 text-red-600 hover:bg-red-50/80 rounded-lg transition-all">
+                        Leave Group
+                    </button>
+                </form>
+                {% endif %}
             </div>
         </div>
+    </div>
 
-        <!-- Members Tab -->
-        <div class="tab-pane fade" id="members" role="tabpanel">
-            <div class="list-group">
-                {% for membership in group.members %}
-                <div class="list-group-item">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="mb-0">{{ membership.user.username }}</h6>
+    <!-- Members Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-1">
+            <div class="dream-card">
+                <div class="border-b border-slate-200 p-6">
+                    <h3 class="text-xl font-semibold text-slate-900">Members</h3>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        {% for membership in members %}
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <svg class="h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                <div>
+                                    <p class="text-sm font-medium text-slate-900">{{ membership.user.username }}</p>
+                                    <p class="text-xs text-slate-500">Joined {{ membership.joined_at.strftime('%B %d, %Y') }}</p>
+                                </div>
+                            </div>
                             {% if membership.is_admin %}
-                            <small class="text-primary">Admin</small>
+                            <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Admin</span>
                             {% endif %}
                         </div>
-                        <small class="text-muted">Joined {{ membership.join_date.strftime('%Y-%m-%d') }}</small>
+                        {% endfor %}
                     </div>
                 </div>
-                {% endfor %}
             </div>
         </div>
-    </div>
-</div>
 
-<!-- Share Dream Modal -->
-{% if is_member %}
-<div class="modal fade" id="shareDreamModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Share Dream with Group</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="{{ url_for('share_dream', group_id=group.id) }}">
-                    <div class="mb-3">
-                        <label for="dreamSelect" class="form-label">Select Dream to Share</label>
-                        <select class="form-select" id="dreamSelect" name="dream_id" required>
-                            {% for dream in user_dreams %}
-                            <option value="{{ dream.id }}">{{ dream.title }}</option>
-                            {% endfor %}
-                        </select>
+        <!-- Discussions Section -->
+        <div class="lg:col-span-2">
+            <div class="dream-card">
+                <div class="border-b border-slate-200 p-6">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xl font-semibold text-slate-900">Discussions</h3>
+                        {% if current_user in group.members %}
+                        <a href="{{ url_for('create_discussion', group_id=group.id) }}" class="dream-button">
+                            New Discussion
+                        </a>
+                        {% endif %}
                     </div>
-                    <button type="submit" class="btn btn-primary">Share Dream</button>
-                </form>
+                </div>
+                <div class="p-6">
+                    {% if discussions %}
+                    <div class="space-y-6">
+                        {% for discussion in discussions %}
+                        <div class="bg-white/50 rounded-lg p-6 hover:bg-white/60 transition-all duration-200">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="text-lg font-semibold text-slate-900 mb-2">
+                                        <a href="{{ url_for('view_discussion', group_id=group.id, discussion_id=discussion.id) }}" 
+                                           class="hover:text-purple-600 transition-colors">
+                                            {{ discussion.title }}
+                                        </a>
+                                    </h4>
+                                    <p class="text-slate-700 line-clamp-2 mb-3">{{ discussion.content }}</p>
+                                    <div class="flex items-center space-x-4 text-sm text-slate-600">
+                                        <span>By {{ discussion.author.username }}</span>
+                                        <span>{{ discussion.created_at.strftime('%B %d, %Y') }}</span>
+                                        <span>{{ discussion.replies|length }} replies</span>
+                                    </div>
+                                </div>
+                                {% if discussion.user_id == current_user.id or is_admin %}
+                                <div class="flex space-x-2">
+                                    <a href="{{ url_for('edit_discussion', group_id=group.id, discussion_id=discussion.id) }}" 
+                                       class="text-slate-600 hover:text-slate-900 transition-colors">
+                                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                        </svg>
+                                    </a>
+                                    <form method="POST" action="{{ url_for('delete_discussion', group_id=group.id, discussion_id=discussion.id) }}"
+                                          onsubmit="return confirm('Are you sure you want to delete this discussion?');" 
+                                          class="inline">
+                                        <button type="submit" class="text-red-600 hover:text-red-700 transition-colors">
+                                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-8">
+                        <svg class="h-12 w-12 mx-auto text-slate-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        <p class="text-slate-600">No discussions yet.</p>
+                        {% if current_user in group.members %}
+                        <a href="{{ url_for('create_discussion', group_id=group.id) }}" 
+                           class="dream-button inline-block mt-4">
+                            Start a Discussion
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
 </div>
-{% endif %}
 {% endblock %}

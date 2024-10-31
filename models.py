@@ -18,6 +18,8 @@ class User(UserMixin, db.Model):
     # Relationships
     dreams = db.relationship('Dream', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
+    forum_posts = db.relationship('ForumPost', backref='author', lazy='dynamic')
+    forum_replies = db.relationship('ForumReply', backref='author', lazy='dynamic')
     groups = db.relationship('DreamGroup', secondary='group_membership', backref=db.backref('members', lazy='dynamic'))
     
     def set_password(self, password):
@@ -25,7 +27,6 @@ class User(UserMixin, db.Model):
         
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-
 
 class Dream(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -53,6 +54,9 @@ class DreamGroup(db.Model):
     description = db.Column(db.Text)
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    forum_posts = db.relationship('ForumPost', backref='group', lazy='dynamic', cascade='all, delete-orphan')
 
 class GroupMembership(db.Model):
     __tablename__ = 'group_membership'
@@ -60,3 +64,21 @@ class GroupMembership(db.Model):
     group_id = db.Column(db.Integer, db.ForeignKey('dream_group.id'), primary_key=True)
     is_admin = db.Column(db.Boolean, default=False)
     joined_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class ForumPost(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    group_id = db.Column(db.Integer, db.ForeignKey('dream_group.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    replies = db.relationship('ForumReply', backref='post', lazy='dynamic', cascade='all, delete-orphan')
+
+class ForumReply(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('forum_post.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
