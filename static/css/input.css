@@ -4,44 +4,52 @@
 
 @layer base {
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-wide;
+    @apply font-semibold tracking-wide text-white;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   }
   
   p {
-    @apply text-dream-text-secondary leading-relaxed;
+    @apply text-gray-100 leading-relaxed;
   }
   
   .form-label {
-    @apply text-dream-text-primary font-medium;
+    @apply text-white font-medium;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-  
-  .dream-card-title {
-    @apply text-xl font-semibold text-dream-text-primary mb-2;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-  }
-  
-  .dream-card-content {
-    @apply text-dream-text-secondary leading-relaxed;
   }
 }
 
 @layer components {
     .dream-card {
-        @apply bg-white/30 backdrop-blur-lg border border-white/20 rounded-lg shadow-lg transition-all duration-300;
+        @apply bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg shadow-lg transition-all duration-300;
     }
 
     .dream-card:hover {
-        @apply transform -translate-y-1 border-purple-500/40 bg-white/35;
+        @apply transform -translate-y-1 border-purple-500/30 bg-white/15;
     }
 
     .dream-input {
-        @apply w-full bg-white/20 border border-gray-400/50 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500/60 focus:border-transparent;
+        @apply w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent;
     }
 
     .dream-button {
-        @apply bg-gradient-to-r from-purple-500/90 to-pink-500/90 hover:from-purple-600/95 hover:to-pink-600/95 text-dream-text-primary font-semibold py-2 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl;
+        @apply bg-gradient-to-r from-purple-500/80 to-pink-500/80 hover:from-purple-600/90 hover:to-pink-600/90 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl;
+    }
+
+    .navbar {
+        @apply bg-white/10 backdrop-blur-lg border-b border-white/20;
+    }
+
+    .mobile-menu {
+        @apply bg-white/10 backdrop-blur-lg;
+    }
+
+    .feature-box {
+        @apply bg-white/10 backdrop-blur-lg rounded-lg p-6;
+    }
+
+    /* Form inputs */
+    .form-input {
+        @apply bg-white/10 border border-white/20;
     }
 
     /* Chart container styling */
@@ -63,41 +71,12 @@
         }
     }
 
-    .chart-container:hover {
-        @apply transform -translate-y-1 shadow-lg;
-    }
-
-    /* Chart loader animation */
-    .chart-loader {
-        @apply transition-opacity duration-300;
-    }
-
     /* Markdown content styling */
     .markdown-content {
         @apply prose prose-invert prose-sm max-w-none;
     }
 
-    .markdown-content h1,
-    .markdown-content h2,
-    .markdown-content h3,
-    .markdown-content h4 {
-        @apply text-dream-text-primary font-semibold mb-4;
-        text-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-    }
-
-    .markdown-content p {
-        @apply text-dream-text-secondary leading-relaxed mb-4;
-    }
-
-    .markdown-content ul {
-        @apply list-disc list-inside text-dream-text-secondary space-y-2;
-    }
-
     .markdown-content blockquote {
-        @apply border-l-4 border-purple-500/50 pl-4 italic text-dream-text-muted;
-    }
-
-    .feature-box {
-        @apply bg-white/35 backdrop-blur-lg rounded-lg p-6 transition-all duration-300 hover:bg-white/40 hover:transform hover:-translate-y-1 shadow-lg hover:shadow-xl border border-white/30 hover:border-purple-500/40;
+        @apply border-l-4 border-purple-500/30 pl-4 italic text-gray-300 bg-white/10;
     }
 }
