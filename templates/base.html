@@ -52,8 +52,77 @@
     </div>
 
     <nav class="bg-white/80 backdrop-blur-lg border-b border-slate-200 fixed w-full top-0 z-50">
-        <!-- Previous nav content remains the same -->
-        {{ super() }}
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <!-- Logo and brand -->
+                <div class="flex">
+                    <a href="{{ url_for('index') }}" class="flex items-center">
+                        <img src="{{ url_for('static', filename='images/dreamlooplogo.svg') }}" 
+                             alt="DreamLoop Logo" 
+                             class="h-10 w-auto">
+                    </a>
+                </div>
+
+                <!-- Navigation Links (Desktop) -->
+                {% if current_user.is_authenticated %}
+                <div class="hidden lg:flex lg:items-center lg:space-x-6">
+                    <a href="{{ url_for('dream_new') }}" class="nav-link">Log Dream</a>
+                    <a href="{{ url_for('dream_patterns') }}" class="nav-link">Patterns</a>
+                    <a href="{{ url_for('community_dreams') }}" class="nav-link">Community</a>
+                    <a href="{{ url_for('dream_groups') }}" class="nav-link">Groups</a>
+                    <div class="relative group">
+                        <button class="nav-link flex items-center">
+                            <span>{{ current_user.username }}</span>
+                            <svg class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="absolute right-0 w-48 py-2 mt-2 bg-white/90 backdrop-blur-lg rounded-lg shadow-xl hidden group-hover:block">
+                            <a href="{{ url_for('subscription') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">
+                                Subscription
+                            </a>
+                            <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-sm text-red-600 hover:bg-slate-100">
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="hidden lg:flex lg:items-center lg:space-x-4">
+                    <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                    <a href="{{ url_for('register') }}" class="dream-button">Get Started</a>
+                </div>
+                {% endif %}
+
+                <!-- Mobile menu button -->
+                <div class="lg:hidden flex items-center">
+                    <button onclick="toggleMenu()" class="inline-flex items-center justify-center p-2 rounded-lg text-slate-700 hover:text-slate-900 hover:bg-slate-100 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="hidden lg:hidden" id="mobileMenu">
+            {% if current_user.is_authenticated %}
+            <div class="px-4 pt-2 pb-3 space-y-1">
+                <a href="{{ url_for('dream_new') }}" class="mobile-nav-link">Log Dream</a>
+                <a href="{{ url_for('dream_patterns') }}" class="mobile-nav-link">Patterns</a>
+                <a href="{{ url_for('community_dreams') }}" class="mobile-nav-link">Community</a>
+                <a href="{{ url_for('dream_groups') }}" class="mobile-nav-link">Groups</a>
+                <a href="{{ url_for('subscription') }}" class="mobile-nav-link">Subscription</a>
+                <a href="{{ url_for('logout') }}" class="mobile-nav-link text-red-600">Logout</a>
+            </div>
+            {% else %}
+            <div class="px-4 pt-2 pb-3 space-y-1">
+                <a href="{{ url_for('login') }}" class="mobile-nav-link">Login</a>
+                <a href="{{ url_for('register') }}" class="mobile-nav-link">Register</a>
+            </div>
+            {% endif %}
+        </div>
     </nav>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-20">
@@ -112,21 +181,12 @@
             });
         });
 
-        // Mobile menu toggle (previous code remains the same)
+        // Mobile menu toggle
         function toggleMenu() {
             const menu = document.getElementById('mobileMenu');
             menu.classList.toggle('hidden');
             menu.classList.toggle('flex');
             menu.classList.toggle('flex-col');
-            menu.classList.toggle('w-full');
-            menu.classList.toggle('fixed');
-            menu.classList.toggle('top-14');
-            menu.classList.toggle('left-0');
-            menu.classList.toggle('bg-white/90');
-            menu.classList.toggle('backdrop-blur-lg');
-            menu.classList.toggle('p-4');
-            menu.classList.toggle('space-y-2');
-            menu.classList.toggle('z-40');
         }
 
         // Performance optimization: Load images lazily
