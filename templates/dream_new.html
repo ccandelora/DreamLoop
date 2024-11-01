@@ -29,6 +29,49 @@
                             <div id="voiceStatus" class="absolute top-full left-0 mt-1 text-sm text-slate-600 hidden"></div>
                         </div>
                     </div>
+
+                    <!-- New Fields -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label for="lucidity_level" class="block text-sm font-medium mb-2 text-slate-900">Lucidity Level (0-5)</label>
+                            <select class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent" 
+                                    id="lucidity_level" name="lucidity_level" required>
+                                <option value="">Select level...</option>
+                                <option value="0">0 - Not Lucid</option>
+                                <option value="1">1 - Barely Lucid</option>
+                                <option value="2">2 - Partially Lucid</option>
+                                <option value="3">3 - Moderately Lucid</option>
+                                <option value="4">4 - Very Lucid</option>
+                                <option value="5">5 - Fully Lucid</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="sleep_quality" class="block text-sm font-medium mb-2 text-slate-900">Sleep Quality (1-5)</label>
+                            <select class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent" 
+                                    id="sleep_quality" name="sleep_quality" required>
+                                <option value="">Select quality...</option>
+                                <option value="1">1 - Poor</option>
+                                <option value="2">2 - Fair</option>
+                                <option value="3">3 - Good</option>
+                                <option value="4">4 - Very Good</option>
+                                <option value="5">5 - Excellent</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="dream_clarity" class="block text-sm font-medium mb-2 text-slate-900">Dream Clarity (1-5)</label>
+                            <select class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent" 
+                                    id="dream_clarity" name="dream_clarity" required>
+                                <option value="">Select clarity...</option>
+                                <option value="1">1 - Very Fuzzy</option>
+                                <option value="2">2 - Somewhat Unclear</option>
+                                <option value="3">3 - Moderately Clear</option>
+                                <option value="4">4 - Very Clear</option>
+                                <option value="5">5 - Crystal Clear</option>
+                            </select>
+                        </div>
+                    </div>
                     
                     <div class="mb-4">
                         <label for="mood" class="block text-sm font-medium mb-2 text-slate-900">Mood</label>
