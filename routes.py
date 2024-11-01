@@ -1,17 +1,20 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db
 from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 import os
 import hashlib
+import json
+from collections import Counter, defaultdict
+import statistics
 from google_ads_helper import track_premium_conversion, show_premium_ads, validate_google_ads_credentials
 from ai_helper import analyze_dream, analyze_dream_patterns
 from stripe_webhook_handler import handle_stripe_webhook
 import stripe
 import markdown
-from sqlalchemy import desc, func
+from sqlalchemy import desc, func, extract
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -22,7 +25,6 @@ app.jinja_env.filters['markdown'] = lambda text: markdown.markdown(text) if text
 def index():
     """Home page."""
     if current_user.is_authenticated:
-        # Pass the Dream model to the template context
         return render_template('index.html', Dream=Dream)
     return render_template('index.html')
 
@@ -140,10 +142,97 @@ def dream_new():
 @login_required
 def dream_patterns():
     """View dream patterns with enhanced analysis for premium users."""
-    dreams = current_user.dreams.all()
-    is_premium = current_user.subscription_type == 'premium'
-    patterns = analyze_dream_patterns(dreams, is_premium=is_premium) if dreams else None
-    return render_template('dream_patterns.html', patterns=patterns)
+    dreams = current_user.dreams.order_by(Dream.date.desc()).all()
+    
+    if not dreams:
+        return render_template('dream_patterns.html', patterns=None)
+        
+    try:
+        # Basic statistics
+        dream_count = len(dreams)
+        lucid_dreams = sum(1 for dream in dreams if dream.lucidity_level and dream.lucidity_level > 0)
+        
+        # Calculate average clarity safely
+        valid_clarity_values = [d.dream_clarity for d in dreams if d.dream_clarity is not None]
+        avg_clarity = sum(valid_clarity_values) / len(valid_clarity_values) if valid_clarity_values else 0
+        
+        # Mood distribution with safe handling
+        mood_distribution = Counter(dream.mood for dream in dreams if dream.mood)
+        
+        # Dream frequency over time
+        date_counts = defaultdict(int)
+        for dream in dreams:
+            date_str = dream.date.strftime('%Y-%m-%d')
+            date_counts[date_str] += 1
+        
+        # Sort dates and prepare frequency data
+        sorted_dates = sorted(date_counts.keys())
+        dream_frequency = {date: date_counts[date] for date in sorted_dates}
+        
+        # Emotional tone analysis with safe handling
+        emotional_tone = {}
+        for dream in dreams:
+            if dream.emotional_tone is not None:
+                emotional_tone[dream.date.strftime('%Y-%m-%d')] = dream.emotional_tone
+        
+        # Common themes and symbols with safe handling
+        all_themes = []
+        for dream in dreams:
+            if dream.recurring_elements:
+                try:
+                    elements = json.loads(dream.recurring_elements or '[]')
+                    all_themes.extend(elements)
+                except (json.JSONDecodeError, TypeError):
+                    continue
+        
+        common_themes = dict(Counter(all_themes).most_common(10))
+        
+        # Sleep quality correlation with safe handling
+        sleep_quality = []
+        for dream in dreams:
+            if dream.sleep_quality is not None and dream.dream_clarity is not None:
+                sleep_quality.append({
+                    'x': dream.sleep_quality,
+                    'y': dream.dream_clarity
+                })
+        
+        # Archetype analysis with safe handling
+        all_archetypes = []
+        for dream in dreams:
+            if dream.dream_archetypes:
+                try:
+                    archetypes = json.loads(dream.dream_archetypes or '[]')
+                    all_archetypes.extend(archetypes)
+                except (json.JSONDecodeError, TypeError):
+                    continue
+        
+        archetype_frequency = dict(Counter(all_archetypes).most_common(8))
+        
+        # Prepare comprehensive pattern analysis
+        patterns = {
+            'dream_count': dream_count,
+            'lucid_count': lucid_dreams,
+            'avg_clarity': round(avg_clarity, 1),
+            'mood_distribution': dict(mood_distribution),
+            'dream_frequency': dream_frequency,
+            'emotional_tone': emotional_tone,
+            'common_themes': common_themes,
+            'sleep_quality': sleep_quality,
+            'archetypes': archetype_frequency
+        }
+        
+        # Add AI analysis for premium users
+        if current_user.subscription_type == 'premium':
+            patterns['ai_analysis'] = analyze_dream_patterns(dreams, is_premium=True)
+        else:
+            patterns['ai_analysis'] = analyze_dream_patterns(dreams, is_premium=False)
+        
+        return render_template('dream_patterns.html', patterns=patterns)
+        
+    except Exception as e:
+        logging.error(f"Error analyzing dream patterns: {str(e)}")
+        flash('An error occurred while analyzing dream patterns.')
+        return render_template('dream_patterns.html', patterns=None)
 
 @app.route('/subscription')
 @login_required
