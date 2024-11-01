@@ -89,7 +89,7 @@
                     </a>
                     {% if current_user.subscription_type == 'free' %}
                     <a href="{{ url_for('subscription') }}" 
-                       class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all flex items-center px-4 py-2 rounded-lg">
+                       class="text-slate-700 hover:text-purple-600 transition-colors flex items-center">
                         <svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
                         </svg>
@@ -161,7 +161,7 @@
                 </a>
                 {% if current_user.subscription_type == 'free' %}
                 <a href="{{ url_for('subscription') }}" 
-                   class="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all flex items-center px-4 py-2 rounded-lg">
+                   class="flex items-center text-slate-700 hover:text-purple-600 transition-colors py-2">
                     <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
                     </svg>
@@ -257,12 +257,9 @@
             menu.classList.toggle('top-14');
             menu.classList.toggle('left-0');
             menu.classList.toggle('bg-white/90');
-            menu.classList.toggle('border-b');
-            menu.classList.toggle('border-slate-200');
-            menu.classList.toggle('backdrop-blur-lg');
-            menu.classList.toggle('z-40');
         }
     </script>
+
     {% block scripts %}{% endblock %}
 </body>
 </html>
