@@ -18,8 +18,16 @@
                     
                     <div class="mb-4">
                         <label for="content" class="block text-sm font-medium mb-2 text-slate-900">Dream Description</label>
-                        <textarea class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent min-h-[150px]" 
-                                  id="content" name="content" required></textarea>
+                        <div class="relative">
+                            <textarea class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent min-h-[150px]" 
+                                      id="content" name="content" required></textarea>
+                            <button type="button" id="voiceButton" class="absolute bottom-2 right-2 p-2 text-slate-600 hover:text-purple-600 transition-colors rounded-full bg-white/80 border border-slate-200">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                                </svg>
+                            </button>
+                            <div id="voiceStatus" class="absolute top-full left-0 mt-1 text-sm text-slate-600 hidden"></div>
+                        </div>
                     </div>
                     
                     <div class="mb-4">
@@ -78,4 +86,90 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const voiceButton = document.getElementById('voiceButton');
+    const contentTextarea = document.getElementById('content');
+    const voiceStatus = document.getElementById('voiceStatus');
+    let isRecording = false;
+    let recognition = null;
+
+    function showStatus(message, isError = false) {
+        voiceStatus.textContent = message;
+        voiceStatus.classList.remove('hidden', 'text-red-600', 'text-green-600');
+        voiceStatus.classList.add(isError ? 'text-red-600' : 'text-green-600');
+    }
+
+    function setupSpeechRecognition() {
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            
+            recognition.onstart = () => {
+                isRecording = true;
+                voiceButton.classList.add('text-purple-600');
+                showStatus('Recording... Speak now');
+            };
+            
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                showStatus('Error: ' + event.error, true);
+                stopRecording();
+            };
+            
+            recognition.onend = () => {
+                stopRecording();
+            };
+            
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+                let finalTranscript = '';
+                
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript + ' ';
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+                
+                if (finalTranscript) {
+                    const currentContent = contentTextarea.value;
+                    contentTextarea.value = currentContent + finalTranscript;
+                }
+            };
+            
+            return true;
+        }
+        return false;
+    }
+    
+    function stopRecording() {
+        if (recognition) {
+            recognition.stop();
+        }
+        isRecording = false;
+        voiceButton.classList.remove('text-purple-600');
+        voiceStatus.classList.add('hidden');
+    }
+    
+    voiceButton.addEventListener('click', function() {
+        if (!recognition && !setupSpeechRecognition()) {
+            showStatus('Speech recognition is not supported in your browser', true);
+            return;
+        }
+        
+        if (isRecording) {
+            stopRecording();
+        } else {
+            recognition.start();
+        }
+    });
+});
+</script>
 {% endblock %}
