@@ -7,11 +7,11 @@
 
 /* Navigation styling */
 .nav-link {
-    @apply text-slate-700 hover:text-slate-900 px-3 py-2 rounded-lg transition-all hover:bg-slate-100/50;
+    @apply px-3 py-2 rounded-lg transition-all hover:bg-slate-100/50;
 }
 
 .mobile-nav-link {
-    @apply block px-4 py-2 text-base text-slate-700 hover:text-slate-900 hover:bg-slate-100/50 rounded-lg transition-all;
+    @apply block w-full px-4 py-3 text-base hover:bg-slate-100/50 rounded-lg transition-all;
 }
 
 /* Loading spinner icon */
