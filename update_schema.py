@@ -17,7 +17,7 @@ def update_schema():
         # Drop tables in reverse order to handle dependencies
         tables = [
             'forum_reply',
-            'forum_post',
+            'forum_post', 
             'group_membership',
             'dream_group',
             'comment',
@@ -50,15 +50,11 @@ def update_schema():
         
         # Verify dream table columns
         dream_columns = [
-            'lucidity_level',
-            'sleep_quality',
-            'dream_clarity',
-            'recurring_elements',
-            'emotional_tone',
-            'dream_symbols',
-            'dream_archetypes',
-            'sleep_duration',
-            'bedtime',
+            'id', 'user_id', 'title', 'content', 'date', 'mood', 'tags',
+            'is_public', 'is_anonymous', 'ai_analysis',
+            'lucidity_level', 'sleep_quality', 'dream_clarity',
+            'recurring_elements', 'emotional_tone', 'dream_symbols',
+            'dream_archetypes', 'sleep_duration', 'bedtime',
             'environmental_factors'
         ]
         
