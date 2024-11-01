@@ -5,15 +5,29 @@
     --dream-accent: rgba(147, 112, 219, 0.4);
 }
 
-/* Heroicons styling */
-[class^="heroicon-"], 
-[class*=" heroicon-"] {
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 0.25rem;
-    stroke-width: 1.5;
+/* Desktop Navigation */
+@media (min-width: 1024px) {
+    .lg\:flex {
+        display: flex !important;
+    }
+    
+    .lg\:hidden {
+        display: none !important;
+    }
+}
+
+/* Navigation Links */
+.nav-link {
+    @apply relative;
+}
+
+.nav-link::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-purple-500 transition-all duration-300;
+}
+
+.nav-link:hover::after {
+    @apply w-full;
 }
 
 /* Navbar and Logo styling */
