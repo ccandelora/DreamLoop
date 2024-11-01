@@ -5,13 +5,21 @@
     --dream-accent: rgba(147, 112, 219, 0.4);
 }
 
-/* Navigation styling */
-.nav-link {
-    @apply px-3 py-2 rounded-lg transition-all hover:bg-slate-100/50;
+/* Heroicons styling */
+[class^="heroicon-"], 
+[class*=" heroicon-"] {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.25rem;
+    stroke-width: 1.5;
 }
 
-.mobile-nav-link {
-    @apply block w-full px-4 py-3 text-base hover:bg-slate-100/50 rounded-lg transition-all;
+/* Navbar and Logo styling */
+.navbar {
+    background: linear-gradient(to right, var(--bs-dark), var(--dream-primary)) !important;
+    backdrop-filter: blur(10px);
 }
 
 /* Loading spinner icon */
@@ -47,6 +55,31 @@
 .icon-lg [class*=" heroicon-"] {
     width: 32px;
     height: 32px;
+}
+
+/* Section divider */
+.section-divider {
+    @apply border-t border-slate-200 my-6;
+}
+
+/* Dream content styling */
+.prose.prose-slate {
+    @apply text-slate-700;
+}
+
+.prose.prose-slate h1,
+.prose.prose-slate h2,
+.prose.prose-slate h3,
+.prose.prose-slate h4 {
+    @apply text-slate-900 font-semibold;
+}
+
+.prose.prose-slate strong {
+    @apply text-slate-900;
+}
+
+.prose.prose-slate blockquote {
+    @apply border-l-4 border-purple-500/30 pl-4 italic bg-white/80;
 }
 
 /* Dream card hover effects */
