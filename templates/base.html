@@ -33,6 +33,25 @@
         @keyframes spinner {
             to {transform: rotate(360deg);}
         }
+        
+        /* Premium upgrade button animation */
+        @keyframes pulse-premium {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .premium-upgrade-btn {
+            background: linear-gradient(135deg, #9333ea 0%, #db2777 100%);
+            animation: pulse-premium 2s infinite;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        
+        .premium-upgrade-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            background: linear-gradient(135deg, #7e22ce 0%, #be185d 100%);
+        }
     </style>
 
     <!-- Deferred CSS loading -->
@@ -88,11 +107,12 @@
                         Groups
                     </a>
                     {% if current_user.subscription_type == 'free' %}
-                    <a href="{{ url_for('subscription') }}" class="text-purple-600 hover:text-purple-700 transition-colors flex items-center">
-                        <svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <a href="{{ url_for('subscription') }}" 
+                       class="premium-upgrade-btn text-white px-6 py-2 rounded-lg flex items-center space-x-2 font-semibold">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
                         </svg>
-                        Upgrade to Premium
+                        <span>✨ Upgrade to Premium</span>
                     </a>
                     {% endif %}
                     <a href="{{ url_for('logout') }}" class="text-slate-700 hover:text-purple-600 transition-colors flex items-center">
@@ -159,11 +179,12 @@
                     Groups
                 </a>
                 {% if current_user.subscription_type == 'free' %}
-                <a href="{{ url_for('subscription') }}" class="flex items-center text-purple-600 hover:text-purple-700 transition-colors py-2">
-                    <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <a href="{{ url_for('subscription') }}" 
+                   class="premium-upgrade-btn text-white px-4 py-3 rounded-lg flex items-center justify-center space-x-2 font-semibold">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
                     </svg>
-                    Upgrade to Premium
+                    <span>✨ Upgrade to Premium</span>
                 </a>
                 {% endif %}
                 <a href="{{ url_for('logout') }}" class="flex items-center text-slate-700 hover:text-purple-600 transition-colors py-2">
@@ -259,22 +280,11 @@
             menu.classList.toggle('top-14');
             menu.classList.toggle('left-0');
             menu.classList.toggle('bg-white/90');
+            menu.classList.toggle('border-b');
+            menu.classList.toggle('border-slate-200');
             menu.classList.toggle('backdrop-blur-lg');
-            menu.classList.toggle('p-4');
-            menu.classList.toggle('space-y-2');
             menu.classList.toggle('z-40');
         }
-
-        // Performance optimization: Load images lazily
-        document.addEventListener('DOMContentLoaded', function() {
-            if ('loading' in HTMLImageElement.prototype) {
-                const images = document.querySelectorAll('img[loading="lazy"]');
-                images.forEach(img => {
-                    img.src = img.dataset.src;
-                });
-            }
-        });
     </script>
-    {% block scripts %}{% endblock %}
 </body>
 </html>
