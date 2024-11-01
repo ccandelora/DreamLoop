@@ -4,204 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DreamLoop - {% block title %}{% endblock %}</title>
-    <meta name="description" content="DreamLoop - Document your dreams, receive AI-powered analysis, and connect with a community of dreamers">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-    
-    <!-- Preload critical resources -->
-    <link rel="preload" href="{{ url_for('static', filename='images/dreamlooplogo.svg') }}" as="image">
-    
-    <!-- Critical CSS -->
-    <style>
-        .initial-loading {
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.02), transparent),
-                        radial-gradient(circle at bottom left, rgba(236, 72, 153, 0.02), transparent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-        }
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(139, 92, 246, 0.3);
-            border-radius: 50%;
-            border-top-color: rgba(139, 92, 246, 0.8);
-            animation: spinner 0.6s linear infinite;
-        }
-        @keyframes spinner {
-            to {transform: rotate(360deg);}
-        }
-    </style>
-
-    <!-- Deferred CSS loading -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/loading.css') }}" media="print" onload="this.media='all'">
-    
-    <!-- Preload Chart.js only on pages that need it -->
-    {% if request.endpoint in ['dream_patterns'] %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" defer></script>
-    {% endif %}
+    <link href="https://unpkg.com/@heroicons/24/outline/style.css" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='css/output.css') }}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
 </head>
 <body class="text-slate-800">
-    <!-- Initial loading indicator -->
-    <div class="initial-loading" id="initialLoading">
-        <div class="loading-spinner"></div>
-    </div>
-
     <nav class="bg-white/80 backdrop-blur-lg border-b border-slate-200 fixed w-full top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20">
-                <!-- Logo and brand -->
-                <div class="flex items-center">
-                    <a href="{{ url_for('index') }}" class="flex items-center">
-                        <img src="{{ url_for('static', filename='images/dreamlooplogo.svg') }}" alt="DreamLoop" class="h-12">
-                    </a>
-                </div>
-
-                <!-- Navigation Links - Desktop -->
-                {% if current_user.is_authenticated %}
-                <div class="hidden lg:flex lg:items-center lg:space-x-8">
-                    <a href="{{ url_for('dream_new') }}" 
-                       class="nav-link h-10 flex items-center px-3 text-base font-medium text-slate-700 hover:text-purple-600 transition-colors">
-                        <svg class="h-5 w-5 mr-2 group-hover:text-purple-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between h-14 sm:h-16">
+                <a href="{{ url_for('index') }}" class="flex items-center">
+                    <img src="{{ url_for('static', filename='images/dreamlooplogo.svg') }}" alt="DreamLoop Logo" class="h-8 w-auto">
+                </a>
+                <button class="lg:hidden z-50" type="button" onclick="toggleMenu()">
+                    <span class="sr-only">Open menu</span>
+                    <svg class="h-6 w-6 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <div id="mobileMenu" class="hidden lg:flex lg:items-center lg:space-x-4">
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('dream_new') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors">
+                        <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                         </svg>
                         Log Dream
                     </a>
-                    <a href="{{ url_for('dream_patterns') }}" 
-                       class="nav-link h-10 flex items-center px-3 text-base font-medium text-slate-700 hover:text-purple-600 transition-colors">
-                        <svg class="h-5 w-5 mr-2 group-hover:text-purple-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    <a href="{{ url_for('dream_patterns') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors">
+                        <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                         </svg>
-                        Patterns
+                        Dream Patterns
                     </a>
-                    <a href="{{ url_for('community_dreams') }}" 
-                       class="nav-link h-10 flex items-center px-3 text-base font-medium text-slate-700 hover:text-purple-600 transition-colors">
-                        <svg class="h-5 w-5 mr-2 group-hover:text-purple-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    <a href="{{ url_for('community_dreams') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors">
+                        <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
-                        Community
+                        Community Dreams
                     </a>
-                    <a href="{{ url_for('dream_groups') }}" 
-                       class="nav-link h-10 flex items-center px-3 text-base font-medium text-slate-700 hover:text-purple-600 transition-colors">
-                        <svg class="h-5 w-5 mr-2 group-hover:text-purple-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
+                    <a href="{{ url_for('dream_groups') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors">
+                        <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
-                        Groups
+                        Dream Groups
                     </a>
-                    {% if current_user.subscription_type == 'free' %}
-                    <a href="{{ url_for('subscription') }}" 
-                       class="nav-link h-10 flex items-center px-4 text-base font-medium bg-gradient-to-r from-purple-500/10 to-pink-500/10 hover:from-purple-500/20 hover:to-pink-500/20 border border-purple-500/30 rounded-lg transition-all duration-300">
-                        <svg class="h-5 w-5 mr-2 text-purple-600 group-hover:text-purple-700 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
-                        </svg>
-                        <span class="text-purple-600 group-hover:text-purple-700 transition-colors">✨ Upgrade</span>
+                    <a href="{{ url_for('subscription') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors">
+                        {% if current_user.subscription_type == 'free' %}
+                        <span class="bg-gradient-to-r from-purple-500/80 to-pink-500/80 text-white text-sm px-4 py-2 rounded-full">
+                            <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                            </svg>
+                            Upgrade to Premium
+                        </span>
+                        {% else %}
+                        <span class="bg-green-600/80 text-white text-sm px-4 py-2 rounded-full">
+                            <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Premium Active
+                        </span>
+                        {% endif %}
                     </a>
-                    {% endif %}
-                    <a href="{{ url_for('logout') }}" 
-                       class="nav-link h-10 flex items-center px-3 text-base font-medium text-slate-700 hover:text-purple-600 transition-colors">
-                        <svg class="h-5 w-5 mr-2 group-hover:text-purple-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    <a href="{{ url_for('logout') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors">
+                        <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                         </svg>
                         Logout
                     </a>
-                </div>
-                {% else %}
-                <div class="hidden lg:flex lg:items-center lg:space-x-8">
-                    <a href="{{ url_for('login') }}" 
-                       class="nav-link h-10 flex items-center px-3 text-base font-medium text-slate-700 hover:text-purple-600 transition-colors">
-                        <svg class="h-5 w-5 mr-2 group-hover:text-purple-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="text-slate-700 hover:text-slate-900 px-4 py-2 rounded-md transition-colors">
+                        <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
                         </svg>
                         Login
                     </a>
-                    <a href="{{ url_for('register') }}" 
-                       class="nav-link h-10 flex items-center px-4 text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-lg transition-all duration-300">
-                        <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                    <a href="{{ url_for('register') }}" class="text-slate-700 hover:text-slate-900 px-4 py-2 rounded-md transition-colors">
+                        <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
                         </svg>
-                        Get Started
+                        Register
                     </a>
-                </div>
-                {% endif %}
-
-                <!-- Mobile menu button -->
-                <div class="lg:hidden flex items-center">
-                    <button onclick="toggleMenu()" class="text-slate-700 hover:text-purple-600 transition-colors">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
+                    {% endif %}
                 </div>
             </div>
-        </div>
-
-        <!-- Mobile menu -->
-        <div class="hidden lg:hidden" id="mobileMenu">
-            {% if current_user.is_authenticated %}
-            <div class="px-4 pt-2 pb-3 space-y-2">
-                <a href="{{ url_for('dream_new') }}" class="flex items-center text-slate-700 hover:text-purple-600 transition-colors py-2">
-                    <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                    </svg>
-                    Log Dream
-                </a>
-                <a href="{{ url_for('dream_patterns') }}" class="flex items-center text-slate-700 hover:text-purple-600 transition-colors py-2">
-                    <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                    </svg>
-                    Patterns
-                </a>
-                <a href="{{ url_for('community_dreams') }}" class="flex items-center text-slate-700 hover:text-purple-600 transition-colors py-2">
-                    <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                    </svg>
-                    Community
-                </a>
-                <a href="{{ url_for('dream_groups') }}" class="flex items-center text-slate-700 hover:text-purple-600 transition-colors py-2">
-                    <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
-                    </svg>
-                    Groups
-                </a>
-                {% if current_user.subscription_type == 'free' %}
-                <a href="{{ url_for('subscription') }}" 
-                   class="flex items-center text-purple-600 hover:text-purple-700 bg-purple-50 rounded-lg px-4 py-2 transition-colors">
-                    <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
-                    </svg>
-                    <span>✨ Upgrade</span>
-                </a>
-                {% endif %}
-                <a href="{{ url_for('logout') }}" class="flex items-center text-slate-700 hover:text-purple-600 transition-colors py-2">
-                    <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                    </svg>
-                    Logout
-                </a>
-            </div>
-            {% else %}
-            <div class="px-4 pt-2 pb-3 space-y-2">
-                <a href="{{ url_for('login') }}" class="flex items-center text-slate-700 hover:text-purple-600 transition-colors py-2">
-                    <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
-                    </svg>
-                    Login
-                </a>
-                <a href="{{ url_for('register') }}" class="flex items-center text-purple-600 hover:text-purple-700 transition-colors py-2">
-                    <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
-                    </svg>
-                    Get Started
-                </a>
-            </div>
-            {% endif %}
         </div>
     </nav>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-20">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         {% for message in messages %}
@@ -215,59 +104,28 @@
         {% endif %}
         {% endwith %}
         
-        <div class="container mx-auto px-4 py-4 sm:py-6 page-transition" id="mainContent">
+        <div class="container mx-auto px-4 py-4 sm:py-6">
             {% block content %}{% endblock %}
         </div>
     </div>
 
     <script>
-        // Loading state management
-        document.addEventListener('DOMContentLoaded', function() {
-            // Remove initial loading screen
-            const initialLoading = document.getElementById('initialLoading');
-            if (initialLoading) {
-                initialLoading.style.opacity = '0';
-                setTimeout(() => initialLoading.remove(), 300);
-            }
-
-            // Handle form submissions
-            document.querySelectorAll('form').forEach(form => {
-                form.addEventListener('submit', function(e) {
-                    const submitButton = this.querySelector('button[type="submit"]');
-                    if (submitButton) {
-                        submitButton.disabled = true;
-                        const originalText = submitButton.innerHTML;
-                        submitButton.innerHTML = `
-                            <svg class="animate-spin h-5 w-5 mr-2 inline-block" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            Processing...
-                        `;
-
-                        // Re-enable after timeout
-                        setTimeout(() => {
-                            submitButton.disabled = false;
-                            submitButton.innerHTML = originalText;
-                        }, 15000);
-                    }
-                });
-            });
-        });
-
-        // Mobile menu toggle
         function toggleMenu() {
             const menu = document.getElementById('mobileMenu');
             menu.classList.toggle('hidden');
-            menu.classList.toggle('absolute');
+            menu.classList.toggle('flex');
+            menu.classList.toggle('flex-col');
             menu.classList.toggle('w-full');
-            menu.classList.toggle('top-20');
+            menu.classList.toggle('fixed');
+            menu.classList.toggle('top-14');
             menu.classList.toggle('left-0');
             menu.classList.toggle('bg-white/90');
             menu.classList.toggle('backdrop-blur-lg');
-            menu.classList.toggle('border-b');
-            menu.classList.toggle('border-slate-200');
+            menu.classList.toggle('p-4');
+            menu.classList.toggle('space-y-2');
+            menu.classList.toggle('z-40');
         }
     </script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>
