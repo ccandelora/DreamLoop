@@ -16,4 +16,5 @@ dependencies = [
     "sqlalchemy",
     "werkzeug",
     "markdown>=3.7",
+    "lorem>=0.1.1",
 ]
