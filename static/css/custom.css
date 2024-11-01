@@ -30,10 +30,10 @@
     @apply w-full;
 }
 
-/* Navbar and Logo styling */
-.navbar {
-    background: linear-gradient(to right, var(--bs-dark), var(--dream-primary)) !important;
-    backdrop-filter: blur(10px);
+/* Only show underline effect on non-button nav items */
+.nav-link.dream-button::after,
+.nav-link[class*="bg-gradient"]::after {
+    display: none;
 }
 
 /* Loading spinner icon */
@@ -48,27 +48,6 @@
     to {
         transform: rotate(360deg);
     }
-}
-
-/* Mobile menu icon sizing */
-.lg\:hidden [class^="heroicon-"],
-.lg\:hidden [class*=" heroicon-"] {
-    width: 28px;
-    height: 28px;
-}
-
-/* Small icon variants */
-.icon-sm [class^="heroicon-"],
-.icon-sm [class*=" heroicon-"] {
-    width: 16px;
-    height: 16px;
-}
-
-/* Large icon variants */
-.icon-lg [class^="heroicon-"],
-.icon-lg [class*=" heroicon-"] {
-    width: 32px;
-    height: 32px;
 }
 
 /* Section divider */
