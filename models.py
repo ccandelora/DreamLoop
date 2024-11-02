@@ -40,25 +40,6 @@ class Dream(db.Model):
     is_anonymous = db.Column(db.Boolean, default=False)
     ai_analysis = db.Column(db.Text)
     comments = db.relationship('Comment', backref='dream', lazy='dynamic', cascade='all, delete-orphan')
-    
-    # New fields for enhanced pattern tracking
-    lucidity_level = db.Column(db.Integer, default=0)  # 0: Not lucid, 1-5: Lucidity scale
-    sleep_quality = db.Column(db.Integer)  # 1-5 scale
-    dream_clarity = db.Column(db.Integer)  # 1-5 scale
-    recurring_elements = db.Column(db.Text)  # JSON string of recurring symbols/themes
-    emotional_tone = db.Column(db.Float)  # -1.0 to 1.0 sentiment score
-    dream_symbols = db.Column(db.Text)  # JSON string of identified symbols
-    dream_archetypes = db.Column(db.Text)  # JSON string of identified archetypes
-    sleep_duration = db.Column(db.Float)  # Hours of sleep
-    bedtime = db.Column(db.Time)  # Time went to bed
-    environmental_factors = db.Column(db.Text)  # JSON string of factors (stress, diet, etc.)
-    
-    __table_args__ = (
-        db.Index('idx_dream_date', 'date'),
-        db.Index('idx_dream_user_id', 'user_id'),
-        db.Index('idx_dream_lucidity', 'lucidity_level'),
-        db.Index('idx_dream_mood', 'mood')
-    )
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
