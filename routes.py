@@ -116,20 +116,7 @@ def dream_new():
                 flash('Invalid sleep metrics provided')
                 return render_template('dream_new.html')
 
-            # Perform AI analysis based on subscription type
-            ai_analysis = None
-            sentiment_info = None
-
-            if current_user.subscription_type == 'free':
-                if current_user.monthly_ai_analysis_count >= 3:
-                    flash('You have reached your monthly limit for AI analyses. Upgrade to Premium for unlimited analyses!')
-                else:
-                    current_user.monthly_ai_analysis_count += 1
-                    ai_analysis, sentiment_info = analyze_dream(content, is_premium=False)
-            else:
-                ai_analysis, sentiment_info = analyze_dream(content, is_premium=True)
-
-            # Create dream with all fields
+            # Create dream with initial fields
             dream = Dream(
                 user_id=current_user.id,
                 title=title,
@@ -144,22 +131,36 @@ def dream_new():
                 sleep_quality=sleep_quality,
                 sleep_interruptions=sleep_interruptions,
                 sleep_position=sleep_position,
-                sleep_duration=sleep_duration,
-                ai_analysis=ai_analysis
+                sleep_duration=sleep_duration
             )
 
-            # Update sentiment analysis fields if available
-            if sentiment_info:
-                dream.sentiment_score = sentiment_info.get('sentiment_score')
-                dream.sentiment_magnitude = sentiment_info.get('sentiment_magnitude')
-                dream.dominant_emotions = sentiment_info.get('dominant_emotions')
-                if sentiment_info.get('lucidity_level'):
-                    dream.lucidity_level = sentiment_info['lucidity_level']
+            # Perform AI analysis based on subscription type
+            can_analyze = True
+            if current_user.subscription_type == 'free':
+                if current_user.monthly_ai_analysis_count >= 3:
+                    can_analyze = False
+                    flash('Monthly AI analysis limit reached. Upgrade to Premium for unlimited analyses!')
+                else:
+                    current_user.monthly_ai_analysis_count += 1
+
+            if can_analyze:
+                try:
+                    analysis, sentiment_info = analyze_dream(content, is_premium=(current_user.subscription_type == 'premium'))
+                    if analysis and sentiment_info:
+                        dream.ai_analysis = analysis
+                        dream.sentiment_score = sentiment_info.get('sentiment_score', 0.0)
+                        dream.sentiment_magnitude = sentiment_info.get('sentiment_magnitude', 0.0)
+                        dream.dominant_emotions = sentiment_info.get('dominant_emotions', '')
+                        if sentiment_info.get('lucidity_level'):
+                            dream.lucidity_level = sentiment_info['lucidity_level']
+                except Exception as e:
+                    logger.error(f"Error during AI analysis: {str(e)}")
+                    flash('AI analysis failed, but your dream was saved')
 
             db.session.add(dream)
             db.session.commit()
             
-            if ai_analysis:
+            if dream.ai_analysis:
                 flash('Dream logged successfully with AI analysis!')
             else:
                 flash('Dream logged successfully!')
@@ -189,6 +190,14 @@ def dream_view(dream_id):
     
     return render_template('dream_view.html', dream=dream)
 
+@app.route('/dream/patterns')
+@login_required
+def dream_patterns():
+    """View dream patterns analysis."""
+    dreams = current_user.dreams.order_by(Dream.date.desc()).all()
+    pattern_analysis = analyze_dream_patterns(dreams, is_premium=(current_user.subscription_type == 'premium'))
+    return render_template('dream_patterns.html', pattern_analysis=pattern_analysis)
+
 @app.route('/dream/<int:dream_id>/reanalyze', methods=['POST'])
 @login_required
 def reanalyze_dream(dream_id):
@@ -206,9 +215,9 @@ def reanalyze_dream(dream_id):
         analysis, sentiment_info = analyze_dream(dream.content, is_premium=(current_user.subscription_type == 'premium'))
         if analysis and sentiment_info:
             dream.ai_analysis = analysis
-            dream.sentiment_score = sentiment_info.get('sentiment_score')
-            dream.sentiment_magnitude = sentiment_info.get('sentiment_magnitude')
-            dream.dominant_emotions = sentiment_info.get('dominant_emotions')
+            dream.sentiment_score = sentiment_info.get('sentiment_score', 0.0)
+            dream.sentiment_magnitude = sentiment_info.get('sentiment_magnitude', 0.0)
+            dream.dominant_emotions = sentiment_info.get('dominant_emotions', '')
             if sentiment_info.get('lucidity_level'):
                 dream.lucidity_level = sentiment_info['lucidity_level']
                 
