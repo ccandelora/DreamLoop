@@ -164,30 +164,24 @@ document.addEventListener('DOMContentLoaded', function() {
     let isRecording = false;
     let recognition = null;
 
+    // Calculate sleep duration when bed time or wake time changes
     const bedTimeInput = document.getElementById('bed_time');
     const wakeTimeInput = document.getElementById('wake_time');
 
     function updateSleepDuration() {
         const durationElement = document.getElementById('sleep_duration');
-        const bedTimeInput = document.getElementById('bed_time');
-        const wakeTimeInput = document.getElementById('wake_time');
-        
-        if (durationElement && bedTimeInput && wakeTimeInput && 
-            bedTimeInput.value && wakeTimeInput.value) {
-            try {
-                const bedTime = new Date(bedTimeInput.value);
-                const wakeTime = new Date(wakeTimeInput.value);
-                const duration = (wakeTime - bedTime) / (1000 * 60 * 60);
-                durationElement.value = duration.toFixed(1);
-            } catch (error) {
-                console.error('Error calculating sleep duration:', error);
-            }
+        if (bedTimeInput.value && wakeTimeInput.value && durationElement) {
+            const bedTime = new Date(bedTimeInput.value);
+            const wakeTime = new Date(wakeTimeInput.value);
+            const duration = (wakeTime - bedTime) / (1000 * 60 * 60);
+            durationElement.value = duration.toFixed(1);
         }
     }
 
-    if (bedTimeInput) bedTimeInput.addEventListener('change', updateSleepDuration);
-    if (wakeTimeInput) wakeTimeInput.addEventListener('change', updateSleepDuration);
+    bedTimeInput.addEventListener('change', updateSleepDuration);
+    wakeTimeInput.addEventListener('change', updateSleepDuration);
 
+    // Voice recognition setup
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         recognition = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
         recognition.continuous = true;
@@ -195,11 +189,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         recognition.onstart = function() {
             isRecording = true;
-            if (voiceButton) voiceButton.classList.add('text-purple-600');
-            if (voiceStatus) {
-                voiceStatus.textContent = 'Listening...';
-                voiceStatus.classList.remove('hidden');
-            }
+            voiceButton.classList.add('text-purple-600');
+            voiceStatus.textContent = 'Listening...';
+            voiceStatus.classList.remove('hidden');
         };
 
         recognition.onresult = function(event) {
@@ -215,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            if (finalTranscript && contentTextarea) {
+            if (finalTranscript) {
                 contentTextarea.value = (contentTextarea.value + ' ' + finalTranscript).trim();
             }
         };
@@ -223,34 +215,30 @@ document.addEventListener('DOMContentLoaded', function() {
         recognition.onerror = function(event) {
             console.error('Speech recognition error:', event.error);
             stopRecording();
-            if (voiceStatus) {
-                voiceStatus.textContent = 'Error: ' + event.error;
-                voiceStatus.classList.remove('hidden');
-                setTimeout(() => voiceStatus.classList.add('hidden'), 3000);
-            }
+            voiceStatus.textContent = 'Error: ' + event.error;
+            voiceStatus.classList.remove('hidden');
+            setTimeout(() => voiceStatus.classList.add('hidden'), 3000);
         };
 
         recognition.onend = function() {
             stopRecording();
         };
 
-        if (voiceButton) {
-            voiceButton.addEventListener('click', function() {
-                if (!isRecording) {
-                    recognition.start();
-                } else {
-                    recognition.stop();
-                }
-            });
-        }
-    } else if (voiceButton) {
+        voiceButton.addEventListener('click', function() {
+            if (!isRecording) {
+                recognition.start();
+            } else {
+                recognition.stop();
+            }
+        });
+    } else {
         voiceButton.style.display = 'none';
     }
 
     function stopRecording() {
         isRecording = false;
-        if (voiceButton) voiceButton.classList.remove('text-purple-600');
-        if (voiceStatus) voiceStatus.classList.add('hidden');
+        voiceButton.classList.remove('text-purple-600');
+        voiceStatus.classList.add('hidden');
     }
 });
 </script>
