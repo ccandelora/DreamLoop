@@ -48,6 +48,8 @@
                             </div>
                         </div>
 
+                        <input type="hidden" id="sleep_duration" name="sleep_duration">
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label for="sleep_quality" class="block text-sm font-medium mb-2 text-slate-900">Sleep Quality</label>
@@ -167,11 +169,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const wakeTimeInput = document.getElementById('wake_time');
 
     function updateSleepDuration() {
-        if (bedTimeInput.value && wakeTimeInput.value) {
+        const durationElement = document.getElementById('sleep_duration');
+        if (bedTimeInput.value && wakeTimeInput.value && durationElement) {
             const bedTime = new Date(bedTimeInput.value);
             const wakeTime = new Date(wakeTimeInput.value);
-            const duration = (wakeTime - bedTime) / (1000 * 60 * 60); // Convert to hours
-            document.getElementById('sleep_duration').value = duration.toFixed(1);
+            const duration = (wakeTime - bedTime) / (1000 * 60 * 60);
+            durationElement.value = duration.toFixed(1);
         }
     }
 
