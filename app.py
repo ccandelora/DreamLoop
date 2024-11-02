@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_login import LoginManager
-from extensions import db, login_manager
+from models import db, User
 import os
 import logging
 import markdown
@@ -17,23 +17,18 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize extensions
 db.init_app(app)
-login_manager.init_app(app)
+login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message = 'Please log in to access this page.'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.get(User, int(user_id))
 
 # Add markdown filter
 def markdown_filter(text):
     return markdown.markdown(text) if text else ''
 app.jinja_env.filters['markdown'] = markdown_filter
-
-# Create tables within app context
-with app.app_context():
-    from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply
-    db.create_all()
-
-    @login_manager.user_loader
-    def load_user(user_id):
-        return db.session.get(User, int(user_id))
 
 # Import routes at the end to avoid circular imports
 from routes import *

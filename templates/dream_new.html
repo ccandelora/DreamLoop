@@ -1,7 +1,159 @@
 {% extends "base.html" %}
 {% block title %}Log New Dream{% endblock %}
 
-{# ... rest of the file content remains the same until the script section ... #}
+{% block content %}
+<div class="flex justify-center">
+    <div class="w-full max-w-3xl">
+        <div class="bg-white/80 backdrop-blur-lg border border-slate-200 rounded-lg shadow-lg">
+            <div class="border-b border-slate-200 px-6 py-4">
+                <h2 class="text-2xl font-semibold text-slate-900">Log New Dream</h2>
+            </div>
+            <div class="p-6">
+                <form method="POST">
+                    <!-- Dream Content Section -->
+                    <div class="space-y-6 mb-8">
+                        <h3 class="text-lg font-semibold text-slate-900">Dream Details</h3>
+                        <div class="mb-4">
+                            <label for="title" class="block text-sm font-medium mb-2 text-slate-900">Dream Title</label>
+                            <input type="text" class="dream-input" id="title" name="title" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="content" class="block text-sm font-medium mb-2 text-slate-900">Dream Description</label>
+                            <div class="relative">
+                                <textarea class="dream-input min-h-[150px]" id="content" name="content" required></textarea>
+                                <button type="button" id="voiceButton" class="absolute bottom-2 right-2 p-2 text-slate-600 hover:text-purple-600 transition-colors rounded-full bg-white/80 border border-slate-200">
+                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                                    </svg>
+                                </button>
+                                <div id="voiceStatus" class="absolute top-full left-0 mt-1 text-sm text-slate-600 hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sleep Metrics Section -->
+                    <div class="space-y-6 mb-8">
+                        <h3 class="text-lg font-semibold text-slate-900">Sleep Metrics</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="bed_time" class="block text-sm font-medium mb-2 text-slate-900">Bed Time</label>
+                                <input type="datetime-local" class="dream-input" id="bed_time" name="bed_time">
+                            </div>
+                            
+                            <div>
+                                <label for="wake_time" class="block text-sm font-medium mb-2 text-slate-900">Wake Time</label>
+                                <input type="datetime-local" class="dream-input" id="wake_time" name="wake_time">
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="sleep_duration" name="sleep_duration">
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="sleep_quality" class="block text-sm font-medium mb-2 text-slate-900">Sleep Quality</label>
+                                <select class="dream-input" id="sleep_quality" name="sleep_quality">
+                                    <option value="">Select quality...</option>
+                                    <option value="1">1 - Very Poor</option>
+                                    <option value="2">2 - Poor</option>
+                                    <option value="3">3 - Fair</option>
+                                    <option value="4">4 - Good</option>
+                                    <option value="5">5 - Excellent</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label for="sleep_interruptions" class="block text-sm font-medium mb-2 text-slate-900">Sleep Interruptions</label>
+                                <input type="number" class="dream-input" id="sleep_interruptions" name="sleep_interruptions" min="0" value="0">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="sleep_position" class="block text-sm font-medium mb-2 text-slate-900">Sleep Position</label>
+                            <select class="dream-input" id="sleep_position" name="sleep_position">
+                                <option value="">Select position...</option>
+                                <option value="back">On Back</option>
+                                <option value="stomach">On Stomach</option>
+                                <option value="left_side">Left Side</option>
+                                <option value="right_side">Right Side</option>
+                                <option value="other">Other/Unknown</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Dream Analysis Section -->
+                    <div class="space-y-6 mb-8">
+                        <h3 class="text-lg font-semibold text-slate-900">Dream Analysis</h3>
+                        
+                        <div class="mb-4">
+                            <label for="mood" class="block text-sm font-medium mb-2 text-slate-900">Mood</label>
+                            <select class="dream-input" id="mood" name="mood" required>
+                                <option value="">Select mood...</option>
+                                <option value="happy">Happy</option>
+                                <option value="sad">Sad</option>
+                                <option value="scared">Scared</option>
+                                <option value="peaceful">Peaceful</option>
+                                <option value="anxious">Anxious</option>
+                                <option value="excited">Excited</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="lucidity_level" class="block text-sm font-medium mb-2 text-slate-900">Dream Lucidity Level</label>
+                            <select class="dream-input" id="lucidity_level" name="lucidity_level" required>
+                                <option value="1">1 - Not lucid at all</option>
+                                <option value="2">2 - Vaguely aware</option>
+                                <option value="3">3 - Partially lucid</option>
+                                <option value="4">4 - Mostly lucid</option>
+                                <option value="5">5 - Fully lucid</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="tags" class="block text-sm font-medium mb-2 text-slate-900">Tags (comma-separated)</label>
+                            <input type="text" class="dream-input" id="tags" name="tags" placeholder="flying, chase, water, etc">
+                        </div>
+                    </div>
+
+                    <!-- Sharing Options -->
+                    <div class="mb-6 space-y-3">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="w-4 h-4 bg-white/80 border-slate-200 rounded focus:ring-purple-500/50" 
+                                   id="is_public" name="is_public" value="true">
+                            <label class="ml-2 text-sm font-medium text-slate-900" for="is_public">Share with Community</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" class="w-4 h-4 bg-white/80 border-slate-200 rounded focus:ring-purple-500/50" 
+                                   id="is_anonymous" name="is_anonymous" value="true">
+                            <label class="ml-2 text-sm font-medium text-slate-900" for="is_anonymous">Post Anonymously</label>
+                            <span class="ml-2 text-xs text-slate-600">When checked, your username will be hidden from other users</span>
+                        </div>
+                    </div>
+
+                    {% if current_user.subscription_type == 'free' %}
+                    <div class="mb-6 bg-white/80 backdrop-blur-sm border border-purple-500/30 rounded-lg p-4">
+                        <p class="text-sm text-slate-700">
+                            AI Analysis Available: {{ 3 - current_user.monthly_ai_analysis_count }} of 3
+                            {% if current_user.monthly_ai_analysis_count >= 3 %}
+                            <br>
+                            <a href="{{ url_for('subscription') }}" class="text-purple-600 hover:text-purple-700 transition-colors">
+                                Upgrade to Premium
+                            </a> for unlimited analyses
+                            {% endif %}
+                        </p>
+                    </div>
+                    {% endif %}
+                    
+                    <button type="submit" class="dream-button w-full">
+                        Log Dream
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
 {% block scripts %}
 <script>
@@ -11,6 +163,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const voiceStatus = document.getElementById('voiceStatus');
     let isRecording = false;
     let recognition = null;
+
+    const bedTimeInput = document.getElementById('bed_time');
+    const wakeTimeInput = document.getElementById('wake_time');
 
     function updateSleepDuration() {
         const durationElement = document.getElementById('sleep_duration');
@@ -29,9 +184,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-
-    const bedTimeInput = document.getElementById('bed_time');
-    const wakeTimeInput = document.getElementById('wake_time');
 
     if (bedTimeInput) bedTimeInput.addEventListener('change', updateSleepDuration);
     if (wakeTimeInput) wakeTimeInput.addEventListener('change', updateSleepDuration);
