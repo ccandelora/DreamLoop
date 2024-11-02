@@ -35,7 +35,9 @@ def safe_strip(value):
     """Safely strip whitespace from string values"""
     if isinstance(value, str):
         return value.strip()
-    return value
+    elif isinstance(value, dict):
+        return value
+    return str(value).strip()
 
 @app.route('/')
 def index():
