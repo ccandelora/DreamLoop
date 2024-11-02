@@ -164,24 +164,29 @@ document.addEventListener('DOMContentLoaded', function() {
     let isRecording = false;
     let recognition = null;
 
-    // Calculate sleep duration when bed time or wake time changes
     const bedTimeInput = document.getElementById('bed_time');
     const wakeTimeInput = document.getElementById('wake_time');
 
     function updateSleepDuration() {
         const durationElement = document.getElementById('sleep_duration');
-        if (bedTimeInput.value && wakeTimeInput.value && durationElement) {
-            const bedTime = new Date(bedTimeInput.value);
-            const wakeTime = new Date(wakeTimeInput.value);
-            const duration = (wakeTime - bedTime) / (1000 * 60 * 60);
-            durationElement.value = duration.toFixed(1);
+        const bedTimeInput = document.getElementById('bed_time');
+        const wakeTimeInput = document.getElementById('wake_time');
+        
+        if (durationElement && bedTimeInput && wakeTimeInput && bedTimeInput.value && wakeTimeInput.value) {
+            try {
+                const bedTime = new Date(bedTimeInput.value);
+                const wakeTime = new Date(wakeTimeInput.value);
+                const duration = (wakeTime - bedTime) / (1000 * 60 * 60);
+                durationElement.value = duration.toFixed(1);
+            } catch (error) {
+                console.error('Error calculating sleep duration:', error);
+            }
         }
     }
 
     bedTimeInput.addEventListener('change', updateSleepDuration);
     wakeTimeInput.addEventListener('change', updateSleepDuration);
 
-    // Voice recognition setup
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         recognition = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
         recognition.continuous = true;

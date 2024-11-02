@@ -44,13 +44,6 @@ def login():
     
     return render_template('login.html')
 
-@app.route('/logout')
-@login_required
-def logout():
-    """User logout."""
-    logout_user()
-    return redirect(url_for('index'))
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """User registration."""
@@ -85,6 +78,21 @@ def register():
     
     return render_template('register.html')
 
+@app.route('/logout')
+@login_required
+def logout():
+    """User logout."""
+    logout_user()
+    return redirect(url_for('index'))
+
+@app.route('/dream/patterns')
+@login_required
+def dream_patterns():
+    """Analyze patterns across user's dreams."""
+    dreams = current_user.dreams.all()
+    pattern_analysis = analyze_dream_patterns(dreams, is_premium=(current_user.subscription_type == 'premium'))
+    return render_template('dream_patterns.html', pattern_analysis=pattern_analysis)
+
 @app.route('/dream/new', methods=['GET', 'POST'])
 @login_required
 def dream_new():
@@ -118,7 +126,35 @@ def dream_new():
                     bed_time = None
                     wake_time = None
 
-            # Create dream object with all available fields
+            # Initialize sentiment values
+            sentiment_score = None
+            sentiment_magnitude = None
+            dominant_emotions = None
+            ai_analysis = None
+
+            # Perform AI analysis if eligible
+            if current_user.subscription_type == 'premium' or current_user.monthly_ai_analysis_count < 3:
+                is_premium = current_user.subscription_type == 'premium'
+                
+                # Get AI analysis and sentiment info
+                analysis, sentiment_info = analyze_dream(content, is_premium=is_premium)
+                
+                if analysis:
+                    ai_analysis = analysis
+                    
+                    # Update sentiment information if available
+                    if sentiment_info:
+                        sentiment_score = sentiment_info.get('sentiment_score')
+                        sentiment_magnitude = sentiment_info.get('sentiment_magnitude')
+                        dominant_emotions = sentiment_info.get('dominant_emotions')
+                        # Only override lucidity level from form if AI provides one
+                        if sentiment_info.get('lucidity_level'):
+                            lucidity_level = sentiment_info['lucidity_level']
+                
+                if current_user.subscription_type == 'free':
+                    current_user.monthly_ai_analysis_count += 1
+
+            # Create dream object with all fields
             dream = Dream(
                 title=title,
                 content=content,
@@ -134,33 +170,11 @@ def dream_new():
                 wake_time=wake_time,
                 sleep_interruptions=sleep_interruptions,
                 sleep_position=sleep_position,
-                sentiment_score=None,
-                sentiment_magnitude=None,
-                dominant_emotions=None,
-                ai_analysis=None
+                sentiment_score=sentiment_score,
+                sentiment_magnitude=sentiment_magnitude,
+                dominant_emotions=dominant_emotions,
+                ai_analysis=ai_analysis
             )
-
-            # Perform AI analysis if eligible
-            if current_user.subscription_type == 'premium' or current_user.monthly_ai_analysis_count < 3:
-                is_premium = current_user.subscription_type == 'premium'
-                
-                # Get AI analysis and sentiment info
-                analysis, sentiment_info = analyze_dream(content, is_premium=is_premium)
-                
-                if analysis:
-                    dream.ai_analysis = analysis
-                    
-                    # Update sentiment information if available
-                    if sentiment_info:
-                        dream.sentiment_score = sentiment_info.get('sentiment_score')
-                        dream.sentiment_magnitude = sentiment_info.get('sentiment_magnitude')
-                        dream.dominant_emotions = sentiment_info.get('dominant_emotions')
-                        # Only override lucidity level from form if AI provides one
-                        if sentiment_info.get('lucidity_level'):
-                            dream.lucidity_level = sentiment_info['lucidity_level']
-                
-                if current_user.subscription_type == 'free':
-                    current_user.monthly_ai_analysis_count += 1
 
             # Save to database
             db.session.add(dream)
