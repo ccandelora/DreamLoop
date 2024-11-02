@@ -3,8 +3,7 @@
 
 {% block content %}
 <div class="container mx-auto">
-    <!-- On desktop: Two-column layout with 7:5 ratio -->
-    <!-- On mobile: Single column with Dream -> AI Analysis -> Comments order -->
+    <!-- Two-column layout with 7:5 ratio -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <!-- Left column (Main dream content) -->
         <div class="lg:col-span-7 order-1">
@@ -56,18 +55,33 @@
             </div>
         </div>
 
-        <!-- Right column (AI Analysis) - Moves between Dream and Comments on mobile -->
+        <!-- Right column (AI Analysis) -->
         <div class="lg:col-span-5 order-2 lg:order-3">
             {% if dream.ai_analysis %}
             <div class="dream-card sticky lg:top-20 hover:shadow-xl transition-all duration-300 mb-8 lg:mb-0">
                 <div class="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-b border-slate-200 p-8">
-                    <h3 class="text-xl font-semibold text-slate-900 flex items-center gap-2">
-                        <svg class="h-6 w-6 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                  d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                        Dream Analysis
-                    </h3>
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xl font-semibold text-slate-900 flex items-center gap-2">
+                            <svg class="h-6 w-6 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            Dream Analysis
+                        </h3>
+                        {% if dream.user_id == current_user.id %}
+                        <form method="POST" action="{{ url_for('reanalyze_dream', dream_id=dream.id) }}" class="inline">
+                            <button type="submit" class="dream-button text-sm px-4 py-2" {% if current_user.subscription_type == 'free' and current_user.monthly_ai_analysis_count >= 3 %}disabled{% endif %}>
+                                <span class="flex items-center gap-2">
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                    Re-analyze
+                                </span>
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
                     <p class="mt-2 text-sm text-slate-600">
                         Powered by AI insights and pattern recognition
                     </p>
@@ -115,7 +129,7 @@
             {% endif %}
         </div>
 
-        <!-- Comments Section - Always last on mobile -->
+        <!-- Comments Section -->
         <div class="lg:col-span-12 order-3 lg:order-2">
             <div class="dream-card hover:shadow-xl transition-all duration-300">
                 <div class="border-b border-slate-200 p-8">

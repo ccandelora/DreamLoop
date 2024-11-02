@@ -136,6 +136,36 @@ def dream_new():
 
     return render_template('dream_new.html')
 
+@app.route('/dream/<int:dream_id>/reanalyze', methods=['POST'])
+@login_required
+def reanalyze_dream(dream_id):
+    """Re-analyze a dream using AI."""
+    dream = Dream.query.get_or_404(dream_id)
+    
+    # Check if user owns the dream
+    if dream.user_id != current_user.id:
+        flash('You can only re-analyze your own dreams.')
+        return redirect(url_for('dream_view', dream_id=dream_id))
+    
+    # Check if free user has remaining analyses
+    if current_user.subscription_type == 'free':
+        if current_user.monthly_ai_analysis_count >= 3:
+            flash('You have reached your monthly limit for AI analyses. Upgrade to Premium for unlimited analyses!')
+            return redirect(url_for('subscription'))
+        current_user.monthly_ai_analysis_count += 1
+    
+    try:
+        # Get fresh AI analysis
+        dream.ai_analysis = analyze_dream(dream.content, is_premium=(current_user.subscription_type == 'premium'))
+        db.session.commit()
+        flash('Dream successfully re-analyzed!')
+    except Exception as e:
+        logger.error(f"Error re-analyzing dream: {str(e)}")
+        db.session.rollback()
+        flash('An error occurred while re-analyzing your dream.')
+    
+    return redirect(url_for('dream_view', dream_id=dream_id))
+
 @app.route('/dream_patterns')
 @login_required
 def dream_patterns():
