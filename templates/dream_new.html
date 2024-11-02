@@ -62,6 +62,11 @@
                                id="tags" name="tags" placeholder="flying, chase, water, etc">
                     </div>
                     
+                    <!-- Hidden fields for AI-generated sentiment data -->
+                    <input type="hidden" name="sentiment_score" id="sentiment_score" value="0">
+                    <input type="hidden" name="sentiment_magnitude" id="sentiment_magnitude" value="0">
+                    <input type="hidden" name="dominant_emotions" id="dominant_emotions" value="">
+                    
                     <div class="mb-6 space-y-3">
                         <div class="flex items-center">
                             <input type="checkbox" class="w-4 h-4 bg-white/80 border-slate-200 rounded focus:ring-purple-500/50" 
