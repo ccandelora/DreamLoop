@@ -102,6 +102,73 @@
 
 {% block scripts %}
 <script>
-// Previous JavaScript code remains the same...
+document.addEventListener('DOMContentLoaded', function() {
+    const voiceButton = document.getElementById('voiceButton');
+    const contentTextarea = document.getElementById('content');
+    const voiceStatus = document.getElementById('voiceStatus');
+    let isRecording = false;
+    let recognition = null;
+
+    // Check if browser supports speech recognition
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        recognition = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onstart = function() {
+            isRecording = true;
+            voiceButton.classList.add('text-purple-600');
+            voiceStatus.textContent = 'Listening...';
+            voiceStatus.classList.remove('hidden');
+        };
+
+        recognition.onresult = function(event) {
+            let interimTranscript = '';
+            let finalTranscript = '';
+
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    finalTranscript += transcript + ' ';
+                } else {
+                    interimTranscript += transcript;
+                }
+            }
+
+            if (finalTranscript) {
+                // Append to existing content with a space
+                contentTextarea.value = (contentTextarea.value + ' ' + finalTranscript).trim();
+            }
+        };
+
+        recognition.onerror = function(event) {
+            console.error('Speech recognition error:', event.error);
+            stopRecording();
+            voiceStatus.textContent = 'Error: ' + event.error;
+            voiceStatus.classList.remove('hidden');
+            setTimeout(() => voiceStatus.classList.add('hidden'), 3000);
+        };
+
+        recognition.onend = function() {
+            stopRecording();
+        };
+
+        voiceButton.addEventListener('click', function() {
+            if (!isRecording) {
+                recognition.start();
+            } else {
+                recognition.stop();
+            }
+        });
+    } else {
+        voiceButton.style.display = 'none';
+    }
+
+    function stopRecording() {
+        isRecording = false;
+        voiceButton.classList.remove('text-purple-600');
+        voiceStatus.classList.add('hidden');
+    }
+});
 </script>
 {% endblock %}
