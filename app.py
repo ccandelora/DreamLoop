@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_login import LoginManager
 from models import db, User
 import os
@@ -18,8 +18,8 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# Import all routes after app initialization
-from routes import *
-
 if __name__ == '__main__':
+    # Import routes here to avoid circular imports
+    import routes
+    print('Registered routes:', [str(p) for p in app.url_map.iter_rules()])
     app.run(host='0.0.0.0', port=5000)
