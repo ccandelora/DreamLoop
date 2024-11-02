@@ -17,18 +17,20 @@ def update_schema():
         # Drop tables in reverse order to handle dependencies
         tables = [
             'forum_reply',
-            'forum_post',
+            'forum_post', 
             'group_membership',
             'dream_group',
             'comment',
             'dream',
-            'user'
+            '"user"'  # Quote the reserved keyword 'user'
         ]
         
         # Drop existing tables with proper quoting
         for table in tables:
             try:
-                db.session.execute(text(f'DROP TABLE IF EXISTS "{table}" CASCADE'))
+                # Only add quotes if not already quoted
+                quoted_table = table if table.startswith('"') else f'"{table}"'
+                db.session.execute(text(f'DROP TABLE IF EXISTS {quoted_table} CASCADE'))
                 db.session.commit()
                 print(f"Dropped table {table}")
             except Exception as e:
@@ -64,14 +66,16 @@ def update_schema():
         
         # Verify the schema creation
         for table in tables:
-            if table not in inspector.get_table_names():
-                print(f"Error: Table {table} was not created!")
+            # Remove quotes for inspection
+            table_name = table.replace('"', '')
+            if table_name not in inspector.get_table_names():
+                print(f"Error: Table {table_name} was not created!")
                 return False
-            print(f"Table {table} exists")
+            print(f"Table {table_name} exists")
             
             # Special verification for dream table columns
-            if table == 'dream':
-                if not verify_columns(inspector, table, dream_columns):
+            if table_name == 'dream':
+                if not verify_columns(inspector, table_name, dream_columns):
                     print("Error: Not all required dream columns were created!")
                     return False
         
