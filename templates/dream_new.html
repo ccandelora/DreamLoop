@@ -172,7 +172,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const bedTimeInput = document.getElementById('bed_time');
         const wakeTimeInput = document.getElementById('wake_time');
         
-        if (durationElement && bedTimeInput && wakeTimeInput && bedTimeInput.value && wakeTimeInput.value) {
+        if (durationElement && bedTimeInput && wakeTimeInput && 
+            bedTimeInput.value && wakeTimeInput.value) {
             try {
                 const bedTime = new Date(bedTimeInput.value);
                 const wakeTime = new Date(wakeTimeInput.value);
@@ -184,8 +185,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    bedTimeInput.addEventListener('change', updateSleepDuration);
-    wakeTimeInput.addEventListener('change', updateSleepDuration);
+    if (bedTimeInput) bedTimeInput.addEventListener('change', updateSleepDuration);
+    if (wakeTimeInput) wakeTimeInput.addEventListener('change', updateSleepDuration);
 
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         recognition = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
@@ -194,9 +195,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         recognition.onstart = function() {
             isRecording = true;
-            voiceButton.classList.add('text-purple-600');
-            voiceStatus.textContent = 'Listening...';
-            voiceStatus.classList.remove('hidden');
+            if (voiceButton) voiceButton.classList.add('text-purple-600');
+            if (voiceStatus) {
+                voiceStatus.textContent = 'Listening...';
+                voiceStatus.classList.remove('hidden');
+            }
         };
 
         recognition.onresult = function(event) {
@@ -212,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            if (finalTranscript) {
+            if (finalTranscript && contentTextarea) {
                 contentTextarea.value = (contentTextarea.value + ' ' + finalTranscript).trim();
             }
         };
@@ -220,30 +223,34 @@ document.addEventListener('DOMContentLoaded', function() {
         recognition.onerror = function(event) {
             console.error('Speech recognition error:', event.error);
             stopRecording();
-            voiceStatus.textContent = 'Error: ' + event.error;
-            voiceStatus.classList.remove('hidden');
-            setTimeout(() => voiceStatus.classList.add('hidden'), 3000);
+            if (voiceStatus) {
+                voiceStatus.textContent = 'Error: ' + event.error;
+                voiceStatus.classList.remove('hidden');
+                setTimeout(() => voiceStatus.classList.add('hidden'), 3000);
+            }
         };
 
         recognition.onend = function() {
             stopRecording();
         };
 
-        voiceButton.addEventListener('click', function() {
-            if (!isRecording) {
-                recognition.start();
-            } else {
-                recognition.stop();
-            }
-        });
-    } else {
+        if (voiceButton) {
+            voiceButton.addEventListener('click', function() {
+                if (!isRecording) {
+                    recognition.start();
+                } else {
+                    recognition.stop();
+                }
+            });
+        }
+    } else if (voiceButton) {
         voiceButton.style.display = 'none';
     }
 
     function stopRecording() {
         isRecording = false;
-        voiceButton.classList.remove('text-purple-600');
-        voiceStatus.classList.add('hidden');
+        if (voiceButton) voiceButton.classList.remove('text-purple-600');
+        if (voiceStatus) voiceStatus.classList.add('hidden');
     }
 });
 </script>
