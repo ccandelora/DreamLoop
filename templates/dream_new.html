@@ -9,7 +9,7 @@
                 <h2 class="text-2xl font-semibold text-slate-900">Log New Dream</h2>
             </div>
             <div class="p-6">
-                <form method="POST">
+                <form method="POST" id="dreamForm">
                     <!-- Dream Content Section -->
                     <div class="space-y-6 mb-8">
                         <h3 class="text-lg font-semibold text-slate-900">Dream Details</h3>
@@ -47,8 +47,6 @@
                                 <input type="datetime-local" class="dream-input" id="wake_time" name="wake_time">
                             </div>
                         </div>
-
-                        <input type="hidden" id="sleep_duration" name="sleep_duration">
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
@@ -164,22 +162,48 @@ document.addEventListener('DOMContentLoaded', function() {
     let isRecording = false;
     let recognition = null;
 
-    // Calculate sleep duration when bed time or wake time changes
+    // Initialize form with current date/time
+    const now = new Date();
     const bedTimeInput = document.getElementById('bed_time');
     const wakeTimeInput = document.getElementById('wake_time');
+    
+    // Set default times (previous night and current morning)
+    const lastNight = new Date(now);
+    lastNight.setDate(lastNight.getDate() - 1);
+    lastNight.setHours(22, 0, 0, 0);
+    
+    const thisDay = new Date(now);
+    thisDay.setHours(7, 0, 0, 0);
+    
+    bedTimeInput.value = lastNight.toISOString().slice(0, 16);
+    wakeTimeInput.value = thisDay.toISOString().slice(0, 16);
 
+    // Auto-populate sleep duration
     function updateSleepDuration() {
-        const durationElement = document.getElementById('sleep_duration');
-        if (bedTimeInput.value && wakeTimeInput.value && durationElement) {
+        if (bedTimeInput.value && wakeTimeInput.value) {
             const bedTime = new Date(bedTimeInput.value);
             const wakeTime = new Date(wakeTimeInput.value);
             const duration = (wakeTime - bedTime) / (1000 * 60 * 60);
-            durationElement.value = duration.toFixed(1);
+            
+            // Update sleep quality based on duration
+            const sleepQualitySelect = document.getElementById('sleep_quality');
+            if (duration >= 7 && duration <= 9) {
+                sleepQualitySelect.value = '4'; // Good
+            } else if (duration >= 6 && duration < 7) {
+                sleepQualitySelect.value = '3'; // Fair
+            } else if (duration < 6) {
+                sleepQualitySelect.value = '2'; // Poor
+            } else {
+                sleepQualitySelect.value = '3'; // Fair
+            }
         }
     }
 
     bedTimeInput.addEventListener('change', updateSleepDuration);
     wakeTimeInput.addEventListener('change', updateSleepDuration);
+
+    // Initialize sleep quality based on default times
+    updateSleepDuration();
 
     // Voice recognition setup
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -240,6 +264,20 @@ document.addEventListener('DOMContentLoaded', function() {
         voiceButton.classList.remove('text-purple-600');
         voiceStatus.classList.add('hidden');
     }
+
+    // Form validation and automatic tag formatting
+    document.getElementById('dreamForm').addEventListener('submit', function(e) {
+        const tagsInput = document.getElementById('tags');
+        if (tagsInput.value) {
+            // Format tags: trim whitespace, remove empty tags, ensure comma separation
+            const formattedTags = tagsInput.value
+                .split(',')
+                .map(tag => tag.trim())
+                .filter(tag => tag)
+                .join(',');
+            tagsInput.value = formattedTags;
+        }
+    });
 });
 </script>
 {% endblock %}
