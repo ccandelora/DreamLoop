@@ -36,7 +36,13 @@ def update_schema():
                         sentiment_score FLOAT,
                         sentiment_magnitude FLOAT,
                         dominant_emotions VARCHAR(200),
-                        lucidity_level INTEGER
+                        lucidity_level INTEGER,
+                        sleep_duration FLOAT,
+                        sleep_quality INTEGER,
+                        bed_time TIMESTAMP,
+                        wake_time TIMESTAMP,
+                        sleep_interruptions INTEGER DEFAULT 0,
+                        sleep_position VARCHAR(50)
                     );
 
                     -- Create or update forum_post table
@@ -59,38 +65,28 @@ def update_schema():
                     );
                     
                     -- Add missing columns to dream table if they don't exist
-                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dream' AND column_name = 'sentiment_score') THEN
-                        ALTER TABLE dream ADD COLUMN sentiment_score FLOAT;
+                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dream' AND column_name = 'sleep_duration') THEN
+                        ALTER TABLE dream ADD COLUMN sleep_duration FLOAT;
                     END IF;
                     
-                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dream' AND column_name = 'sentiment_magnitude') THEN
-                        ALTER TABLE dream ADD COLUMN sentiment_magnitude FLOAT;
+                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dream' AND column_name = 'sleep_quality') THEN
+                        ALTER TABLE dream ADD COLUMN sleep_quality INTEGER;
                     END IF;
                     
-                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dream' AND column_name = 'dominant_emotions') THEN
-                        ALTER TABLE dream ADD COLUMN dominant_emotions VARCHAR(200);
+                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dream' AND column_name = 'bed_time') THEN
+                        ALTER TABLE dream ADD COLUMN bed_time TIMESTAMP;
                     END IF;
                     
-                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dream' AND column_name = 'lucidity_level') THEN
-                        ALTER TABLE dream ADD COLUMN lucidity_level INTEGER;
+                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dream' AND column_name = 'wake_time') THEN
+                        ALTER TABLE dream ADD COLUMN wake_time TIMESTAMP;
                     END IF;
-
-                    -- Add missing columns to forum_post table if they don't exist
-                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'forum_post' AND column_name = 'created_at') THEN
-                        ALTER TABLE forum_post ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+                    
+                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dream' AND column_name = 'sleep_interruptions') THEN
+                        ALTER TABLE dream ADD COLUMN sleep_interruptions INTEGER DEFAULT 0;
                     END IF;
-
-                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'forum_post' AND column_name = 'user_id') THEN
-                        ALTER TABLE forum_post ADD COLUMN user_id INTEGER NOT NULL;
-                    END IF;
-
-                    -- Add missing columns to forum_reply table if they don't exist
-                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'forum_reply' AND column_name = 'created_at') THEN
-                        ALTER TABLE forum_reply ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-                    END IF;
-
-                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'forum_reply' AND column_name = 'user_id') THEN
-                        ALTER TABLE forum_reply ADD COLUMN user_id INTEGER NOT NULL;
+                    
+                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dream' AND column_name = 'sleep_position') THEN
+                        ALTER TABLE dream ADD COLUMN sleep_position VARCHAR(50);
                     END IF;
                 END $$;
             '''))

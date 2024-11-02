@@ -84,7 +84,7 @@ def register():
 @app.route('/dream/new', methods=['GET', 'POST'])
 @login_required
 def dream_new():
-    """Create a new dream entry with sentiment analysis."""
+    """Create a new dream entry with sentiment analysis and sleep metrics."""
     if request.method == 'POST':
         title = request.form.get('title')
         content = request.form.get('content')
@@ -93,6 +93,24 @@ def dream_new():
         is_public = bool(request.form.get('is_public'))
         is_anonymous = bool(request.form.get('is_anonymous'))
         lucidity_level = int(request.form.get('lucidity_level', 1))
+        
+        # Get sleep metrics
+        bed_time = request.form.get('bed_time')
+        wake_time = request.form.get('wake_time')
+        sleep_quality = request.form.get('sleep_quality')
+        sleep_interruptions = request.form.get('sleep_interruptions', 0)
+        sleep_position = request.form.get('sleep_position')
+        
+        # Calculate sleep duration if both times are provided
+        sleep_duration = None
+        if bed_time and wake_time:
+            try:
+                bed_time = datetime.fromisoformat(bed_time)
+                wake_time = datetime.fromisoformat(wake_time)
+                sleep_duration = (wake_time - bed_time).total_seconds() / 3600  # Convert to hours
+            except ValueError:
+                bed_time = None
+                wake_time = None
 
         dream = Dream(
             title=title,
@@ -102,7 +120,13 @@ def dream_new():
             is_public=is_public,
             is_anonymous=is_anonymous,
             lucidity_level=lucidity_level,
-            user_id=current_user.id
+            user_id=current_user.id,
+            sleep_duration=sleep_duration,
+            sleep_quality=sleep_quality,
+            bed_time=bed_time,
+            wake_time=wake_time,
+            sleep_interruptions=sleep_interruptions,
+            sleep_position=sleep_position
         )
 
         try:
@@ -142,7 +166,6 @@ def dream_view(dream_id):
     """View an individual dream."""
     dream = Dream.query.get_or_404(dream_id)
     
-    # Check if user has access to this dream
     if dream.user_id != current_user.id and not dream.is_public:
         flash('You do not have permission to view this dream.')
         return redirect(url_for('index'))
@@ -163,12 +186,10 @@ def reanalyze_dream(dream_id):
     """Re-analyze a dream using AI."""
     dream = Dream.query.get_or_404(dream_id)
     
-    # Check if user owns the dream
     if dream.user_id != current_user.id:
         flash('You can only re-analyze your own dreams.')
         return redirect(url_for('dream_view', dream_id=dream_id))
     
-    # Check if free user has remaining analyses
     if current_user.subscription_type == 'free':
         if current_user.monthly_ai_analysis_count >= 3:
             flash('You have reached your monthly limit for AI analyses. Upgrade to Premium for unlimited analyses!')
@@ -176,11 +197,9 @@ def reanalyze_dream(dream_id):
         current_user.monthly_ai_analysis_count += 1
     
     try:
-        # Get fresh AI analysis
         analysis, sentiment_info = analyze_dream(dream.content, is_premium=(current_user.subscription_type == 'premium'))
         dream.ai_analysis = analysis
         
-        # Update sentiment information
         if sentiment_info:
             dream.sentiment_score = sentiment_info['sentiment_score']
             dream.sentiment_magnitude = sentiment_info['sentiment_magnitude']
@@ -226,7 +245,6 @@ def delete_comment(dream_id, comment_id):
     comment = Comment.query.get_or_404(comment_id)
     dream = Dream.query.get_or_404(dream_id)
     
-    # Check if user has permission to delete the comment
     if comment.user_id != current_user.id and dream.user_id != current_user.id:
         flash('You do not have permission to delete this comment.')
         return redirect(url_for('dream_view', dream_id=dream_id))
@@ -271,7 +289,6 @@ def subscription():
     stripe_publishable_key = os.getenv('STRIPE_PUBLISHABLE_KEY')
     return render_template('subscription.html', stripe_publishable_key=stripe_publishable_key)
 
-# Group-related routes
 @app.route('/groups')
 @login_required
 def dream_groups():

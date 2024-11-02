@@ -44,6 +44,14 @@ class Dream(db.Model):
     is_anonymous = db.Column(db.Boolean, default=False)
     ai_analysis = db.Column(db.Text)
     
+    # Sleep metrics
+    sleep_duration = db.Column(db.Float, nullable=True)  # Duration in hours
+    sleep_quality = db.Column(db.Integer, nullable=True)  # Scale of 1-5
+    bed_time = db.Column(db.DateTime, nullable=True)  # When went to bed
+    wake_time = db.Column(db.DateTime, nullable=True)  # When woke up
+    sleep_interruptions = db.Column(db.Integer, default=0)  # Number of times woke up during sleep
+    sleep_position = db.Column(db.String(50), nullable=True)  # Sleeping position when dreaming
+    
     # Relationships
     comments = db.relationship('Comment', backref='dream', lazy='dynamic', cascade='all, delete-orphan')
     
