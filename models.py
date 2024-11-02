@@ -18,8 +18,8 @@ class User(UserMixin, db.Model):
     # Relationships
     dreams = db.relationship('Dream', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
-    forum_posts = db.relationship('ForumPost', backref='author', lazy='dynamic', foreign_keys='ForumPost.author_id')
-    forum_replies = db.relationship('ForumReply', backref='author', lazy='dynamic', foreign_keys='ForumReply.author_id')
+    forum_posts = db.relationship('ForumPost', backref='author', lazy='dynamic')
+    forum_replies = db.relationship('ForumReply', backref='author', lazy='dynamic')
     groups = db.relationship('DreamGroup', secondary='group_membership', backref=db.backref('members', lazy='dynamic'))
     
     def set_password(self, password):
@@ -35,15 +35,23 @@ class Dream(db.Model):
     content = db.Column(db.Text, nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
     mood = db.Column(db.String(50))
-    sentiment_score = db.Column(db.Float)  # Overall sentiment score (-1 to 1)
-    sentiment_magnitude = db.Column(db.Float)  # Intensity of emotion (0 to inf)
-    dominant_emotions = db.Column(db.String(200))  # Comma-separated list of prominent emotions
-    lucidity_level = db.Column(db.Integer)  # Scale of 1-5 for dream lucidity
+    sentiment_score = db.Column(db.Float, nullable=True)  # Overall sentiment score (-1 to 1)
+    sentiment_magnitude = db.Column(db.Float, nullable=True)  # Intensity of emotion (0 to inf)
+    dominant_emotions = db.Column(db.String(200), nullable=True)  # Comma-separated list of prominent emotions
+    lucidity_level = db.Column(db.Integer, nullable=True)  # Scale of 1-5 for dream lucidity
     tags = db.Column(db.String(200))
     is_public = db.Column(db.Boolean, default=False)
     is_anonymous = db.Column(db.Boolean, default=False)
     ai_analysis = db.Column(db.Text)
+    
+    # Relationships
     comments = db.relationship('Comment', backref='dream', lazy='dynamic', cascade='all, delete-orphan')
+    
+    __table_args__ = (
+        db.Index('idx_dream_user_id', 'user_id'),
+        db.Index('idx_dream_date', 'date'),
+        db.Index('idx_dream_public', 'is_public')
+    )
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -86,7 +94,7 @@ class ForumPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey('dream_group.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
@@ -94,7 +102,7 @@ class ForumPost(db.Model):
     replies = db.relationship('ForumReply', backref='post', lazy='dynamic', cascade='all, delete-orphan')
     
     __table_args__ = (
-        db.Index('idx_forumpost_author_id', 'author_id'),
+        db.Index('idx_forumpost_user_id', 'user_id'),
         db.Index('idx_forumpost_group_id', 'group_id'),
         db.Index('idx_forumpost_created_at', 'created_at')
     )
@@ -102,12 +110,12 @@ class ForumPost(db.Model):
 class ForumReply(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('forum_post.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     __table_args__ = (
         db.Index('idx_forumreply_post_id', 'post_id'),
-        db.Index('idx_forumreply_author_id', 'author_id'),
+        db.Index('idx_forumreply_user_id', 'user_id'),
         db.Index('idx_forumreply_created_at', 'created_at')
     )
