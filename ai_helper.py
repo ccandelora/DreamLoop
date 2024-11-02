@@ -1,195 +1,144 @@
 import os
 import google.generativeai as genai
-import logging
-import json
-from collections import Counter
-from datetime import datetime, timedelta
+import re
+from datetime import datetime
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-# Configure Gemini AI
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 genai.configure(api_key=GEMINI_API_KEY)
 
-
 def analyze_dream(content, is_premium=False):
-    """Analyze a dream with different depth based on subscription type."""
+    """Analyze dream content using Gemini AI."""
     try:
         model = genai.GenerativeModel('gemini-pro')
+        
+        # Base prompt for all users
+        prompt = f"""Analyze this dream and provide insights. Dream content: {content}
+
+Please analyze this dream and provide the following:
+1. Key Themes and Symbols
+2. Emotional Analysis (including sentiment score from -1 to 1, and magnitude from 0 to 5)
+3. Most prominent emotions (comma-separated list)
+4. Dream lucidity level (1-5 scale)
+5. Psychological Interpretation
+
+Format the response in markdown with appropriate headers. For the emotional analysis, strictly use this format:
+Sentiment Score: [number between -1 and 1]
+Sentiment Magnitude: [number between 0 and 5]
+Dominant Emotions: [comma-separated list]"""
 
         if is_premium:
-            # Enhanced prompt for premium users
-            prompt = f"""As an expert dream analyst, provide a comprehensive analysis of the following dream:
+            prompt += """
 
-            Dream Content: {content}
-
-            # Symbolism Analysis
-            * Detailed interpretation of key symbols
-            * Historical and mythological connections
-            * Personal and cultural significance
-            * Archetypal meanings and universal patterns
-
-            # Emotional Patterns
-            * Core emotional themes and their origins
-            * Subconscious feelings revealed
-            * Connection to current life situations
-            * Impact on waking emotional state
-
-            # Psychological Insights
-            * Jungian archetypal analysis
-            * Shadow aspects and integration
-            * Personal growth opportunities
-            * Relationship dynamics revealed
-
-            # Life Connections
-            * Current life situations reflected
-            * Past experiences influencing the dream
-            * Future possibilities indicated
-            * Relationships and interactions highlighted
-
-            # Growth & Development
-            * Personal development opportunities
-            * Areas for psychological exploration
-            * Potential challenges to address
-            * Skills or qualities to develop
-
-            # Action Steps
-            * Specific recommendations for growth
-            * Daily practices to implement
-            * Journal prompts for deeper exploration
-            * Mindfulness exercises related to dream themes
-
-            Format the response in markdown with clear sections and bullet points."""
-        else:
-            # Basic prompt for free users with upgrade message
-            prompt = f"""Provide a very brief analysis of this dream (3-4 sentences maximum):
-
-            Dream Content: {content}
-
-            Include only:
-            1. One key symbol and its basic meaning
-            2. The main emotional theme
-            3. A single practical insight
-
-            End with: "💫 *Unlock deeper insights with Premium: Get comprehensive symbolism analysis, personal growth recommendations, and detailed psychological patterns.*"
-
-            Keep it clear and concise."""
+Also provide:
+6. Personal Growth Recommendations
+7. Pattern Recognition Suggestions
+8. Archetypal Analysis
+9. Cultural Symbolism
+10. Action Steps for Integration"""
 
         response = model.generate_content(prompt)
-        return response.text
-    except Exception as e:
-        logger.error(f"Error in dream analysis: {str(e)}")
-        return "Unable to analyze dream at this time. Please try again later."
+        analysis = response.text
 
+        # Extract sentiment information
+        sentiment_info = extract_sentiment_info(analysis)
+        
+        return analysis, sentiment_info
+    except Exception as e:
+        return f"Error analyzing dream: {str(e)}", None
+
+def extract_sentiment_info(analysis):
+    """Extract sentiment information from the AI analysis."""
+    try:
+        # Extract sentiment score (-1 to 1)
+        score_match = re.search(r'Sentiment Score:\s*([-+]?\d*\.?\d+)', analysis)
+        sentiment_score = float(score_match.group(1)) if score_match else 0.0
+
+        # Extract sentiment magnitude (0 to 5)
+        magnitude_match = re.search(r'Sentiment Magnitude:\s*(\d*\.?\d+)', analysis)
+        sentiment_magnitude = float(magnitude_match.group(1)) if magnitude_match else 0.0
+
+        # Extract dominant emotions
+        emotions_match = re.search(r'Dominant Emotions:\s*([^#\n]+)', analysis)
+        dominant_emotions = emotions_match.group(1).strip() if emotions_match else ''
+
+        # Extract lucidity level (1-5)
+        lucidity_match = re.search(r'Dream lucidity level.*?(\d+)', analysis)
+        lucidity_level = int(lucidity_match.group(1)) if lucidity_match else 1
+
+        return {
+            'sentiment_score': sentiment_score,
+            'sentiment_magnitude': sentiment_magnitude,
+            'dominant_emotions': dominant_emotions,
+            'lucidity_level': lucidity_level
+        }
+    except Exception as e:
+        return None
 
 def analyze_dream_patterns(dreams, is_premium=False):
-    """Analyze patterns across multiple dreams with enhanced insights for premium users."""
+    """Analyze patterns across multiple dreams."""
+    if not dreams:
+        return None
+
     try:
-        if not dreams:
-            return None
-
-        # Collect dream data
+        # Collect all dream content
         dream_texts = [dream.content for dream in dreams]
-        moods = [dream.mood for dream in dreams]
-        tags = [
-            tag.strip() for dream in dreams for tag in dream.tags.split(',')
-            if dream.tags
-        ]
+        model = genai.GenerativeModel('gemini-pro')
+        
+        # Base prompt for pattern analysis
+        prompt = f"""Analyze these {len(dreams)} dreams and identify patterns. Dreams: {dream_texts}
 
-        # Calculate dream frequency
-        dream_dates = {}
-        for dream in dreams:
-            date_str = dream.date.strftime('%Y-%m-%d')
-            dream_dates[date_str] = dream_dates.get(date_str, 0) + 1
+Please provide:
+1. Common themes
+2. Emotional patterns
+3. Recurring symbols
+4. Dream type distribution
 
-        # Sort dates for the chart
-        sorted_dates = dict(sorted(dream_dates.items()))
-
-        # Basic pattern analysis
-        mood_frequency = Counter(moods)
-        tag_frequency = Counter(tags)
+Format the response in markdown."""
 
         if is_premium:
-            # Enhanced analysis for premium users
-            model = genai.GenerativeModel('gemini-pro')
-            combined_dreams = "\n---\n".join(
-                dream_texts[-10:])  # Analyze last 10 dreams
+            prompt += """
+Also analyze:
+5. Long-term pattern evolution
+6. Psychological growth indicators
+7. Life event correlations
+8. Detailed archetype analysis
+9. Personalized recommendations"""
 
-            prompt = f"""As an expert dream analyst, analyze these recent dreams for deep patterns and insights:
+        response = model.generate_content(prompt)
+        pattern_analysis = response.text
 
-            Dreams:
-            {combined_dreams}
+        # Process dream dates for timeline
+        dream_dates = {dream.date.strftime('%Y-%m-%d'): 1 for dream in dreams}
+        
+        # Calculate mood patterns
+        mood_patterns = {}
+        for dream in dreams:
+            mood = dream.mood or 'unspecified'
+            mood_patterns[mood] = mood_patterns.get(mood, 0) + 1
 
-            # Dream Evolution Patterns
-            * Major themes and their progression
-            * Symbol transformations over time
-            * Narrative pattern development
+        # Extract common themes
+        common_themes = extract_common_themes(pattern_analysis)
 
-            # Psychological Growth
-            * Personal development indicators
-            * Recurring challenges and resolutions
-            * Integration of shadow aspects
-
-            # Emotional Journey
-            * Emotional pattern progression
-            * Relationship dynamics evolution
-            * Conflict resolution patterns
-
-            # Symbol Network
-            * Interconnected symbol meanings
-            * Personal symbol dictionary
-            * Cultural and archetypal significance
-
-            # Growth Recommendations
-            * Key areas for conscious work
-            * Specific journaling exercises
-            * Meditation and mindfulness practices
-
-            Format the response in markdown with clear sections."""
-
-            response = model.generate_content(prompt)
-            ai_pattern_analysis = response.text
-        else:
-            # Basic analysis for free users with upgrade message
-            model = genai.GenerativeModel('gemini-pro')
-            combined_dreams = "\n---\n".join(
-                dream_texts[-3:])  # Analyze last 3 dreams
-            prompt = f"""As an expert dream analyst, analyze these recent dreams for deep patterns and insights:
-
-            Dreams:
-            {combined_dreams}
-            Include only:
-            # Basic Pattern Summary
-            * A simple overview of your most common dream themes
-            * Basic mood patterns across your dreams
-
-            End with: 💫 **Upgrade to Premium to Unlock:**
-                        * Deep psychological pattern analysis
-                        * Personal growth recommendations
-                        * Symbol network insights
-                        * Customized journaling prompts
-                        * Comprehensive emotional journey tracking"""
-            response = model.generate_content(prompt)
-            ai_pattern_analysis = response.text
-
-        # Construct the analysis result
-        analysis = {
-            'mood_patterns': dict(mood_frequency),
-            'common_themes': dict(tag_frequency.most_common(5)),
+        return {
             'dream_count': len(dreams),
-            'time_span': {
-                'start':
-                min(dream.date for dream in dreams).strftime('%Y-%m-%d'),
-                'end': max(dream.date for dream in dreams).strftime('%Y-%m-%d')
-            },
-            'dream_dates': sorted_dates,
-            'ai_analysis': ai_pattern_analysis,
-            'is_premium': is_premium
+            'mood_patterns': mood_patterns,
+            'dream_dates': dream_dates,
+            'common_themes': common_themes,
+            'ai_analysis': pattern_analysis
         }
 
-        return analysis
     except Exception as e:
-        logger.error(f"Error in pattern analysis: {str(e)}")
         return None
+
+def extract_common_themes(analysis):
+    """Extract common themes from the pattern analysis."""
+    try:
+        themes_match = re.search(r'Common themes:(.*?)(?=\#|\Z)', analysis, re.DOTALL | re.IGNORECASE)
+        if themes_match:
+            themes_text = themes_match.group(1).strip()
+            # Extract bullet points or numbered items
+            themes = re.findall(r'[-*\d.]\s*([^\n]+)', themes_text)
+            return {theme.strip(): 1 for theme in themes}
+        return {'No themes found': 0}
+    except Exception:
+        return {'Error extracting themes': 0}

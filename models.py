@@ -35,6 +35,10 @@ class Dream(db.Model):
     content = db.Column(db.Text, nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
     mood = db.Column(db.String(50))
+    sentiment_score = db.Column(db.Float)  # Overall sentiment score (-1 to 1)
+    sentiment_magnitude = db.Column(db.Float)  # Intensity of emotion (0 to inf)
+    dominant_emotions = db.Column(db.String(200))  # Comma-separated list of prominent emotions
+    lucidity_level = db.Column(db.Integer)  # Scale of 1-5 for dream lucidity
     tags = db.Column(db.String(200))
     is_public = db.Column(db.Boolean, default=False)
     is_anonymous = db.Column(db.Boolean, default=False)
