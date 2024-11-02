@@ -4,8 +4,19 @@ from sqlalchemy import text, inspect
 
 def update_schema():
     with app.app_context():
-        # Drop all tables to ensure clean slate
-        db.drop_all()
+        inspector = inspect(db.engine)
+        
+        # Drop existing tables in correct order
+        tables = ['forum_reply', 'forum_post', 'group_membership', 'dream_group', 
+                 'comment', 'dream', 'user']
+        
+        for table in tables:
+            try:
+                if table in inspector.get_table_names():
+                    db.session.execute(text(f'DROP TABLE IF EXISTS "{table}" CASCADE'))
+            except Exception as e:
+                print(f"Error dropping table {table}: {str(e)}")
+                
         db.session.commit()
         
         # Create all tables with proper indexes
@@ -17,9 +28,6 @@ def update_schema():
             print(f"Error creating tables: {str(e)}")
             db.session.rollback()
             return False
-        
-        # Verify table creation and columns
-        inspector = inspect(db.engine)
         
         # Verify dream table columns
         dream_columns = [
