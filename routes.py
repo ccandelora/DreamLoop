@@ -189,6 +189,13 @@ def dream_view(dream_id):
 
     return render_template('dream_view.html', dream=dream)
 
+@app.route('/community')
+@login_required
+def community():
+    """View public dreams from the community."""
+    dreams = Dream.query.filter_by(is_public=True).order_by(Dream.date.desc()).all()
+    return render_template('community_dreams.html', dreams=dreams)
+
 @app.route('/dream_patterns')
 @login_required
 def dream_patterns():
