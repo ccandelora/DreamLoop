@@ -21,6 +21,22 @@ logger = logging.getLogger(__name__)
 
 app.jinja_env.filters['markdown'] = lambda text: markdown.markdown(text) if text else ''
 
+def safe_json_loads(json_str, default_value=None):
+    """Safely parse JSON string with error handling"""
+    if not json_str:
+        return default_value
+    try:
+        return json.loads(json_str)
+    except json.JSONDecodeError as e:
+        logger.error(f"Error parsing JSON: {str(e)}")
+        return default_value
+
+def safe_strip(value):
+    """Safely strip whitespace from string values"""
+    if isinstance(value, str):
+        return value.strip()
+    return value
+
 @app.route('/')
 def index():
     """Home page."""
@@ -142,12 +158,12 @@ def dream_new():
 @login_required
 def dream_patterns():
     """View dream patterns with enhanced analysis for premium users."""
-    dreams = current_user.dreams.order_by(Dream.date.desc()).all()
-    
-    if not dreams:
-        return render_template('dream_patterns.html', patterns=None)
-        
     try:
+        dreams = current_user.dreams.order_by(Dream.date.desc()).all()
+        
+        if not dreams:
+            return render_template('dream_patterns.html', patterns=None)
+            
         # Basic statistics
         dream_count = len(dreams)
         lucid_dreams = sum(1 for dream in dreams if dream.lucidity_level and dream.lucidity_level > 0)
@@ -157,7 +173,10 @@ def dream_patterns():
         avg_clarity = sum(valid_clarity_values) / len(valid_clarity_values) if valid_clarity_values else 0
         
         # Mood distribution with safe handling
-        mood_distribution = Counter(dream.mood for dream in dreams if dream.mood)
+        mood_distribution = Counter()
+        for dream in dreams:
+            if dream.mood:
+                mood_distribution[safe_strip(dream.mood)] += 1
         
         # Dream frequency over time
         date_counts = defaultdict(int)
@@ -178,13 +197,10 @@ def dream_patterns():
         # Common themes and symbols with safe handling
         all_themes = []
         for dream in dreams:
-            if dream.recurring_elements:
-                try:
-                    elements = json.loads(dream.recurring_elements or '[]')
-                    all_themes.extend(elements)
-                except (json.JSONDecodeError, TypeError):
-                    continue
-        
+            elements = safe_json_loads(dream.recurring_elements, [])
+            if isinstance(elements, list):
+                all_themes.extend(elements)
+            
         common_themes = dict(Counter(all_themes).most_common(10))
         
         # Sleep quality correlation with safe handling
@@ -199,12 +215,9 @@ def dream_patterns():
         # Archetype analysis with safe handling
         all_archetypes = []
         for dream in dreams:
-            if dream.dream_archetypes:
-                try:
-                    archetypes = json.loads(dream.dream_archetypes or '[]')
-                    all_archetypes.extend(archetypes)
-                except (json.JSONDecodeError, TypeError):
-                    continue
+            archetypes = safe_json_loads(dream.dream_archetypes, [])
+            if isinstance(archetypes, list):
+                all_archetypes.extend(archetypes)
         
         archetype_frequency = dict(Counter(all_archetypes).most_common(8))
         
@@ -230,7 +243,7 @@ def dream_patterns():
         return render_template('dream_patterns.html', patterns=patterns)
         
     except Exception as e:
-        logging.error(f"Error analyzing dream patterns: {str(e)}")
+        logger.error(f"Error analyzing dream patterns: {str(e)}")
         flash('An error occurred while analyzing dream patterns.')
         return render_template('dream_patterns.html', patterns=None)
 
