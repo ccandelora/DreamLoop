@@ -85,107 +85,73 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-@app.route('/dream/patterns')
-@login_required
-def dream_patterns():
-    """Analyze patterns across user's dreams."""
-    dreams = current_user.dreams.all()
-    pattern_analysis = analyze_dream_patterns(dreams, is_premium=(current_user.subscription_type == 'premium'))
-    return render_template('dream_patterns.html', pattern_analysis=pattern_analysis)
-
 @app.route('/dream/new', methods=['GET', 'POST'])
 @login_required
 def dream_new():
-    """Create a new dream entry with sentiment analysis and sleep metrics."""
+    """Create a new dream entry."""
     if request.method == 'POST':
+        # Extract dream details from form
+        title = request.form.get('title')
+        content = request.form.get('content')
+        mood = request.form.get('mood')
+        tags = request.form.get('tags')
+        is_public = bool(request.form.get('is_public'))
+        is_anonymous = bool(request.form.get('is_anonymous'))
+        lucidity_level = int(request.form.get('lucidity_level', 1))
+        
+        # Extract sleep metrics
+        bed_time = request.form.get('bed_time')
+        wake_time = request.form.get('wake_time')
+        sleep_quality = request.form.get('sleep_quality')
+        sleep_interruptions = request.form.get('sleep_interruptions', 0)
+        sleep_position = request.form.get('sleep_position')
+        sleep_duration = request.form.get('sleep_duration')
+
+        # Create new dream with all fields
+        dream = Dream(
+            user_id=current_user.id,
+            title=title,
+            content=content,
+            mood=mood,
+            tags=tags,
+            is_public=is_public,
+            is_anonymous=is_anonymous,
+            lucidity_level=lucidity_level,
+            bed_time=datetime.fromisoformat(bed_time) if bed_time else None,
+            wake_time=datetime.fromisoformat(wake_time) if wake_time else None,
+            sleep_quality=int(sleep_quality) if sleep_quality else None,
+            sleep_interruptions=int(sleep_interruptions),
+            sleep_position=sleep_position,
+            sleep_duration=float(sleep_duration) if sleep_duration else None
+        )
+
         try:
-            # Get basic dream details
-            title = request.form.get('title')
-            content = request.form.get('content')
-            mood = request.form.get('mood')
-            tags = request.form.get('tags')
-            is_public = bool(request.form.get('is_public'))
-            is_anonymous = bool(request.form.get('is_anonymous'))
-            lucidity_level = int(request.form.get('lucidity_level', 1))
-            
-            # Get sleep metrics
-            bed_time = request.form.get('bed_time')
-            wake_time = request.form.get('wake_time')
-            sleep_quality = int(request.form.get('sleep_quality')) if request.form.get('sleep_quality') else None
-            sleep_interruptions = int(request.form.get('sleep_interruptions', 0))
-            sleep_position = request.form.get('sleep_position')
-            
-            # Calculate sleep duration if both times are provided
-            sleep_duration = None
-            if bed_time and wake_time:
-                try:
-                    bed_time = datetime.fromisoformat(bed_time)
-                    wake_time = datetime.fromisoformat(wake_time)
-                    sleep_duration = (wake_time - bed_time).total_seconds() / 3600  # Convert to hours
-                except ValueError:
-                    bed_time = None
-                    wake_time = None
-
-            # Initialize sentiment values
-            sentiment_score = None
-            sentiment_magnitude = None
-            dominant_emotions = None
-            ai_analysis = None
-
-            # Perform AI analysis if eligible
-            if current_user.subscription_type == 'premium' or current_user.monthly_ai_analysis_count < 3:
-                is_premium = current_user.subscription_type == 'premium'
-                
-                # Get AI analysis and sentiment info
-                analysis, sentiment_info = analyze_dream(content, is_premium=is_premium)
-                
-                if analysis:
-                    ai_analysis = analysis
-                    
-                    # Update sentiment information if available
-                    if sentiment_info:
-                        sentiment_score = sentiment_info.get('sentiment_score')
-                        sentiment_magnitude = sentiment_info.get('sentiment_magnitude')
-                        dominant_emotions = sentiment_info.get('dominant_emotions')
-                        # Only override lucidity level from form if AI provides one
-                        if sentiment_info.get('lucidity_level'):
-                            lucidity_level = sentiment_info['lucidity_level']
-                
-                if current_user.subscription_type == 'free':
+            # Analyze dream content if user has available analyses
+            if current_user.subscription_type == 'free':
+                if current_user.monthly_ai_analysis_count >= 3:
+                    flash('You have reached your monthly limit for AI analyses. Upgrade to Premium for unlimited analyses!')
+                else:
                     current_user.monthly_ai_analysis_count += 1
+                    analysis, sentiment_info = analyze_dream(content, is_premium=False)
+            else:
+                analysis, sentiment_info = analyze_dream(content, is_premium=True)
 
-            # Create dream object with all fields
-            dream = Dream(
-                title=title,
-                content=content,
-                mood=mood,
-                tags=tags,
-                is_public=is_public,
-                is_anonymous=is_anonymous,
-                lucidity_level=lucidity_level,
-                user_id=current_user.id,
-                sleep_duration=sleep_duration,
-                sleep_quality=sleep_quality,
-                bed_time=bed_time,
-                wake_time=wake_time,
-                sleep_interruptions=sleep_interruptions,
-                sleep_position=sleep_position,
-                sentiment_score=sentiment_score,
-                sentiment_magnitude=sentiment_magnitude,
-                dominant_emotions=dominant_emotions,
-                ai_analysis=ai_analysis
-            )
+            if analysis and sentiment_info:
+                dream.ai_analysis = analysis
+                dream.sentiment_score = sentiment_info.get('sentiment_score')
+                dream.sentiment_magnitude = sentiment_info.get('sentiment_magnitude')
+                dream.dominant_emotions = sentiment_info.get('dominant_emotions')
+                if sentiment_info.get('lucidity_level'):
+                    dream.lucidity_level = sentiment_info['lucidity_level']
 
-            # Save to database
             db.session.add(dream)
             db.session.commit()
-            flash('Dream logged successfully!')
             return redirect(url_for('dream_view', dream_id=dream.id))
 
         except Exception as e:
             logger.error(f"Error creating dream: {str(e)}")
             db.session.rollback()
-            flash('An error occurred while saving your dream.')
+            flash('An error occurred while saving your dream')
             return render_template('dream_new.html')
 
     return render_template('dream_new.html')
@@ -194,7 +160,10 @@ def dream_new():
 @login_required
 def dream_view(dream_id):
     """View an individual dream."""
-    dream = Dream.query.get_or_404(dream_id)
+    dream = db.session.get(Dream, dream_id)
+    if not dream:
+        flash('Dream not found.')
+        return redirect(url_for('index'))
     
     if dream.user_id != current_user.id and not dream.is_public:
         flash('You do not have permission to view this dream.')
@@ -206,7 +175,10 @@ def dream_view(dream_id):
 @login_required
 def reanalyze_dream(dream_id):
     """Re-analyze a dream using AI."""
-    dream = Dream.query.get_or_404(dream_id)
+    dream = db.session.get(Dream, dream_id)
+    if not dream:
+        flash('Dream not found.')
+        return redirect(url_for('index'))
     
     if dream.user_id != current_user.id:
         flash('You can only re-analyze your own dreams.')

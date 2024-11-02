@@ -26,7 +26,7 @@ with app.app_context():
 
 @login_manager.user_loader
 def load_user(id):
-    return User.query.get(int(id))
+    return db.session.get(User, int(id))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
