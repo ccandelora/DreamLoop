@@ -82,6 +82,14 @@ def register():
     
     return render_template('register.html')
 
+@app.route('/dream/patterns')
+@login_required
+def dream_patterns():
+    """View dream patterns and analysis."""
+    dreams = current_user.dreams.order_by(Dream.date.desc()).all()
+    patterns = analyze_dream_patterns(dreams, is_premium=(current_user.subscription_type == 'premium'))
+    return render_template('dream_patterns.html', patterns=patterns)
+
 @app.route('/dream/new', methods=['GET', 'POST'])
 @login_required
 def dream_new():
