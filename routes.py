@@ -21,6 +21,13 @@ def index():
     """Landing page and user dashboard."""
     return render_template('index.html', Dream=Dream)
 
+@app.route('/community')
+@login_required
+def community_dreams():
+    """View all public dreams from the community."""
+    public_dreams = Dream.query.filter_by(is_public=True).order_by(Dream.date.desc()).all()
+    return render_template('community_dreams.html', dreams=public_dreams)
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """User login."""
