@@ -1,204 +1,131 @@
 {% extends "base.html" %}
-{% block title %}Premium Subscription{% endblock %}
+{% block title %}DreamLoop Premium Subscription{% endblock %}
 
 {% block content %}
-<div class="container mx-auto">
-    <div class="max-w-3xl mx-auto">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        {% for message in messages %}
-        <div class="bg-white/80 backdrop-blur-sm border border-slate-200 rounded-lg px-4 py-3 mb-4">
-            {{ message }}
-        </div>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
-
-        <div class="dream-card">
-            <div class="border-b border-slate-200 px-6 py-4">
-                <h2 class="text-2xl font-semibold text-slate-900">DreamLoop Premium</h2>
-            </div>
-            <div class="p-6">
-                <h3 class="mb-4 text-lg font-semibold">Your Current Plan: 
-                    <span class="{% if current_user.subscription_type == 'premium' %}bg-green-500/80{% else %}bg-slate-500/80{% endif %} text-white px-3 py-1 rounded-full text-sm">
-                        {{ current_user.subscription_type|title }}
-                    </span>
-                </h3>
-
-                {% if current_user.subscription_type == 'free' %}
-                <div class="bg-white/80 backdrop-blur-sm border border-slate-200 rounded-lg p-4 mb-6">
-                    <h4 class="text-lg font-semibold text-slate-900 mb-2">Free Plan Limitations:</h4>
-                    <ul class="space-y-2 text-slate-700">
-                        <li>✦ 3 AI dream analyses per month</li>
-                        <li>✦ Basic pattern recognition</li>
-                        <li>✦ Standard dream journaling features</li>
-                    </ul>
-                    <p class="mt-3 text-sm text-slate-600">AI Analyses Remaining This Month: {{ 3 - current_user.monthly_ai_analysis_count }}</p>
-                </div>
-
-                <div class="bg-white/80 backdrop-blur-sm border border-purple-500/30 rounded-lg p-6 mb-6">
-                    <h4 class="text-xl font-semibold text-slate-900 mb-4">Upgrade to Premium</h4>
-                    <ul class="space-y-3 text-slate-700 mb-6">
-                        <li class="flex items-center">
-                            <span class="text-purple-500 mr-2">✨</span>
-                            Unlimited AI dream analyses
-                        </li>
-                        <li class="flex items-center">
-                            <span class="text-purple-500 mr-2">✨</span>
-                            Advanced pattern recognition
-                        </li>
-                        <li class="flex items-center">
-                            <span class="text-purple-500 mr-2">✨</span>
-                            Priority support
-                        </li>
-                        <li class="flex items-center">
-                            <span class="text-purple-500 mr-2">✨</span>
-                            Ad-free experience
-                        </li>
-                        <li class="flex items-center">
-                            <span class="text-purple-500 mr-2">✨</span>
-                            Early access to new features
-                        </li>
-                    </ul>
-                    <div class="text-center">
-                        {% if stripe_publishable_key %}
-                        <button type="button" class="dream-button w-full" id="checkout-button">
-                            <span class="button-text">Upgrade Now - $4.99/month</span>
-                            <div class="spinner-border spinner-border-sm hidden ml-2" role="status"></div>
-                        </button>
-                        <div id="error-message" class="bg-red-100/80 text-red-700 px-4 py-3 rounded-lg mt-3 hidden"></div>
-                        <div id="success-message" class="bg-green-100/80 text-green-700 px-4 py-3 rounded-lg mt-3 hidden"></div>
-                        {% else %}
-                        <div class="bg-yellow-100/80 text-yellow-700 px-4 py-3 rounded-lg">
-                            Payment system is currently unavailable. Please try again later.
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-                {% else %}
-                <div class="bg-white/80 backdrop-blur-sm border border-green-500/30 rounded-lg p-6 mb-6">
-                    <h4 class="text-lg font-semibold text-slate-900 mb-4">Premium Benefits Active:</h4>
-                    <ul class="space-y-3 text-slate-700">
-                        <li class="flex items-center">
-                            <span class="text-green-500 mr-2">✨</span>
-                            Unlimited AI dream analyses
-                        </li>
-                        <li class="flex items-center">
-                            <span class="text-green-500 mr-2">✨</span>
-                            Advanced pattern recognition
-                        </li>
-                        <li class="flex items-center">
-                            <span class="text-green-500 mr-2">✨</span>
-                            Priority support
-                        </li>
-                        <li class="flex items-center">
-                            <span class="text-green-500 mr-2">✨</span>
-                            Ad-free experience
-                        </li>
-                        <li class="flex items-center">
-                            <span class="text-green-500 mr-2">✨</span>
-                            Early access to new features
-                        </li>
-                    </ul>
+<div class="container mx-auto py-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Current Subscription Status -->
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-slate-900 mb-4">DreamLoop Premium</h1>
+            <p class="text-xl text-slate-700">
+                {% if current_user.subscription_type == 'premium' %}
+                    You are currently on the Premium plan
                     {% if current_user.subscription_end_date %}
-                    <p class="mt-4 text-sm text-slate-600">
-                        Subscription renews on: {{ current_user.subscription_end_date.strftime('%Y-%m-%d') }}
-                    </p>
+                        (valid until {{ current_user.subscription_end_date.strftime('%B %d, %Y') }})
                     {% endif %}
-                </div>
-                
-                <form method="POST" action="{{ url_for('cancel_subscription') }}">
-                    <button type="submit" class="px-4 py-2 border-2 border-red-500/50 text-red-600 hover:bg-red-50/80 rounded-lg transition-all">
-                        Cancel Subscription
-                    </button>
-                </form>
+                {% else %}
+                    Upgrade to Premium for unlimited dream analysis and enhanced features
                 {% endif %}
+            </p>
+        </div>
+
+        <!-- Premium Features Comparison -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div class="dream-card">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-slate-900 mb-4">Free Plan</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center">
+                            <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            3 AI dream analyses per month
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Basic dream pattern tracking
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Join up to 2 dream groups
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="dream-card bg-gradient-to-br from-purple-500/5 to-pink-500/5">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-slate-900 mb-4">Premium Plan</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center">
+                            <svg class="h-5 w-5 text-purple-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Unlimited AI dream analyses
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="h-5 w-5 text-purple-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Advanced pattern recognition
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="h-5 w-5 text-purple-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Create unlimited dream groups
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="h-5 w-5 text-purple-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Detailed dream symbolism analysis
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="h-5 w-5 text-purple-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Personal growth recommendations
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
+
+        <!-- Upgrade Button -->
+        {% if current_user.subscription_type == 'free' %}
+        <div class="text-center">
+            <button id="upgrade-button" class="dream-button text-lg px-8 py-3">
+                Upgrade to Premium
+            </button>
+            <p class="mt-4 text-sm text-slate-600">Cancel anytime. Monthly subscription.</p>
+        </div>
+        {% endif %}
     </div>
 </div>
-{% endblock %}
 
+{% if current_user.subscription_type == 'free' %}
 {% block scripts %}
-{% if current_user.subscription_type == 'free' and stripe_publishable_key %}
 <script src="https://js.stripe.com/v3/"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const button = document.getElementById('checkout-button');
-    const errorMessage = document.getElementById('error-message');
-    const successMessage = document.getElementById('success-message');
-    const spinner = button.querySelector('.spinner-border');
-    const buttonText = button.querySelector('.button-text');
-
-    function setLoading(isLoading) {
-        button.disabled = isLoading;
-        if (isLoading) {
-            spinner.classList.remove('hidden');
-            buttonText.textContent = 'Processing...';
-        } else {
-            spinner.classList.add('hidden');
-            buttonText.textContent = 'Upgrade Now - $4.99/month';
-        }
-    }
-
-    function showError(message) {
-        errorMessage.textContent = message;
-        errorMessage.classList.remove('hidden');
-        successMessage.classList.add('hidden');
-        setLoading(false);
-    }
-
-    function showSuccess(message) {
-        successMessage.textContent = message;
-        successMessage.classList.remove('hidden');
-        errorMessage.classList.add('hidden');
-    }
-
-    button.addEventListener('click', async (e) => {
-        e.preventDefault();
-
+    const stripe = Stripe('{{ stripe_public_key }}');
+    const upgradeButton = document.getElementById('upgrade-button');
+    
+    upgradeButton.addEventListener('click', async function() {
         try {
-            setLoading(true);
-            errorMessage.classList.add('hidden');
-            successMessage.classList.add('hidden');
-
-            const response = await fetch("{{ url_for('create_checkout_session') }}", {
+            const response = await fetch('/create-checkout-session', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                credentials: 'same-origin'
             });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const data = await response.json();
+            const session = await response.json();
             
-            if (data.error) {
-                throw new Error(data.error);
+            const result = await stripe.redirectToCheckout({
+                sessionId: session.id
+            });
+            
+            if (result.error) {
+                console.error(result.error);
             }
-
-            if (!data.url) {
-                throw new Error('No checkout URL received');
-            }
-
-            window.location.href = data.url;
         } catch (error) {
             console.error('Error:', error);
-            showError(error.message || 'Unable to start checkout. Please try again later.');
         }
     });
-
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('success') === 'true') {
-        showSuccess('Payment successful! Your premium features will be activated shortly.');
-    } else if (urlParams.get('canceled') === 'true') {
-        showError('Payment was canceled. Please try again if you wish to upgrade.');
-    }
 });
 </script>
+{% endblock %}
 {% endif %}
 {% endblock %}
