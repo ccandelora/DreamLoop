@@ -12,20 +12,43 @@ def update_schema():
             # Start transaction
             db.session.begin()
             
-            # Create all tables using SQLAlchemy models
+            # First create all tables using SQLAlchemy models
             logger.info("Creating tables from models...")
             db.create_all()
             
-            # Execute the schema updates
-            logger.info("Updating forum tables...")
+            # Now execute DO block to ensure table exists and has all required columns
+            logger.info("Checking and adding any missing columns...")
             db.session.execute(text('''
                 DO $$ 
                 BEGIN
-                    -- Recreate forum tables with correct column names
-                    DROP TABLE IF EXISTS forum_reply CASCADE;
-                    DROP TABLE IF EXISTS forum_post CASCADE;
+                    -- First create or update the dream table
+                    CREATE TABLE IF NOT EXISTS dream (
+                        id SERIAL PRIMARY KEY,
+                        user_id INTEGER NOT NULL,
+                        title VARCHAR(100) NOT NULL,
+                        content TEXT NOT NULL,
+                        date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        mood VARCHAR(50),
+                        tags VARCHAR(200),
+                        is_public BOOLEAN DEFAULT FALSE,
+                        is_anonymous BOOLEAN DEFAULT FALSE,
+                        ai_analysis TEXT,
+                        sentiment_score FLOAT,
+                        sentiment_magnitude FLOAT,
+                        dominant_emotions VARCHAR(200),
+                        lucidity_level INTEGER,
+                        sleep_duration FLOAT,
+                        sleep_quality INTEGER,
+                        bed_time TIMESTAMP,
+                        wake_time TIMESTAMP,
+                        sleep_interruptions INTEGER DEFAULT 0,
+                        sleep_position VARCHAR(50)
+                    );
+
+                    -- Drop and recreate forum_post table
+                    DROP TABLE IF EXISTS forum_reply;
+                    DROP TABLE IF EXISTS forum_post;
                     
-                    -- Create forum_post table with user_id
                     CREATE TABLE forum_post (
                         id SERIAL PRIMARY KEY,
                         title VARCHAR(200) NOT NULL,
@@ -35,7 +58,7 @@ def update_schema():
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
 
-                    -- Create forum_reply table with user_id
+                    -- Create forum_reply table
                     CREATE TABLE forum_reply (
                         id SERIAL PRIMARY KEY,
                         content TEXT NOT NULL,
@@ -43,6 +66,7 @@ def update_schema():
                         post_id INTEGER NOT NULL REFERENCES forum_post(id) ON DELETE CASCADE,
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
+
                 END $$;
             '''))
             
