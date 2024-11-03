@@ -28,6 +28,13 @@ def community_dreams():
     public_dreams = Dream.query.filter_by(is_public=True).order_by(Dream.date.desc()).all()
     return render_template('community_dreams.html', dreams=public_dreams)
 
+@app.route('/groups')
+@login_required
+def dream_groups():
+    """View all dream groups."""
+    groups = DreamGroup.query.all()
+    return render_template('dream_groups.html', groups=groups)
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """User login."""
@@ -110,20 +117,18 @@ def dream_new():
         is_anonymous = bool(request.form.get('is_anonymous'))
         lucidity_level = int(request.form.get('lucidity_level', 1))
         
-        # Get sleep metrics
         bed_time = request.form.get('bed_time')
         wake_time = request.form.get('wake_time')
         sleep_quality = int(request.form.get('sleep_quality')) if request.form.get('sleep_quality') else None
         sleep_interruptions = int(request.form.get('sleep_interruptions', 0))
         sleep_position = request.form.get('sleep_position')
         
-        # Calculate sleep duration if both times are provided
         sleep_duration = None
         if bed_time and wake_time:
             try:
                 bed_time = datetime.fromisoformat(bed_time)
                 wake_time = datetime.fromisoformat(wake_time)
-                sleep_duration = (wake_time - bed_time).total_seconds() / 3600  # Convert to hours
+                sleep_duration = (wake_time - bed_time).total_seconds() / 3600
             except ValueError:
                 bed_time = None
                 wake_time = None
@@ -149,11 +154,9 @@ def dream_new():
             if current_user.subscription_type == 'premium' or current_user.monthly_ai_analysis_count < 3:
                 is_premium = current_user.subscription_type == 'premium'
                 
-                # Get AI analysis and sentiment info
                 analysis, sentiment_info = analyze_dream(content, is_premium=is_premium)
                 dream.ai_analysis = analysis
                 
-                # Update sentiment information
                 if sentiment_info:
                     dream.sentiment_score = sentiment_info['sentiment_score']
                     dream.sentiment_magnitude = sentiment_info['sentiment_magnitude']
