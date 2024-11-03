@@ -45,49 +45,28 @@ def update_schema():
                         sleep_position VARCHAR(50)
                     );
 
-                    -- Create or update forum_post table
-                    CREATE TABLE IF NOT EXISTS forum_post (
+                    -- Drop and recreate forum_post table
+                    DROP TABLE IF EXISTS forum_reply;
+                    DROP TABLE IF EXISTS forum_post;
+                    
+                    CREATE TABLE forum_post (
                         id SERIAL PRIMARY KEY,
                         title VARCHAR(200) NOT NULL,
                         content TEXT NOT NULL,
-                        user_id INTEGER NOT NULL,
-                        group_id INTEGER NOT NULL,
+                        user_id INTEGER NOT NULL REFERENCES "user"(id),
+                        group_id INTEGER NOT NULL REFERENCES dream_group(id),
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
 
-                    -- Create or update forum_reply table
-                    CREATE TABLE IF NOT EXISTS forum_reply (
+                    -- Create forum_reply table
+                    CREATE TABLE forum_reply (
                         id SERIAL PRIMARY KEY,
                         content TEXT NOT NULL,
-                        user_id INTEGER NOT NULL,
-                        post_id INTEGER NOT NULL,
+                        user_id INTEGER NOT NULL REFERENCES "user"(id),
+                        post_id INTEGER NOT NULL REFERENCES forum_post(id) ON DELETE CASCADE,
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
-                    
-                    -- Add missing columns to dream table if they don't exist
-                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dream' AND column_name = 'sleep_duration') THEN
-                        ALTER TABLE dream ADD COLUMN sleep_duration FLOAT;
-                    END IF;
-                    
-                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dream' AND column_name = 'sleep_quality') THEN
-                        ALTER TABLE dream ADD COLUMN sleep_quality INTEGER;
-                    END IF;
-                    
-                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dream' AND column_name = 'bed_time') THEN
-                        ALTER TABLE dream ADD COLUMN bed_time TIMESTAMP;
-                    END IF;
-                    
-                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dream' AND column_name = 'wake_time') THEN
-                        ALTER TABLE dream ADD COLUMN wake_time TIMESTAMP;
-                    END IF;
-                    
-                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dream' AND column_name = 'sleep_interruptions') THEN
-                        ALTER TABLE dream ADD COLUMN sleep_interruptions INTEGER DEFAULT 0;
-                    END IF;
-                    
-                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dream' AND column_name = 'sleep_position') THEN
-                        ALTER TABLE dream ADD COLUMN sleep_position VARCHAR(50);
-                    END IF;
+
                 END $$;
             '''))
             
