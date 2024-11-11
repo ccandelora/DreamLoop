@@ -28,13 +28,13 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
 
-    with app.app_context():
-        # Configure login manager
-        login_manager.login_view = 'login'
-        login_manager.login_message = 'Please log in to access this page.'
-        login_manager.login_message_category = 'info'
-        login_manager.session_protection = 'strong'
+    # Configure login manager
+    login_manager.login_view = 'login'
+    login_manager.login_message = 'Please log in to access this page.'
+    login_manager.login_message_category = 'info'
+    login_manager.session_protection = 'strong'
 
+    with app.app_context():
         # Add markdown filter
         def markdown_filter(text):
             return markdown.markdown(text) if text else ''
