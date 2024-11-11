@@ -179,6 +179,15 @@ def dream_new():
 
     return render_template('dream_new.html')
 
+@app.route('/dream/<int:dream_id>', methods=['GET', 'POST'])
+@login_required
+def dream_view(dream_id):
+    """View a dream entry and its comments."""
+    dream = Dream.query.get_or_404(dream_id)
+    comments = Comment.query.filter_by(dream_id=dream_id).order_by(Comment.created_at.desc()).all()
+    return render_template('dream_view.html', dream=dream, comments=comments)
+    
+
 @app.route('/group/<int:group_id>/forum/new', methods=['GET', 'POST'])
 @login_required
 def create_forum_post(group_id):

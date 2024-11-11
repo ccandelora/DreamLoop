@@ -20,7 +20,7 @@
                             {% if dream.is_anonymous and dream.user_id != current_user.id %}
                                 Posted anonymously
                             {% else %}
-                                By {{ dream.author.username }}
+                                By {{ dream.user.username }}
                             {% endif %}
                         </span>
                         <span>•</span>
