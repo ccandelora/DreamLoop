@@ -55,21 +55,15 @@ def register_routes(app):
         """Landing page and user dashboard."""
         try:
             if current_user.is_authenticated:
-                try:
-                    dreams = Dream.query.filter_by(user_id=current_user.id)\
-                        .order_by(Dream.date.desc())\
-                        .limit(5)\
-                        .all()
-                    logger.info(f"Successfully fetched {len(dreams) if dreams else 0} dreams for user {current_user.id}")
-                    return render_template('index.html', dreams=dreams if dreams else [])
-                except SQLAlchemyError as e:
-                    logger.error(f"Database error fetching dreams: {str(e)}")
-                    flash('An error occurred while loading your dreams')
-                    return render_template('index.html', dreams=[])
+                dreams = Dream.query.filter_by(user_id=current_user.id)\
+                    .order_by(Dream.date.desc())\
+                    .limit(5)\
+                    .all()
+                logger.info(f"Successfully fetched {len(dreams) if dreams else 0} dreams for user {current_user.id}")
+                return render_template('index.html', dreams=dreams if dreams else [])
             return render_template('index.html')
         except Exception as e:
             logger.error(f"Error in index route: {str(e)}")
-            flash('An error occurred while loading your dreams')
             return render_template('index.html', dreams=[])
 
     @app.route('/dream_patterns')

@@ -106,13 +106,6 @@
                     </div>
                     {% endfor %}
                 </div>
-                {% if dreams|length > 5 %}
-                <div class="mt-6 text-center">
-                    <a href="{{ url_for('dream_patterns') }}" class="dream-button">
-                        View All Dreams
-                    </a>
-                </div>
-                {% endif %}
             {% else %}
             <div class="text-center py-8">
                 <svg class="h-16 w-16 mx-auto mb-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
