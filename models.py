@@ -14,11 +14,18 @@ class User(UserMixin, db.Model):
     last_analysis_reset = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
-    dreams = db.relationship('Dream', backref='user', lazy='dynamic')
-    comments = db.relationship('Comment', backref='user', lazy='dynamic')
-    forum_posts = db.relationship('ForumPost', backref='user', lazy='dynamic')
-    forum_replies = db.relationship('ForumReply', backref='user', lazy='dynamic')
+    dreams = db.relationship('Dream', backref='user', lazy='dynamic', cascade='all, delete-orphan')
+    comments = db.relationship('Comment', backref='user', lazy='dynamic', cascade='all, delete-orphan')
+    forum_posts = db.relationship('ForumPost', backref='user', lazy='dynamic', cascade='all, delete-orphan')
+    forum_replies = db.relationship('ForumReply', backref='user', lazy='dynamic', cascade='all, delete-orphan')
     groups = db.relationship('DreamGroup', secondary='group_membership', backref=db.backref('members', lazy='dynamic'))
+    
+    def __init__(self, username=None, email=None, subscription_type='free'):
+        self.username = username
+        self.email = email
+        self.subscription_type = subscription_type
+        self.monthly_ai_analysis_count = 0
+        self.last_analysis_reset = datetime.utcnow()
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -53,12 +60,24 @@ class Dream(db.Model):
     # Relationships
     comments = db.relationship('Comment', backref='dream', lazy='dynamic', cascade='all, delete-orphan')
 
+    def __init__(self, user_id=None, title=None, content=None):
+        self.user_id = user_id
+        self.title = title
+        self.content = content
+        self.date = datetime.utcnow()
+
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     dream_id = db.Column(db.Integer, db.ForeignKey('dream.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __init__(self, content=None, user_id=None, dream_id=None):
+        self.content = content
+        self.user_id = user_id
+        self.dream_id = dream_id
+        self.created_at = datetime.utcnow()
 
 class DreamGroup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -69,6 +88,13 @@ class DreamGroup(db.Model):
     
     # Relationships
     forum_posts = db.relationship('ForumPost', backref='group', lazy='dynamic', cascade='all, delete-orphan')
+    creator = db.relationship('User', foreign_keys=[created_by], backref='created_groups')
+
+    def __init__(self, name=None, description=None, created_by=None):
+        self.name = name
+        self.description = description
+        self.created_by = created_by
+        self.created_at = datetime.utcnow()
 
 class GroupMembership(db.Model):
     __tablename__ = 'group_membership'
@@ -76,6 +102,12 @@ class GroupMembership(db.Model):
     group_id = db.Column(db.Integer, db.ForeignKey('dream_group.id'), primary_key=True)
     is_admin = db.Column(db.Boolean, default=False)
     joined_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __init__(self, user_id=None, group_id=None, is_admin=False):
+        self.user_id = user_id
+        self.group_id = group_id
+        self.is_admin = is_admin
+        self.joined_at = datetime.utcnow()
 
 class ForumPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -88,9 +120,22 @@ class ForumPost(db.Model):
     # Relationships
     replies = db.relationship('ForumReply', backref='post', lazy='dynamic', cascade='all, delete-orphan')
 
+    def __init__(self, title=None, content=None, user_id=None, group_id=None):
+        self.title = title
+        self.content = content
+        self.user_id = user_id
+        self.group_id = group_id
+        self.created_at = datetime.utcnow()
+
 class ForumReply(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('forum_post.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __init__(self, content=None, user_id=None, post_id=None):
+        self.content = content
+        self.user_id = user_id
+        self.post_id = post_id
+        self.created_at = datetime.utcnow()

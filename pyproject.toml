@@ -16,4 +16,6 @@ dependencies = [
     "sqlalchemy",
     "werkzeug",
     "markdown>=3.7",
+    "psutil>=6.1.0",
+    "python-dotenv>=1.0.1",
 ]

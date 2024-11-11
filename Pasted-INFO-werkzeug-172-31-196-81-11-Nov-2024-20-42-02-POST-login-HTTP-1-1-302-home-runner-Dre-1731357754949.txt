@@ -1,0 +1,32 @@
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:02] "POST /login HTTP/1.1" 302 -
+/home/runner/DreamShare/app.py:47: LegacyAPIWarning: The Query.get() method is considered legacy as of the 1.x series of SQLAlchemy and becomes a legacy construct in 2.0. The method is now available as Session.get() (deprecated since: 2.0) (Background on SQLAlchemy 2.0 at: https://sqlalche.me/e/b8d9)
+  return User.query.get(int(user_id))
+ERROR:routes:Error rendering index page: 'Dream' is undefined
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:02] "GET / HTTP/1.1" 302 -
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:02] "GET /login HTTP/1.1" 302 -
+ERROR:routes:Error rendering index page: 'Dream' is undefined
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:03] "GET / HTTP/1.1" 302 -
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:03] "GET /login HTTP/1.1" 302 -
+ERROR:routes:Error rendering index page: 'Dream' is undefined
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:03] "GET / HTTP/1.1" 302 -
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:04] "GET /login HTTP/1.1" 302 -
+ERROR:routes:Error rendering index page: 'Dream' is undefined
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:04] "GET / HTTP/1.1" 302 -
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:04] "GET /login HTTP/1.1" 302 -
+ERROR:routes:Error rendering index page: 'Dream' is undefined
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:04] "GET / HTTP/1.1" 302 -
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:05] "GET /login HTTP/1.1" 302 -
+ERROR:routes:Error rendering index page: 'Dream' is undefined
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:05] "GET / HTTP/1.1" 302 -
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:05] "GET /login HTTP/1.1" 302 -
+ERROR:routes:Error rendering index page: 'Dream' is undefined
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:05] "GET / HTTP/1.1" 302 -
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:06] "GET /login HTTP/1.1" 302 -
+ERROR:routes:Error rendering index page: 'Dream' is undefined
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:06] "GET / HTTP/1.1" 302 -
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:06] "GET /login HTTP/1.1" 302 -
+ERROR:routes:Error rendering index page: 'Dream' is undefined
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:06] "GET / HTTP/1.1" 302 -
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:07] "GET /login HTTP/1.1" 302 -
+ERROR:routes:Error rendering index page: 'Dream' is undefined
+INFO:werkzeug:172.31.196.81 - - [11/Nov/2024 20:42:07] "GET / HTTP/1.1" 302 -
