@@ -55,31 +55,51 @@ def register_routes(app):
         """Landing page and user dashboard."""
         try:
             if current_user.is_authenticated:
-                dreams = Dream.query.filter_by(user_id=current_user.id)\
-                    .order_by(Dream.date.desc())\
-                    .limit(5)\
-                    .all()
-                return render_template('index.html', dreams=dreams)
+                logger.info(f"Fetching dreams for user {current_user.id}")
+                try:
+                    dreams = Dream.query.filter_by(user_id=current_user.id)\
+                        .order_by(Dream.date.desc())\
+                        .limit(5)\
+                        .all()
+                    logger.info(f"Successfully fetched {len(dreams) if dreams else 0} dreams")
+                    return render_template('index.html', dreams=dreams if dreams else [])
+                except SQLAlchemyError as e:
+                    logger.error(f"Database error fetching dreams: {str(e)}")
+                    flash('An error occurred while loading your dreams')
+                    return render_template('index.html', dreams=[])
             return render_template('index.html')
         except Exception as e:
             logger.error(f"Error rendering index page: {str(e)}")
             flash('An error occurred while loading the dashboard')
-            return render_template('index.html')
+            return render_template('index.html', dreams=[])
 
     @app.route('/dream_patterns')
     @login_required
     def dream_patterns():
         """View and analyze dream patterns."""
         try:
+            logger.info(f"Fetching dreams for pattern analysis - user {current_user.id}")
             dreams = Dream.query.filter_by(user_id=current_user.id)\
                 .order_by(Dream.date.desc())\
                 .all()
-            patterns = analyze_dream_patterns(dreams) if dreams else None
-            return render_template('dream_patterns.html', dreams=dreams, patterns=patterns)
-        except Exception as e:
+            
+            if not dreams:
+                logger.info("No dreams found for pattern analysis")
+                return render_template('dream_patterns.html', dreams=[], patterns=None)
+            
+            try:
+                patterns = analyze_dream_patterns(dreams)
+                logger.info("Successfully analyzed dream patterns")
+                return render_template('dream_patterns.html', dreams=dreams, patterns=patterns)
+            except Exception as e:
+                logger.error(f"Error analyzing dream patterns: {str(e)}")
+                flash('An error occurred while analyzing dream patterns')
+                return render_template('dream_patterns.html', dreams=dreams, patterns=None)
+                
+        except SQLAlchemyError as e:
             logger.error(f"Database error in dream patterns: {str(e)}")
-            flash('An error occurred while analyzing dream patterns')
-            return redirect(url_for('index'))
+            flash('An error occurred while loading your dreams')
+            return render_template('dream_patterns.html', dreams=[], patterns=None)
 
     @app.route('/subscription')
     @login_required
