@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db
 from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply
@@ -15,6 +15,8 @@ from sqlalchemy import desc, func
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
 @app.route('/')
 def index():
@@ -187,7 +189,6 @@ def dream_view(dream_id):
     comments = Comment.query.filter_by(dream_id=dream_id).order_by(Comment.created_at.desc()).all()
     return render_template('dream_view.html', dream=dream, comments=comments)
     
-
 @app.route('/group/<int:group_id>/forum/new', methods=['GET', 'POST'])
 @login_required
 def create_forum_post(group_id):
@@ -251,3 +252,86 @@ def reply_to_post(post_id):
         flash('An error occurred while adding your reply.')
     
     return redirect(url_for('dream_group', group_id=post.group_id))
+
+@app.route('/subscription')
+@login_required
+def subscription():
+    """Show subscription page."""
+    return render_template('subscription.html', 
+                         stripe_publishable_key=os.getenv('STRIPE_PUBLISHABLE_KEY'))
+
+@app.route('/create-checkout-session', methods=['POST'])
+@login_required
+def create_checkout_session():
+    """Create Stripe Checkout session for premium subscription."""
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            client_reference_id=current_user.id,
+            customer_email=current_user.email,
+            payment_method_types=['card'],
+            line_items=[{
+                'price_data': {
+                    'currency': 'usd',
+                    'product_data': {
+                        'name': 'DreamLoop Premium Subscription',
+                        'description': 'Unlock unlimited AI analysis and advanced features',
+                    },
+                    'unit_amount': 499,  # $4.99
+                    'recurring': {
+                        'interval': 'month'
+                    },
+                },
+                'quantity': 1,
+            }],
+            mode='subscription',
+            success_url=request.host_url + 'subscription?success=true',
+            cancel_url=request.host_url + 'subscription?canceled=true',
+            metadata={
+                'user_id': str(current_user.id),
+                'user_email': current_user.email
+            }
+        )
+        return jsonify({'url': checkout_session.url})
+    except Exception as e:
+        logger.error(f"Error creating checkout session: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/webhook', methods=['POST'])
+def stripe_webhook():
+    """Handle Stripe webhook events."""
+    payload = request.get_data()
+    sig_header = request.headers.get('Stripe-Signature')
+
+    success, message = handle_stripe_webhook(payload, sig_header)
+    if success:
+        return jsonify({'status': 'success', 'message': message}), 200
+    return jsonify({'status': 'error', 'message': message}), 400
+
+@app.route('/cancel-subscription', methods=['POST'])
+@login_required
+def cancel_subscription():
+    """Cancel user's premium subscription."""
+    try:
+        # Find the subscription in Stripe
+        subscriptions = stripe.Subscription.list(
+            customer_email=current_user.email,
+            status='active',
+            limit=1
+        )
+        
+        if not subscriptions.data:
+            flash('No active subscription found.')
+            return redirect(url_for('subscription'))
+            
+        subscription = subscriptions.data[0]
+        stripe.Subscription.modify(
+            subscription.id,
+            cancel_at_period_end=True
+        )
+        
+        flash('Your subscription will be canceled at the end of the billing period.')
+    except Exception as e:
+        logger.error(f"Error canceling subscription: {str(e)}")
+        flash('An error occurred while canceling your subscription.')
+    
+    return redirect(url_for('subscription'))
