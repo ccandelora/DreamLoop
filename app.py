@@ -24,11 +24,11 @@ def create_app():
         'max_overflow': 5
     }
 
-    # Initialize extensions with app context
-    with app.app_context():
-        db.init_app(app)
-        login_manager.init_app(app)
+    # Initialize extensions
+    db.init_app(app)
+    login_manager.init_app(app)
 
+    with app.app_context():
         # Configure login manager
         login_manager.login_view = 'login'
         login_manager.login_message = 'Please log in to access this page.'
@@ -54,7 +54,7 @@ def create_app():
             # Import routes after app creation to avoid circular imports
             from routes import register_routes
             
-            # Create database tables
+            # Create database tables if they don't exist
             db.create_all()
             logger.info("Database tables created successfully")
             

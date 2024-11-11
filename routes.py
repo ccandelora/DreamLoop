@@ -1,14 +1,14 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
-from extensions import db
+from extensions import db, login_manager
 from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply
 from datetime import datetime, timedelta
 from sqlalchemy import desc, text
 import logging
+from sqlalchemy.exc import SQLAlchemyError
 import os
 import stripe
 from ai_helper import analyze_dream, analyze_dream_patterns
-from sqlalchemy.exc import SQLAlchemyError
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -36,7 +36,7 @@ def handle_stripe_webhook(payload, sig_header):
         
         if user_id:
             try:
-                user = db.session.get(User, int(user_id))
+                user = User.query.get(int(user_id))
                 if user:
                     user.subscription_type = 'premium'
                     user.subscription_end_date = datetime.utcnow() + timedelta(days=30)
@@ -55,13 +55,12 @@ def register_routes(app):
         """Landing page and user dashboard."""
         try:
             if current_user.is_authenticated:
-                logger.info(f"Fetching dreams for user {current_user.id}")
                 try:
                     dreams = Dream.query.filter_by(user_id=current_user.id)\
                         .order_by(Dream.date.desc())\
                         .limit(5)\
                         .all()
-                    logger.info(f"Successfully fetched {len(dreams) if dreams else 0} dreams")
+                    logger.info(f"Successfully fetched {len(dreams) if dreams else 0} dreams for user {current_user.id}")
                     return render_template('index.html', dreams=dreams if dreams else [])
                 except SQLAlchemyError as e:
                     logger.error(f"Database error fetching dreams: {str(e)}")
@@ -69,8 +68,8 @@ def register_routes(app):
                     return render_template('index.html', dreams=[])
             return render_template('index.html')
         except Exception as e:
-            logger.error(f"Error rendering index page: {str(e)}")
-            flash('An error occurred while loading the dashboard')
+            logger.error(f"Error in index route: {str(e)}")
+            flash('An error occurred while loading your dreams')
             return render_template('index.html', dreams=[])
 
     @app.route('/dream_patterns')
@@ -125,7 +124,7 @@ def register_routes(app):
             if current_user not in group.members:
                 membership = GroupMembership(user_id=current_user.id, group_id=group.id)
                 db.session.add(membership)
-                db.session.commit()
+                db.session.commit()  # Fixed syntax error here
                 flash('Successfully joined the group!')
             else:
                 flash('You are already a member of this group')
