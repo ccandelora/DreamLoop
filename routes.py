@@ -9,6 +9,7 @@ from sqlalchemy import desc
 import os
 import stripe
 from ai_helper import analyze_dream, analyze_dream_patterns
+from activity_tracker import track_user_activity, ACTIVITY_TYPES
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -38,6 +39,7 @@ def register_routes(app):
     def subscription():
         """Subscription management page."""
         try:
+            track_user_activity(current_user.id, ACTIVITY_TYPES['SUBSCRIPTION_VIEW'])
             stripe_publishable_key = os.getenv('STRIPE_PUBLISHABLE_KEY')
             if not stripe_publishable_key:
                 logger.error("Stripe publishable key not found")
@@ -56,6 +58,7 @@ def register_routes(app):
     def create_checkout_session():
         """Create Stripe checkout session for subscription."""
         try:
+            track_user_activity(current_user.id, ACTIVITY_TYPES['SUBSCRIPTION_PURCHASE_ATTEMPT'])
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
                 line_items=[{
@@ -77,6 +80,7 @@ def register_routes(app):
     def cancel_subscription():
         """Cancel user's premium subscription."""
         try:
+            track_user_activity(current_user.id, ACTIVITY_TYPES['SUBSCRIPTION_CANCEL_ATTEMPT'])
             if current_user.subscription_type != 'premium':
                 flash('No active subscription to cancel')
                 return redirect(url_for('subscription'))
@@ -111,6 +115,7 @@ def register_routes(app):
                 
                 if user and user.check_password(password):
                     login_user(user)
+                    track_user_activity(user.id, ACTIVITY_TYPES['LOGIN'])
                     next_page = request.args.get('next')
                     if next_page and next_page.startswith('/'):
                         return redirect(next_page)
@@ -128,6 +133,8 @@ def register_routes(app):
     @login_required
     def logout():
         """User logout."""
+        if current_user.is_authenticated:
+            track_user_activity(current_user.id, ACTIVITY_TYPES['LOGOUT'])
         logout_user()
         return redirect(url_for('index'))
 
@@ -162,6 +169,7 @@ def register_routes(app):
                 
                 db.session.add(user)
                 db.session.commit()
+                track_user_activity(user.id, ACTIVITY_TYPES['REGISTRATION'])
                 login_user(user)
                 flash('Registration successful! Welcome to DreamLoop!')
                 return redirect(url_for('index'))
@@ -178,6 +186,7 @@ def register_routes(app):
     def dream_patterns():
         """View and analyze dream patterns."""
         try:
+            track_user_activity(current_user.id, ACTIVITY_TYPES['DREAM_PATTERNS_VIEW'])
             logger.info(f"Fetching dreams for pattern analysis - user {current_user.id}")
             dreams = Dream.query\
                 .filter_by(user_id=current_user.id)\
@@ -213,6 +222,7 @@ def register_routes(app):
     def community_dreams():
         """View all public dreams from the community."""
         try:
+            track_user_activity(current_user.id, ACTIVITY_TYPES['COMMUNITY_DREAMS_VIEW'])
             public_dreams = Dream.query\
                 .filter_by(is_public=True)\
                 .order_by(Dream.date.desc())\
@@ -229,6 +239,7 @@ def register_routes(app):
     def dream_groups():
         """View all dream groups."""
         try:
+            track_user_activity(current_user.id, ACTIVITY_TYPES['DREAM_GROUPS_VIEW'])
             groups = DreamGroup.query.all()
             return render_template('dream_groups.html', groups=groups)
         except SQLAlchemyError as e:
@@ -258,6 +269,7 @@ def register_routes(app):
                 db.session.add(membership)
                 
                 db.session.commit()
+                track_user_activity(current_user.id, ACTIVITY_TYPES['GROUP_CREATE'], description=f"Created group: {group.name}", target_type='group', target_id=group.id)
                 flash('Group created successfully!')
                 return redirect(url_for('dream_groups'))
             except SQLAlchemyError as e:
@@ -321,6 +333,16 @@ def register_routes(app):
                 
                 db.session.add(dream)
                 db.session.commit()
+
+                # Track dream creation activity
+                track_user_activity(
+                    current_user.id,
+                    ACTIVITY_TYPES['DREAM_CREATE'],
+                    description=f"Created dream: {dream.title}",
+                    target_type='dream',
+                    target_id=dream.id
+                )
+
                 flash('Dream logged successfully!')
                 return redirect(url_for('dream_view', dream_id=dream.id))
             except SQLAlchemyError as e:
@@ -336,6 +358,7 @@ def register_routes(app):
     def dream_view(dream_id):
         """View a dream entry."""
         try:
+            track_user_activity(current_user.id, ACTIVITY_TYPES['DREAM_VIEW'], target_type='dream', target_id=dream_id)
             dream = Dream.query.get_or_404(dream_id)
             if dream.user_id != current_user.id and not dream.is_public:
                 flash('You do not have permission to view this dream')
@@ -352,6 +375,7 @@ def register_routes(app):
     def group_view(group_id):
         """View a dream group."""
         try:
+            track_user_activity(current_user.id, ACTIVITY_TYPES['GROUP_VIEW'], target_type='group', target_id=group_id)
             group = DreamGroup.query.get_or_404(group_id)
             return render_template('group_view.html', group=group)
         except SQLAlchemyError as e:
@@ -365,6 +389,7 @@ def register_routes(app):
     def join_group(group_id):
         """Join a dream group."""
         try:
+            track_user_activity(current_user.id, ACTIVITY_TYPES['GROUP_JOIN_ATTEMPT'], target_type='group', target_id=group_id)
             group = DreamGroup.query.get_or_404(group_id)
             
             membership = GroupMembership.query.filter_by(user_id=current_user.id, group_id=group_id).first()
@@ -375,6 +400,7 @@ def register_routes(app):
             membership = GroupMembership(user_id=current_user.id, group_id=group_id)
             db.session.add(membership)
             db.session.commit()
+            track_user_activity(current_user.id, ACTIVITY_TYPES['GROUP_JOIN'], target_type='group', target_id=group_id)
             flash('You have successfully joined the group!')
             return redirect(url_for('group_view', group_id=group_id))
         except SQLAlchemyError as e:
@@ -388,6 +414,7 @@ def register_routes(app):
     def leave_group(group_id):
         """Leave a dream group."""
         try:
+            track_user_activity(current_user.id, ACTIVITY_TYPES['GROUP_LEAVE_ATTEMPT'], target_type='group', target_id=group_id)
             group = DreamGroup.query.get_or_404(group_id)
             membership = GroupMembership.query.filter_by(user_id=current_user.id, group_id=group_id).first()
             if not membership:
@@ -396,6 +423,7 @@ def register_routes(app):
             
             db.session.delete(membership)
             db.session.commit()
+            track_user_activity(current_user.id, ACTIVITY_TYPES['GROUP_LEAVE'], target_type='group', target_id=group_id)
             flash('You have successfully left the group')
             return redirect(url_for('group_view', group_id=group_id))
         except SQLAlchemyError as e:
@@ -409,6 +437,7 @@ def register_routes(app):
     def group_dreams(group_id):
         """View dreams shared in a group."""
         try:
+            track_user_activity(current_user.id, ACTIVITY_TYPES['GROUP_DREAMS_VIEW'], target_type='group', target_id=group_id)
             group = DreamGroup.query.get_or_404(group_id)
             
             # Get all dreams shared in this group
@@ -426,6 +455,7 @@ def register_routes(app):
     def add_comment(dream_id):
         """Add a comment to a dream."""
         try:
+            track_user_activity(current_user.id, ACTIVITY_TYPES['DREAM_COMMENT_ATTEMPT'], target_type='dream', target_id=dream_id)
             dream = Dream.query.get_or_404(dream_id)
             comment_text = request.form.get('comment_text')
             if not comment_text:
@@ -439,6 +469,7 @@ def register_routes(app):
             )
             db.session.add(comment)
             db.session.commit()
+            track_user_activity(current_user.id, ACTIVITY_TYPES['DREAM_COMMENT'], target_type='dream', target_id=dream_id)
             flash('Comment added successfully!')
             return redirect(url_for('dream_view', dream_id=dream_id))
         except SQLAlchemyError as e:
@@ -452,6 +483,7 @@ def register_routes(app):
     def forum():
         """View the forum."""
         try:
+            track_user_activity(current_user.id, ACTIVITY_TYPES['FORUM_VIEW'])
             posts = ForumPost.query.order_by(ForumPost.created_at.desc()).all()
             return render_template('forum.html', posts=posts)
         except SQLAlchemyError as e:
@@ -466,6 +498,7 @@ def register_routes(app):
         """Create a new forum post."""
         if request.method == 'POST':
             try:
+                track_user_activity(current_user.id, ACTIVITY_TYPES['FORUM_POST_CREATE_ATTEMPT'])
                 title = request.form.get('title')
                 content = request.form.get('content')
                 if not title or not content:
@@ -479,6 +512,7 @@ def register_routes(app):
                 )
                 db.session.add(post)
                 db.session.commit()
+                track_user_activity(current_user.id, ACTIVITY_TYPES['FORUM_POST_CREATE'], description=f"Created forum post: {post.title}", target_type='forum_post', target_id=post.id)
                 flash('Forum post created successfully!')
                 return redirect(url_for('forum'))
             except SQLAlchemyError as e:
@@ -494,6 +528,7 @@ def register_routes(app):
     def forum_post(post_id):
         """View a forum post."""
         try:
+            track_user_activity(current_user.id, ACTIVITY_TYPES['FORUM_POST_VIEW'], target_type='forum_post', target_id=post_id)
             post = ForumPost.query.get_or_404(post_id)
             replies = ForumReply.query.filter_by(post_id=post_id).order_by(ForumReply.created_at.desc()).all()
             return render_template('forum_post.html', post=post, replies=replies)
@@ -508,6 +543,7 @@ def register_routes(app):
     def add_forum_reply(post_id):
         """Add a reply to a forum post."""
         try:
+            track_user_activity(current_user.id, ACTIVITY_TYPES['FORUM_REPLY_ATTEMPT'], target_type='forum_post', target_id=post_id)
             post = ForumPost.query.get_or_404(post_id)
             reply_content = request.form.get('reply_content')
             if not reply_content:
@@ -521,6 +557,7 @@ def register_routes(app):
             )
             db.session.add(reply)
             db.session.commit()
+            track_user_activity(current_user.id, ACTIVITY_TYPES['FORUM_REPLY'], target_type='forum_post', target_id=post_id)
             flash('Reply added successfully!')
             return redirect(url_for('forum_post', post_id=post_id))
         except SQLAlchemyError as e:

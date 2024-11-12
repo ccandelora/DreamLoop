@@ -792,3 +792,865 @@ Level: INFO
 Module: _internal
 Message: 172.31.196.66 - - [12/Nov/2024 17:47:47] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
 
+2024-11-12 17:48:44,443 - None - None - None None
+Level: INFO
+Module: _internal
+Message:  * Detected change in '/home/runner/DreamShare/models.py', reloading
+
+2024-11-12 17:48:44,963 - None - None - None None
+Level: INFO
+Module: _internal
+Message:  * Restarting with stat
+
+2024-11-12 17:48:45,944 - None - None - None None
+Level: INFO
+Module: base
+Message: select pg_catalog.version()
+
+2024-11-12 17:48:45,946 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:48:45,985 - None - None - None None
+Level: INFO
+Module: base
+Message: select current_schema()
+
+2024-11-12 17:48:45,987 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:48:46,027 - None - None - None None
+Level: INFO
+Module: base
+Message: show standard_conforming_strings
+
+2024-11-12 17:48:46,029 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:48:46,068 - None - None - None None
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-12 17:48:46,073 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:48:46,075 - None - None - None None
+Level: INFO
+Module: base
+Message: [generated in 0.00144s] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:48:46,115 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:48:46,117 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.04371s ago] {'table_name': 'user_activity', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:48:46,138 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:48:46,140 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.06644s ago] {'table_name': 'dream', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:48:46,161 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:48:46,163 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.08933s ago] {'table_name': 'comment', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:48:46,185 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:48:46,187 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1133s ago] {'table_name': 'dream_group', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:48:46,208 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:48:46,209 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1358s ago] {'table_name': 'group_membership', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:48:46,230 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:48:46,231 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1581s ago] {'table_name': 'forum_post', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:48:46,253 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:48:46,253 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1799s ago] {'table_name': 'forum_reply', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:48:46,277 - None - None - None None
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE user_activity (
+	id SERIAL NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	activity_type VARCHAR(50) NOT NULL, 
+	description TEXT, 
+	target_type VARCHAR(50), 
+	target_id INTEGER, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	ip_address VARCHAR(45), 
+	user_agent VARCHAR(256), 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id)
+)
+
+
+
+2024-11-12 17:48:46,278 - None - None - None None
+Level: INFO
+Module: base
+Message: [no key 0.00028s] {}
+
+2024-11-12 17:48:46,349 - None - None - None None
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-12 17:48:46,370 - None - None - None None
+Level: INFO
+Module: app
+Message: Database tables created successfully
+
+2024-11-12 17:48:46,370 - None - None - None None
+Level: INFO
+Module: app
+Message: Database tables created successfully
+
+2024-11-12 17:48:48,670 - None - None - None None
+Level: INFO
+Module: app
+Message: Routes registered successfully
+
+2024-11-12 17:48:48,670 - None - None - None None
+Level: INFO
+Module: app
+Message: Routes registered successfully
+
+2024-11-12 17:48:48,731 - None - None - None None
+Level: WARNING
+Module: _internal
+Message:  * Debugger is active!
+
+2024-11-12 17:48:48,733 - None - None - None None
+Level: INFO
+Module: _internal
+Message:  * Debugger PIN: 746-342-415
+
+2024-11-12 17:49:28,437 - None - None - None None
+Level: INFO
+Module: _internal
+Message:  * Detected change in '/home/runner/DreamShare/routes.py', reloading
+
+2024-11-12 17:49:28,949 - None - None - None None
+Level: INFO
+Module: _internal
+Message:  * Restarting with stat
+
+2024-11-12 17:49:30,166 - None - None - None None
+Level: INFO
+Module: base
+Message: select pg_catalog.version()
+
+2024-11-12 17:49:30,167 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:49:30,208 - None - None - None None
+Level: INFO
+Module: base
+Message: select current_schema()
+
+2024-11-12 17:49:30,208 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:49:30,249 - None - None - None None
+Level: INFO
+Module: base
+Message: show standard_conforming_strings
+
+2024-11-12 17:49:30,249 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:49:30,289 - None - None - None None
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-12 17:49:30,293 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:30,293 - None - None - None None
+Level: INFO
+Module: base
+Message: [generated in 0.00039s] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:30,344 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:30,344 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.05156s ago] {'table_name': 'user_activity', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:30,365 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:30,365 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.07254s ago] {'table_name': 'dream', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:30,386 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:30,386 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.09298s ago] {'table_name': 'comment', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:30,406 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:30,406 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1133s ago] {'table_name': 'dream_group', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:30,427 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:30,427 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.134s ago] {'table_name': 'group_membership', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:30,447 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:30,447 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1545s ago] {'table_name': 'forum_post', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:30,467 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:30,468 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1748s ago] {'table_name': 'forum_reply', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:30,488 - None - None - None None
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-12 17:49:30,508 - None - None - None None
+Level: INFO
+Module: app
+Message: Database tables created successfully
+
+2024-11-12 17:49:30,508 - None - None - None None
+Level: INFO
+Module: app
+Message: Database tables created successfully
+
+2024-11-12 17:49:32,139 - None - None - None None
+Level: INFO
+Module: app
+Message: Routes registered successfully
+
+2024-11-12 17:49:32,139 - None - None - None None
+Level: INFO
+Module: app
+Message: Routes registered successfully
+
+2024-11-12 17:49:32,164 - None - None - None None
+Level: WARNING
+Module: _internal
+Message:  * Debugger is active!
+
+2024-11-12 17:49:32,166 - None - None - None None
+Level: INFO
+Module: _internal
+Message:  * Debugger PIN: 955-008-590
+
+2024-11-12 17:49:34,355 - None - None - None None
+Level: INFO
+Module: _internal
+Message:  * Detected change in '/home/runner/DreamShare/update_schema.py', reloading
+
+2024-11-12 17:49:34,962 - None - None - None None
+Level: INFO
+Module: _internal
+Message:  * Restarting with stat
+
+2024-11-12 17:49:36,114 - None - None - None None
+Level: INFO
+Module: base
+Message: select pg_catalog.version()
+
+2024-11-12 17:49:36,116 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:49:36,155 - None - None - None None
+Level: INFO
+Module: base
+Message: select current_schema()
+
+2024-11-12 17:49:36,157 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:49:36,196 - None - None - None None
+Level: INFO
+Module: base
+Message: show standard_conforming_strings
+
+2024-11-12 17:49:36,198 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:49:36,237 - None - None - None None
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-12 17:49:36,242 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:36,244 - None - None - None None
+Level: INFO
+Module: base
+Message: [generated in 0.00152s] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:36,283 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:36,284 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.04159s ago] {'table_name': 'user_activity', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:36,304 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:36,305 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.06329s ago] {'table_name': 'dream', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:36,326 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:36,327 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.08455s ago] {'table_name': 'comment', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:36,346 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:36,346 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1044s ago] {'table_name': 'dream_group', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:36,366 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:36,366 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.124s ago] {'table_name': 'group_membership', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:36,386 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:36,386 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1436s ago] {'table_name': 'forum_post', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:36,405 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:36,406 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1636s ago] {'table_name': 'forum_reply', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:36,425 - None - None - None None
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-12 17:49:36,445 - None - None - None None
+Level: INFO
+Module: app
+Message: Database tables created successfully
+
+2024-11-12 17:49:36,445 - None - None - None None
+Level: INFO
+Module: app
+Message: Database tables created successfully
+
+2024-11-12 17:49:38,335 - None - None - None None
+Level: INFO
+Module: app
+Message: Routes registered successfully
+
+2024-11-12 17:49:38,335 - None - None - None None
+Level: INFO
+Module: app
+Message: Routes registered successfully
+
+2024-11-12 17:49:38,802 - None - None - None None
+Level: INFO
+Module: _internal
+Message: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.66:5000
+
+2024-11-12 17:49:38,892 - None - None - None None
+Level: INFO
+Module: _internal
+Message: [33mPress CTRL+C to quit[0m
+
+2024-11-12 17:49:38,909 - None - None - None None
+Level: INFO
+Module: _internal
+Message:  * Restarting with stat
+
+2024-11-12 17:49:40,348 - None - None - None None
+Level: INFO
+Module: base
+Message: select pg_catalog.version()
+
+2024-11-12 17:49:40,349 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:49:40,392 - None - None - None None
+Level: INFO
+Module: base
+Message: select current_schema()
+
+2024-11-12 17:49:40,392 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:49:40,434 - None - None - None None
+Level: INFO
+Module: base
+Message: show standard_conforming_strings
+
+2024-11-12 17:49:40,435 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:49:40,479 - None - None - None None
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-12 17:49:40,485 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:40,487 - None - None - None None
+Level: INFO
+Module: base
+Message: [generated in 0.00151s] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:40,531 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:40,533 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.04797s ago] {'table_name': 'user_activity', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:40,555 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:40,557 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.0718s ago] {'table_name': 'dream', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:40,579 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:40,581 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.09556s ago] {'table_name': 'comment', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:40,604 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:40,606 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1206s ago] {'table_name': 'dream_group', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:40,628 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:40,629 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1437s ago] {'table_name': 'group_membership', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:40,650 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:40,650 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1654s ago] {'table_name': 'forum_post', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:40,672 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:49:40,672 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1871s ago] {'table_name': 'forum_reply', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:49:40,694 - None - None - None None
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-12 17:49:40,715 - None - None - None None
+Level: INFO
+Module: app
+Message: Database tables created successfully
+
+2024-11-12 17:49:40,715 - None - None - None None
+Level: INFO
+Module: app
+Message: Database tables created successfully
+
+2024-11-12 17:49:42,751 - None - None - None None
+Level: INFO
+Module: app
+Message: Routes registered successfully
+
+2024-11-12 17:49:42,751 - None - None - None None
+Level: INFO
+Module: app
+Message: Routes registered successfully
+
+2024-11-12 17:49:42,797 - None - None - None None
+Level: WARNING
+Module: _internal
+Message:  * Debugger is active!
+
+2024-11-12 17:49:42,801 - None - None - None None
+Level: INFO
+Module: _internal
+Message:  * Debugger PIN: 326-372-360
+
+2024-11-12 17:49:42,853 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+
+2024-11-12 17:49:42,879 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+
+2024-11-12 17:49:42,879 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:49:42] "GET / HTTP/1.1" 200 -
+
+2024-11-12 17:49:43,073 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+
+2024-11-12 17:49:43,075 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+
+2024-11-12 17:49:43,075 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:49:43] "GET / HTTP/1.1" 200 -
+
+2024-11-12 17:49:43,091 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:49:43,091 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:49:43,092 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:49:43] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+
+2024-11-12 17:49:43,415 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:49:43,416 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:49:43,417 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:49:43] "[36mGET /static/images/dreamlooplogo.svg HTTP/1.1[0m" 304 -
+
+2024-11-12 17:49:43,599 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:49:43,600 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:49:43,601 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:49:43,604 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:49:43] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+
+2024-11-12 17:49:43,603 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:49:43,605 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:49:43] "[36mGET /static/images/dreamlooplogo.svg HTTP/1.1[0m" 304 -
+
+2024-11-12 17:49:48,929 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+
+2024-11-12 17:49:48,930 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+
+2024-11-12 17:49:48,930 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:49:48] "GET / HTTP/1.1" 200 -
+
+2024-11-12 17:49:48,948 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:49:48,949 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:49:48,952 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:49:48] "GET /static/css/output.css HTTP/1.1" 200 -
+
+2024-11-12 17:49:48,959 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:49:48,959 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:49:48,960 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:49:48] "GET /static/images/dreamlooplogo.svg HTTP/1.1" 200 -
+

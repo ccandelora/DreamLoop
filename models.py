@@ -19,6 +19,7 @@ class User(UserMixin, db.Model):
     forum_posts = db.relationship('ForumPost', backref='user', lazy='dynamic', cascade='all, delete-orphan')
     forum_replies = db.relationship('ForumReply', backref='user', lazy='dynamic', cascade='all, delete-orphan')
     groups = db.relationship('DreamGroup', secondary='group_membership', backref=db.backref('members', lazy='dynamic'))
+    activities = db.relationship('UserActivity', backref='user', lazy='dynamic', cascade='all, delete-orphan')
     
     def __init__(self, username=None, email=None, subscription_type='free'):
         self.username = username
@@ -32,6 +33,27 @@ class User(UserMixin, db.Model):
         
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+class UserActivity(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    activity_type = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.Text)
+    target_type = db.Column(db.String(50))  # e.g., 'dream', 'comment', 'group'
+    target_id = db.Column(db.Integer)  # ID of the related object
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    ip_address = db.Column(db.String(45))  # IPv6 addresses can be up to 45 chars
+    user_agent = db.Column(db.String(256))
+
+    def __init__(self, user_id, activity_type, description=None, target_type=None, target_id=None, ip_address=None, user_agent=None):
+        self.user_id = user_id
+        self.activity_type = activity_type
+        self.description = description
+        self.target_type = target_type
+        self.target_id = target_id
+        self.ip_address = ip_address
+        self.user_agent = user_agent
+        self.created_at = datetime.utcnow()
 
 class Dream(db.Model):
     id = db.Column(db.Integer, primary_key=True)

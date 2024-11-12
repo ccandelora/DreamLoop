@@ -1,5 +1,5 @@
 from app import app, db
-from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply
+from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply, UserActivity
 from sqlalchemy import text
 import logging
 
@@ -21,6 +21,29 @@ def update_schema():
             db.session.execute(text('''
                 DO $$ 
                 BEGIN
+                    -- Create user_activity table
+                    CREATE TABLE IF NOT EXISTS user_activity (
+                        id SERIAL PRIMARY KEY,
+                        user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+                        activity_type VARCHAR(50) NOT NULL,
+                        description TEXT,
+                        target_type VARCHAR(50),
+                        target_id INTEGER,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        ip_address VARCHAR(45),
+                        user_agent VARCHAR(256)
+                    );
+
+                    -- Create index on user_id and activity_type for faster queries
+                    CREATE INDEX IF NOT EXISTS idx_user_activity_user_id 
+                    ON user_activity(user_id);
+                    
+                    CREATE INDEX IF NOT EXISTS idx_user_activity_type 
+                    ON user_activity(activity_type);
+                    
+                    CREATE INDEX IF NOT EXISTS idx_user_activity_created_at 
+                    ON user_activity(created_at);
+
                     -- First create or update the dream table
                     CREATE TABLE IF NOT EXISTS dream (
                         id SERIAL PRIMARY KEY,
