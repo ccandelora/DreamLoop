@@ -1,15 +1,16 @@
 from flask import Flask
 import os
 from extensions import db, login_manager
-import logging
 from sqlalchemy.exc import SQLAlchemyError
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from logging_config import setup_logging, ErrorLogger
+from middleware import setup_request_logging
 
 def create_app():
     """Create and configure the Flask application."""
     app = Flask(__name__)
+    
+    # Setup logging first
+    setup_logging(app)
     
     # Configure the Flask app
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', os.urandom(24))
@@ -36,6 +37,9 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
 
+    # Setup request logging
+    setup_request_logging(app)
+
     # Import models and set up user loader
     from models import User
 
@@ -46,7 +50,7 @@ def create_app():
         try:
             return User.query.get(int(user_id))
         except SQLAlchemyError as e:
-            logger.error(f"Error loading user {user_id}: {str(e)}")
+            ErrorLogger.log_error(e, {'user_id': user_id})
             db.session.rollback()
             return None
 
@@ -55,14 +59,14 @@ def create_app():
         try:
             # Initialize database
             db.create_all()
-            logger.info("Database tables created successfully")
+            app.logger.info("Database tables created successfully")
 
             # Register routes after db initialization
             from routes import register_routes
             register_routes(app)
-            logger.info("Routes registered successfully")
+            app.logger.info("Routes registered successfully")
         except SQLAlchemyError as e:
-            logger.error(f"Error during app initialization: {str(e)}")
+            error_details = ErrorLogger.log_error(e)
             db.session.rollback()
             raise
 
