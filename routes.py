@@ -21,19 +21,76 @@ def register_routes(app):
         """Landing page and user dashboard."""
         try:
             if current_user.is_authenticated:
-                dreams = Dream.query\
-                    .filter_by(user_id=current_user.id)\
+                dreams = Dream.query.filter_by(user_id=current_user.id)\
                     .order_by(Dream.date.desc())\
                     .limit(5)\
                     .all()
                 logger.info(f"Successfully fetched {len(dreams) if dreams else 0} dreams for user {current_user.id}")
-                return render_template('index.html', dreams=dreams)
+                return render_template('index.html', dreams=dreams if dreams else [])
             return render_template('index.html')
         except SQLAlchemyError as e:
-            logger.error(f"Database error in index: {str(e)}")
+            logger.error(f"Error in index route: {str(e)}")
             db.session.rollback()
-            flash('An error occurred while loading your dreams')
             return render_template('index.html', dreams=[])
+
+    @app.route('/subscription')
+    @login_required
+    def subscription():
+        """Subscription management page."""
+        try:
+            stripe_publishable_key = os.getenv('STRIPE_PUBLISHABLE_KEY')
+            if not stripe_publishable_key:
+                logger.error("Stripe publishable key not found")
+                flash('Payment system is currently unavailable')
+                return redirect(url_for('index'))
+                
+            return render_template('subscription.html', 
+                                stripe_publishable_key=stripe_publishable_key)
+        except Exception as e:
+            logger.error(f"Error in subscription route: {str(e)}")
+            flash('An error occurred while loading the subscription page')
+            return redirect(url_for('index'))
+
+    @app.route('/create-checkout-session', methods=['POST'])
+    @login_required
+    def create_checkout_session():
+        """Create Stripe checkout session for subscription."""
+        try:
+            checkout_session = stripe.checkout.Session.create(
+                payment_method_types=['card'],
+                line_items=[{
+                    'price': os.getenv('STRIPE_PRICE_ID'),
+                    'quantity': 1,
+                }],
+                mode='subscription',
+                success_url=url_for('subscription', success='true', _external=True),
+                cancel_url=url_for('subscription', canceled='true', _external=True),
+                customer_email=current_user.email,
+            )
+            return {'url': checkout_session.url}
+        except Exception as e:
+            logger.error(f"Error creating checkout session: {str(e)}")
+            return {'error': str(e)}, 400
+
+    @app.route('/cancel-subscription', methods=['POST'])
+    @login_required
+    def cancel_subscription():
+        """Cancel user's premium subscription."""
+        try:
+            if current_user.subscription_type != 'premium':
+                flash('No active subscription to cancel')
+                return redirect(url_for('subscription'))
+
+            current_user.subscription_type = 'free'
+            current_user.subscription_end_date = None
+            db.session.commit()
+            flash('Your subscription has been cancelled')
+            return redirect(url_for('subscription'))
+        except SQLAlchemyError as e:
+            logger.error(f"Error cancelling subscription: {str(e)}")
+            db.session.rollback()
+            flash('An error occurred while cancelling your subscription')
+            return redirect(url_for('subscription'))
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -53,20 +110,18 @@ def register_routes(app):
                 user = User.query.filter_by(username=username).first()
                 
                 if user and user.check_password(password):
-                    login_user(user, remember=True)
+                    login_user(user)
                     next_page = request.args.get('next')
-                    if not next_page or not next_page.startswith('/'):
-                        next_page = url_for('index')
-                    return redirect(next_page)
+                    if next_page and next_page.startswith('/'):
+                        return redirect(next_page)
+                    return redirect(url_for('index'))
                 
                 flash('Invalid username or password')
-                return render_template('login.html')
             except SQLAlchemyError as e:
                 logger.error(f"Database error during login: {str(e)}")
                 db.session.rollback()
                 flash('An error occurred during login')
-                return render_template('login.html')
-        
+            
         return render_template('login.html')
 
     @app.route('/logout')
