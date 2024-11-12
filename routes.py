@@ -358,14 +358,47 @@ def register_routes(app):
     def dream_view(dream_id):
         """View a dream entry."""
         try:
-            track_user_activity(current_user.id, ACTIVITY_TYPES['DREAM_VIEW'], target_type='dream', target_id=dream_id)
+            # Fetch dream with error handling
             dream = Dream.query.get_or_404(dream_id)
+            
+            # Check permissions
             if dream.user_id != current_user.id and not dream.is_public:
+                logger.warning(f"Unauthorized access attempt to dream {dream_id} by user {current_user.id}")
                 flash('You do not have permission to view this dream')
                 return redirect(url_for('index'))
-            return render_template('dream_view.html', dream=dream)
-        except SQLAlchemyError as e:
-            logger.error(f"Database error viewing dream: {str(e)}")
+            
+            # Track view activity with error handling
+            try:
+                track_user_activity(
+                    user_id=current_user.id,
+                    activity_type=ACTIVITY_TYPES['DREAM_VIEW'],
+                    description=f"Viewed dream: {dream.title}",
+                    target_type='dream',
+                    target_id=dream_id
+                )
+                logger.info(f"Dream view activity tracked for dream {dream_id} by user {current_user.id}")
+            except Exception as e:
+                logger.error(f"Failed to track dream view activity: {str(e)}")
+                # Continue with the request even if activity tracking fails
+            
+            # Fetch comments with error handling
+            try:
+                comments = dream.comments.order_by(Comment.created_at.desc()).all()
+                logger.debug(f"Successfully loaded {len(comments)} comments for dream {dream_id}")
+            except Exception as e:
+                logger.error(f"Error loading comments for dream {dream_id}: {str(e)}")
+                comments = []
+                flash('Unable to load comments at this time')
+            
+            return render_template('dream_view.html', dream=dream, comments=comments)
+            
+        except Exception as e:
+            error_context = {
+                'dream_id': dream_id,
+                'user_id': current_user.id,
+                'request_path': request.path
+            }
+            logger.error(f"Error in dream_view route: {str(e)}", extra=error_context)
             db.session.rollback()
             flash('An error occurred while loading the dream')
             return redirect(url_for('index'))

@@ -47,10 +47,13 @@ ACTIVITY_TYPES = {
     'DREAM_DELETE': 'dream_delete',
     'DREAM_VIEW': 'dream_view',
     'DREAM_PATTERNS_VIEW': 'dream_patterns_view',
+    'DREAM_ANALYSIS_VIEW': 'dream_analysis_view',
+    'DREAM_COMMENTS_VIEW': 'dream_comments_view',
     
     # Comment activities
     'COMMENT_ADD': 'comment_add',
     'COMMENT_DELETE': 'comment_delete',
+    'COMMENT_VIEW': 'comment_view',
     
     # Group activities
     'GROUP_JOIN': 'group_join',
