@@ -36,17 +36,45 @@ def track_user_activity(user_id, activity_type, description=None, target_type=No
 
 # Activity type constants
 ACTIVITY_TYPES = {
+    # Authentication activities
     'LOGIN': 'login',
     'LOGOUT': 'logout',
+    'REGISTRATION': 'registration',
+    
+    # Dream-related activities
     'DREAM_CREATE': 'dream_create',
     'DREAM_UPDATE': 'dream_update',
     'DREAM_DELETE': 'dream_delete',
+    'DREAM_VIEW': 'dream_view',
+    'DREAM_PATTERNS_VIEW': 'dream_patterns_view',
+    
+    # Comment activities
     'COMMENT_ADD': 'comment_add',
     'COMMENT_DELETE': 'comment_delete',
+    
+    # Group activities
     'GROUP_JOIN': 'group_join',
+    'GROUP_JOIN_ATTEMPT': 'group_join_attempt',
     'GROUP_LEAVE': 'group_leave',
+    'GROUP_LEAVE_ATTEMPT': 'group_leave_attempt',
     'GROUP_CREATE': 'group_create',
-    'POST_CREATE': 'post_create',
-    'REPLY_CREATE': 'reply_create',
+    'GROUP_VIEW': 'group_view',
+    'DREAM_GROUPS_VIEW': 'dream_groups_view',
+    
+    # Community activities
+    'COMMUNITY_DREAMS_VIEW': 'community_dreams_view',
+    
+    # Forum activities
+    'FORUM_POST_CREATE': 'forum_post_create',
+    'FORUM_POST_CREATE_ATTEMPT': 'forum_post_create_attempt',
+    'FORUM_REPLY': 'forum_reply',
+    'FORUM_REPLY_ATTEMPT': 'forum_reply_attempt',
+    'FORUM_POST_VIEW': 'forum_post_view',
+    'FORUM_VIEW': 'forum_view',
+    
+    # Subscription activities
+    'SUBSCRIPTION_VIEW': 'subscription_view',
+    'SUBSCRIPTION_PURCHASE_ATTEMPT': 'subscription_purchase_attempt',
+    'SUBSCRIPTION_CANCEL_ATTEMPT': 'subscription_cancel_attempt',
     'SUBSCRIPTION_CHANGE': 'subscription_change'
 }

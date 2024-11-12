@@ -1654,3 +1654,920 @@ Level: INFO
 Module: _internal
 Message: 172.31.196.66 - - [12/Nov/2024 17:49:48] "GET /static/images/dreamlooplogo.svg HTTP/1.1" 200 -
 
+2024-11-12 17:49:59,435 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+
+2024-11-12 17:49:59,436 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+
+2024-11-12 17:49:59,436 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:49:59] "GET / HTTP/1.1" 200 -
+
+2024-11-12 17:49:59,656 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:49:59,657 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:49:59,658 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:49:59,658 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:49:59] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+
+2024-11-12 17:49:59,660 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:49:59,662 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:49:59] "[36mGET /static/images/dreamlooplogo.svg HTTP/1.1[0m" 304 -
+
+2024-11-12 17:50:07,733 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+
+2024-11-12 17:50:07,738 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+
+2024-11-12 17:50:07,739 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:50:07] "GET /login HTTP/1.1" 200 -
+
+2024-11-12 17:50:08,035 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:50:08,036 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:50:08,036 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:50:08] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+
+2024-11-12 17:50:08,120 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:50:08,121 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:50:08,123 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:50:08] "[36mGET /static/images/dreamlooplogo.svg HTTP/1.1[0m" 304 -
+
+2024-11-12 17:50:24,573 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+Level: INFO
+Module: middleware
+Message: Request started: POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+
+2024-11-12 17:50:24,634 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-12 17:50:24,637 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+Level: INFO
+Module: base
+Message: SELECT "user".id AS user_id, "user".username AS user_username, "user".email AS user_email, "user".password_hash AS user_password_hash, "user".subscription_type AS user_subscription_type, "user".subscription_end_date AS user_subscription_end_date, "user".monthly_ai_analysis_count AS user_monthly_ai_analysis_count, "user".last_analysis_reset AS user_last_analysis_reset 
+FROM "user" 
+WHERE "user".username = %(username_1)s 
+ LIMIT %(param_1)s
+
+2024-11-12 17:50:24,638 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+Level: INFO
+Module: base
+Message: [generated in 0.00044s] {'username_1': 'testuser', 'param_1': 1}
+
+2024-11-12 17:50:24,788 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+Level: INFO
+Module: base
+Message: INSERT INTO user_activity (user_id, activity_type, description, target_type, target_id, created_at, ip_address, user_agent) VALUES (%(user_id)s, %(activity_type)s, %(description)s, %(target_type)s, %(target_id)s, %(created_at)s, %(ip_address)s, %(user_agent)s) RETURNING user_activity.id
+
+2024-11-12 17:50:24,789 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+Level: INFO
+Module: base
+Message: [generated in 0.00058s] {'user_id': 1, 'activity_type': 'login', 'description': None, 'target_type': None, 'target_id': None, 'created_at': datetime.datetime(2024, 11, 12, 17, 50, 24, 786936), 'ip_address': '172.31.196.66', 'user_agent': None}
+
+2024-11-12 17:50:24,821 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-12 17:50:24,843 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+Level: INFO
+Module: activity_tracker
+Message: Activity tracked: login for user 1
+
+2024-11-12 17:50:24,843 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+Level: INFO
+Module: middleware
+Message: Request completed: POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+
+2024-11-12 17:50:24,844 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:50:24] "[32mPOST /login HTTP/1.1[0m" 302 -
+
+2024-11-12 17:50:24,973 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+
+2024-11-12 17:50:25,000 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-12 17:50:25,001 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: base
+Message: SELECT "user".id AS user_id, "user".username AS user_username, "user".email AS user_email, "user".password_hash AS user_password_hash, "user".subscription_type AS user_subscription_type, "user".subscription_end_date AS user_subscription_end_date, "user".monthly_ai_analysis_count AS user_monthly_ai_analysis_count, "user".last_analysis_reset AS user_last_analysis_reset 
+FROM "user" 
+WHERE "user".id = %(pk_1)s
+
+2024-11-12 17:50:25,002 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: base
+Message: [generated in 0.00037s] {'pk_1': 1}
+
+2024-11-12 17:50:25,048 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: base
+Message: SELECT dream.id AS dream_id, dream.user_id AS dream_user_id, dream.title AS dream_title, dream.content AS dream_content, dream.date AS dream_date, dream.mood AS dream_mood, dream.sentiment_score AS dream_sentiment_score, dream.sentiment_magnitude AS dream_sentiment_magnitude, dream.dominant_emotions AS dream_dominant_emotions, dream.lucidity_level AS dream_lucidity_level, dream.tags AS dream_tags, dream.is_public AS dream_is_public, dream.is_anonymous AS dream_is_anonymous, dream.ai_analysis AS dream_ai_analysis, dream.sleep_duration AS dream_sleep_duration, dream.sleep_quality AS dream_sleep_quality, dream.bed_time AS dream_bed_time, dream.wake_time AS dream_wake_time, dream.sleep_interruptions AS dream_sleep_interruptions, dream.sleep_position AS dream_sleep_position 
+FROM dream 
+WHERE dream.user_id = %(user_id_1)s ORDER BY dream.date DESC 
+ LIMIT %(param_1)s
+
+2024-11-12 17:50:25,050 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: base
+Message: [generated in 0.00155s] {'user_id_1': 1, 'param_1': 5}
+
+2024-11-12 17:50:25,073 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: routes
+Message: Successfully fetched 0 dreams for user 1
+
+2024-11-12 17:50:25,078 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: base
+Message: SELECT dream_group.id AS dream_group_id, dream_group.name AS dream_group_name, dream_group.description AS dream_group_description, dream_group.created_by AS dream_group_created_by, dream_group.created_at AS dream_group_created_at 
+FROM dream_group, group_membership 
+WHERE %(param_1)s = group_membership.user_id AND dream_group.id = group_membership.group_id
+
+2024-11-12 17:50:25,079 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: base
+Message: [generated in 0.00113s] {'param_1': 1}
+
+2024-11-12 17:50:25,102 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+
+2024-11-12 17:50:25,103 - None - None - None None
+Level: INFO
+Module: base
+Message: ROLLBACK
+
+2024-11-12 17:50:25,125 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:50:25] "GET / HTTP/1.1" 200 -
+
+2024-11-12 17:50:25,492 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:50:25,495 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:50:25,497 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:50:25] "[36mGET /static/images/dreamlooplogo.svg HTTP/1.1[0m" 304 -
+
+2024-11-12 17:50:25,602 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:50:25,603 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:50:25,603 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:50:25] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+
+2024-11-12 17:50:29,637 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+
+2024-11-12 17:50:29,659 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-12 17:50:29,660 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: SELECT "user".id AS user_id, "user".username AS user_username, "user".email AS user_email, "user".password_hash AS user_password_hash, "user".subscription_type AS user_subscription_type, "user".subscription_end_date AS user_subscription_end_date, "user".monthly_ai_analysis_count AS user_monthly_ai_analysis_count, "user".last_analysis_reset AS user_last_analysis_reset 
+FROM "user" 
+WHERE "user".id = %(pk_1)s
+
+2024-11-12 17:50:29,661 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: [cached since 4.659s ago] {'pk_1': 1}
+
+2024-11-12 17:50:29,711 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+
+2024-11-12 17:50:29,712 - None - None - None None
+Level: INFO
+Module: base
+Message: ROLLBACK
+
+2024-11-12 17:50:29,733 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:50:29] "GET /dream/new HTTP/1.1" 200 -
+
+2024-11-12 17:50:30,053 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:50:30,054 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:50:30,055 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:50:30] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+
+2024-11-12 17:50:30,134 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:50:30,136 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:50:30,136 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:50:30] "[36mGET /static/images/dreamlooplogo.svg HTTP/1.1[0m" 304 -
+
+2024-11-12 17:52:20,802 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: middleware
+Message: Request started: POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+
+2024-11-12 17:52:20,846 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-12 17:52:20,849 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: SELECT "user".id AS user_id, "user".username AS user_username, "user".email AS user_email, "user".password_hash AS user_password_hash, "user".subscription_type AS user_subscription_type, "user".subscription_end_date AS user_subscription_end_date, "user".monthly_ai_analysis_count AS user_monthly_ai_analysis_count, "user".last_analysis_reset AS user_last_analysis_reset 
+FROM "user" 
+WHERE "user".id = %(pk_1)s
+
+2024-11-12 17:52:20,850 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: [cached since 115.8s ago] {'pk_1': 1}
+
+2024-11-12 17:52:24,783 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: UPDATE "user" SET monthly_ai_analysis_count=%(monthly_ai_analysis_count)s WHERE "user".id = %(user_id)s
+
+2024-11-12 17:52:24,784 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: [generated in 0.00051s] {'monthly_ai_analysis_count': 1, 'user_id': 1}
+
+2024-11-12 17:52:24,809 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: INSERT INTO dream (user_id, title, content, date, mood, sentiment_score, sentiment_magnitude, dominant_emotions, lucidity_level, tags, is_public, is_anonymous, ai_analysis, sleep_duration, sleep_quality, bed_time, wake_time, sleep_interruptions, sleep_position) VALUES (%(user_id)s, %(title)s, %(content)s, %(date)s, %(mood)s, %(sentiment_score)s, %(sentiment_magnitude)s, %(dominant_emotions)s, %(lucidity_level)s, %(tags)s, %(is_public)s, %(is_anonymous)s, %(ai_analysis)s, %(sleep_duration)s, %(sleep_quality)s, %(bed_time)s, %(wake_time)s, %(sleep_interruptions)s, %(sleep_position)s) RETURNING dream.id
+
+2024-11-12 17:52:24,810 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: [generated in 0.00059s] {'user_id': 1, 'title': 'swimming on land', 'content': 'i had a dream i was walking down this main street in a small town. I was surprised to see that all the other people were floating and swam through the air to get where they were going.', 'date': datetime.datetime(2024, 11, 12, 17, 52, 20, 894423), 'mood': 'peaceful', 'sentiment_score': 0.5, 'sentiment_magnitude': 3.0, 'dominant_emotions': 'Peacefulness, curiosity', 'lucidity_level': 1, 'tags': '', 'is_public': True, 'is_anonymous': False, 'ai_analysis': "## Dream Analysis\n\n### Key Themes and Symbols\n\n* **Floating:** Freedom, weightlessness, effortless movement.\n* **Small town:** Familiarity, comf ... (1015 characters truncated) ... itive sentiment of hope and optimism. The dreamer believes that with effort and imagination, they can create a life that is more fulfilling and free.", 'sleep_duration': 9.0, 'sleep_quality': 4, 'bed_time': datetime.datetime(2024, 11, 12, 3, 0), 'wake_time': datetime.datetime(2024, 11, 12, 12, 0), 'sleep_interruptions': 0, 'sleep_position': 'stomach'}
+
+2024-11-12 17:52:24,912 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-12 17:52:24,955 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-12 17:52:24,957 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: SELECT "user".id AS user_id, "user".username AS user_username, "user".email AS user_email, "user".password_hash AS user_password_hash, "user".subscription_type AS user_subscription_type, "user".subscription_end_date AS user_subscription_end_date, "user".monthly_ai_analysis_count AS user_monthly_ai_analysis_count, "user".last_analysis_reset AS user_last_analysis_reset 
+FROM "user" 
+WHERE "user".id = %(pk_1)s
+
+2024-11-12 17:52:24,957 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: [generated in 0.00039s] {'pk_1': 1}
+
+2024-11-12 17:52:25,001 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: SELECT dream.id AS dream_id, dream.user_id AS dream_user_id, dream.title AS dream_title, dream.content AS dream_content, dream.date AS dream_date, dream.mood AS dream_mood, dream.sentiment_score AS dream_sentiment_score, dream.sentiment_magnitude AS dream_sentiment_magnitude, dream.dominant_emotions AS dream_dominant_emotions, dream.lucidity_level AS dream_lucidity_level, dream.tags AS dream_tags, dream.is_public AS dream_is_public, dream.is_anonymous AS dream_is_anonymous, dream.ai_analysis AS dream_ai_analysis, dream.sleep_duration AS dream_sleep_duration, dream.sleep_quality AS dream_sleep_quality, dream.bed_time AS dream_bed_time, dream.wake_time AS dream_wake_time, dream.sleep_interruptions AS dream_sleep_interruptions, dream.sleep_position AS dream_sleep_position 
+FROM dream 
+WHERE dream.id = %(pk_1)s
+
+2024-11-12 17:52:25,001 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: [generated in 0.00042s] {'pk_1': 1}
+
+2024-11-12 17:52:25,023 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: INSERT INTO user_activity (user_id, activity_type, description, target_type, target_id, created_at, ip_address, user_agent) VALUES (%(user_id)s, %(activity_type)s, %(description)s, %(target_type)s, %(target_id)s, %(created_at)s, %(ip_address)s, %(user_agent)s) RETURNING user_activity.id
+
+2024-11-12 17:52:25,023 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: [cached since 120.2s ago] {'user_id': 1, 'activity_type': 'dream_create', 'description': 'Created dream: swimming on land', 'target_type': 'dream', 'target_id': 1, 'created_at': datetime.datetime(2024, 11, 12, 17, 52, 25, 23157), 'ip_address': '172.31.196.66', 'user_agent': None}
+
+2024-11-12 17:52:25,045 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-12 17:52:25,067 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: activity_tracker
+Message: Activity tracked: dream_create for user 1
+
+2024-11-12 17:52:25,089 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-12 17:52:25,090 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: SELECT dream.id AS dream_id, dream.user_id AS dream_user_id, dream.title AS dream_title, dream.content AS dream_content, dream.date AS dream_date, dream.mood AS dream_mood, dream.sentiment_score AS dream_sentiment_score, dream.sentiment_magnitude AS dream_sentiment_magnitude, dream.dominant_emotions AS dream_dominant_emotions, dream.lucidity_level AS dream_lucidity_level, dream.tags AS dream_tags, dream.is_public AS dream_is_public, dream.is_anonymous AS dream_is_anonymous, dream.ai_analysis AS dream_ai_analysis, dream.sleep_duration AS dream_sleep_duration, dream.sleep_quality AS dream_sleep_quality, dream.bed_time AS dream_bed_time, dream.wake_time AS dream_wake_time, dream.sleep_interruptions AS dream_sleep_interruptions, dream.sleep_position AS dream_sleep_position 
+FROM dream 
+WHERE dream.id = %(pk_1)s
+
+2024-11-12 17:52:25,090 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: base
+Message: [cached since 0.08968s ago] {'pk_1': 1}
+
+2024-11-12 17:52:25,134 - - - 172.31.196.66 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: INFO
+Module: middleware
+Message: Request completed: POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+
+2024-11-12 17:52:25,135 - None - None - None None
+Level: INFO
+Module: base
+Message: ROLLBACK
+
+2024-11-12 17:52:25,156 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:52:25] "[32mPOST /dream/new HTTP/1.1[0m" 302 -
+
+2024-11-12 17:52:25,390 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+
+2024-11-12 17:52:25,412 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-12 17:52:25,414 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: INFO
+Module: base
+Message: SELECT "user".id AS user_id, "user".username AS user_username, "user".email AS user_email, "user".password_hash AS user_password_hash, "user".subscription_type AS user_subscription_type, "user".subscription_end_date AS user_subscription_end_date, "user".monthly_ai_analysis_count AS user_monthly_ai_analysis_count, "user".last_analysis_reset AS user_last_analysis_reset 
+FROM "user" 
+WHERE "user".id = %(pk_1)s
+
+2024-11-12 17:52:25,416 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: INFO
+Module: base
+Message: [cached since 120.4s ago] {'pk_1': 1}
+
+2024-11-12 17:52:25,460 - None - None - None None
+Level: INFO
+Module: base
+Message: ROLLBACK
+
+2024-11-12 17:52:25,496 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:52:25] "[35m[1mGET /dream/1 HTTP/1.1[0m" 500 -
+
+2024-11-12 17:52:25,680 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:52:25] "GET /dream/1?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+
+2024-11-12 17:52:25,794 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:52:25] "GET /dream/1?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+
+2024-11-12 17:53:47,170 - None - None - None None
+Level: INFO
+Module: _internal
+Message:  * Detected change in '/home/runner/DreamShare/activity_tracker.py', reloading
+
+2024-11-12 17:53:47,687 - None - None - None None
+Level: INFO
+Module: _internal
+Message:  * Restarting with stat
+
+2024-11-12 17:53:49,173 - None - None - None None
+Level: INFO
+Module: base
+Message: select pg_catalog.version()
+
+2024-11-12 17:53:49,174 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:53:49,216 - None - None - None None
+Level: INFO
+Module: base
+Message: select current_schema()
+
+2024-11-12 17:53:49,216 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:53:49,257 - None - None - None None
+Level: INFO
+Module: base
+Message: show standard_conforming_strings
+
+2024-11-12 17:53:49,257 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:53:49,298 - None - None - None None
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-12 17:53:49,302 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:53:49,302 - None - None - None None
+Level: INFO
+Module: base
+Message: [generated in 0.00035s] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:53:49,344 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:53:49,345 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.04291s ago] {'table_name': 'user_activity', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:53:49,366 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:53:49,367 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.06498s ago] {'table_name': 'dream', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:53:49,388 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:53:49,389 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.08731s ago] {'table_name': 'comment', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:53:49,410 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:53:49,411 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.109s ago] {'table_name': 'dream_group', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:53:49,432 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:53:49,432 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1308s ago] {'table_name': 'group_membership', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:53:49,453 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:53:49,453 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1519s ago] {'table_name': 'forum_post', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:53:49,474 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:53:49,475 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.173s ago] {'table_name': 'forum_reply', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:53:49,496 - None - None - None None
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-12 17:53:49,516 - None - None - None None
+Level: INFO
+Module: app
+Message: Database tables created successfully
+
+2024-11-12 17:53:49,516 - None - None - None None
+Level: INFO
+Module: app
+Message: Database tables created successfully
+
+2024-11-12 17:53:51,417 - None - None - None None
+Level: INFO
+Module: app
+Message: Routes registered successfully
+
+2024-11-12 17:53:51,417 - None - None - None None
+Level: INFO
+Module: app
+Message: Routes registered successfully
+
+2024-11-12 17:53:51,459 - None - None - None None
+Level: INFO
+Module: _internal
+Message: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.31.196.66:5000
+
+2024-11-12 17:53:51,460 - None - None - None None
+Level: INFO
+Module: _internal
+Message: [33mPress CTRL+C to quit[0m
+
+2024-11-12 17:53:51,462 - None - None - None None
+Level: INFO
+Module: _internal
+Message:  * Restarting with stat
+
+2024-11-12 17:53:52,198 - None - None - None None
+Level: INFO
+Module: base
+Message: select pg_catalog.version()
+
+2024-11-12 17:53:52,199 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:53:52,238 - None - None - None None
+Level: INFO
+Module: base
+Message: select current_schema()
+
+2024-11-12 17:53:52,238 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:53:52,278 - None - None - None None
+Level: INFO
+Module: base
+Message: show standard_conforming_strings
+
+2024-11-12 17:53:52,278 - None - None - None None
+Level: INFO
+Module: base
+Message: [raw sql] {}
+
+2024-11-12 17:53:52,317 - None - None - None None
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-12 17:53:52,322 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:53:52,322 - None - None - None None
+Level: INFO
+Module: base
+Message: [generated in 0.00048s] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:53:52,363 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:53:52,364 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.04214s ago] {'table_name': 'user_activity', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:53:52,384 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:53:52,384 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.06264s ago] {'table_name': 'dream', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:53:52,405 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:53:52,405 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.08318s ago] {'table_name': 'comment', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:53:52,425 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:53:52,425 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1033s ago] {'table_name': 'dream_group', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:53:52,445 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:53:52,445 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1234s ago] {'table_name': 'group_membership', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:53:52,465 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:53:52,465 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1435s ago] {'table_name': 'forum_post', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:53:52,485 - None - None - None None
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-12 17:53:52,486 - None - None - None None
+Level: INFO
+Module: base
+Message: [cached since 0.1641s ago] {'table_name': 'forum_reply', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-12 17:53:52,506 - None - None - None None
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-12 17:53:52,526 - None - None - None None
+Level: INFO
+Module: app
+Message: Database tables created successfully
+
+2024-11-12 17:53:52,526 - None - None - None None
+Level: INFO
+Module: app
+Message: Database tables created successfully
+
+2024-11-12 17:53:53,435 - None - None - None None
+Level: INFO
+Module: app
+Message: Routes registered successfully
+
+2024-11-12 17:53:53,435 - None - None - None None
+Level: INFO
+Module: app
+Message: Routes registered successfully
+
+2024-11-12 17:53:53,447 - None - None - None None
+Level: WARNING
+Module: _internal
+Message:  * Debugger is active!
+
+2024-11-12 17:53:53,449 - None - None - None None
+Level: INFO
+Module: _internal
+Message:  * Debugger PIN: 264-840-401
+
+2024-11-12 17:53:53,485 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+
+2024-11-12 17:53:53,493 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+
+2024-11-12 17:53:53,511 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+
+2024-11-12 17:53:53,512 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+
+2024-11-12 17:53:53,513 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:53:53] "GET / HTTP/1.1" 200 -
+
+2024-11-12 17:53:53,513 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:53:53] "GET / HTTP/1.1" 200 -
+
+2024-11-12 17:53:53,527 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:53:53,530 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:53:53,531 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:53:53] "GET /static/css/output.css HTTP/1.1" 200 -
+
+2024-11-12 17:53:53,633 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:53:53,634 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:53:53,634 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:53:53] "GET /static/images/dreamlooplogo.svg HTTP/1.1" 200 -
+
+2024-11-12 17:53:53,708 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:53:53,709 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+
+2024-11-12 17:53:53,709 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:53:53] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+
+2024-11-12 17:53:53,778 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request started: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:53:53,779 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: INFO
+Module: middleware
+Message: Request completed: GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+
+2024-11-12 17:53:53,779 - None - None - None None
+Level: INFO
+Module: _internal
+Message: 172.31.196.66 - - [12/Nov/2024 17:53:53] "[36mGET /static/images/dreamlooplogo.svg HTTP/1.1[0m" 304 -
+
