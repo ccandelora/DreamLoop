@@ -1,11 +1,11 @@
-from flask import render_template, redirect, url_for, flash, request, jsonify
+from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
-from extensions import db, login_manager
+from extensions import db
 from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply
-from datetime import datetime, timedelta
-from sqlalchemy import desc, text
+from datetime import datetime
 import logging
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import desc
 import os
 import stripe
 from ai_helper import analyze_dream, analyze_dream_patterns
@@ -15,194 +15,25 @@ logger = logging.getLogger(__name__)
 
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
-def handle_stripe_webhook(payload, sig_header):
-    """Handle Stripe webhook events."""
-    webhook_secret = os.getenv('STRIPE_WEBHOOK_SECRET')
-    
-    try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, webhook_secret
-        )
-    except ValueError as e:
-        logger.error(f"Invalid payload: {str(e)}")
-        return False, "Invalid payload"
-    except Exception as e:
-        logger.error(f"Invalid signature: {str(e)}")
-        return False, "Invalid signature"
-
-    if event['type'] == 'checkout.session.completed':
-        session = event['data']['object']
-        user_id = session.get('client_reference_id')
-        
-        if user_id:
-            try:
-                user = User.query.get(int(user_id))
-                if user:
-                    user.subscription_type = 'premium'
-                    user.subscription_end_date = datetime.utcnow() + timedelta(days=30)
-                    db.session.commit()
-                    logger.info(f"User {user_id} upgraded to premium")
-                    return True, "Subscription updated"
-            except Exception as e:
-                logger.error(f"Error updating user subscription: {str(e)}")
-                return False, "Error updating subscription"
-    
-    return True, "Webhook processed"
-
 def register_routes(app):
     @app.route('/')
     def index():
         """Landing page and user dashboard."""
         try:
             if current_user.is_authenticated:
-                dreams = Dream.query.filter_by(user_id=current_user.id)\
+                dreams = Dream.query\
+                    .filter_by(user_id=current_user.id)\
                     .order_by(Dream.date.desc())\
                     .limit(5)\
                     .all()
                 logger.info(f"Successfully fetched {len(dreams) if dreams else 0} dreams for user {current_user.id}")
-                return render_template('index.html', dreams=dreams if dreams else [])
+                return render_template('index.html', dreams=dreams)
             return render_template('index.html')
-        except Exception as e:
-            logger.error(f"Error in index route: {str(e)}")
-            return render_template('index.html', dreams=[])
-
-    @app.route('/dream_patterns')
-    @login_required
-    def dream_patterns():
-        """View and analyze dream patterns."""
-        try:
-            logger.info(f"Fetching dreams for pattern analysis - user {current_user.id}")
-            dreams = Dream.query.filter_by(user_id=current_user.id)\
-                .order_by(Dream.date.desc())\
-                .all()
-            
-            if not dreams:
-                logger.info("No dreams found for pattern analysis")
-                return render_template('dream_patterns.html', dreams=[], patterns=None)
-            
-            try:
-                patterns = analyze_dream_patterns(dreams)
-                logger.info("Successfully analyzed dream patterns")
-                return render_template('dream_patterns.html', dreams=dreams, patterns=patterns)
-            except Exception as e:
-                logger.error(f"Error analyzing dream patterns: {str(e)}")
-                flash('An error occurred while analyzing dream patterns')
-                return render_template('dream_patterns.html', dreams=dreams, patterns=None)
-                
         except SQLAlchemyError as e:
-            logger.error(f"Database error in dream patterns: {str(e)}")
-            flash('An error occurred while loading your dreams')
-            return render_template('dream_patterns.html', dreams=[], patterns=None)
-
-    @app.route('/subscription')
-    @login_required
-    def subscription():
-        """Subscription management page."""
-        try:
-            return render_template('subscription.html')
-        except Exception as e:
-            logger.error(f"Error loading subscription page: {str(e)}")
-            flash('An error occurred while loading the subscription page')
-            return redirect(url_for('index'))
-
-    @app.route('/group/<int:group_id>/join', methods=['POST'])
-    @login_required
-    def join_group(group_id):
-        """Join a dream group."""
-        try:
-            group = DreamGroup.query.get(group_id)
-            if not group:
-                flash('Group not found')
-                return redirect(url_for('dream_groups'))
-            
-            if current_user not in group.members:
-                membership = GroupMembership(user_id=current_user.id, group_id=group.id)
-                db.session.add(membership)
-                db.session.commit()  # Fixed syntax error here
-                flash('Successfully joined the group!')
-            else:
-                flash('You are already a member of this group')
-            return redirect(url_for('dream_group', group_id=group_id))
-        except Exception as e:
-            logger.error(f"Database error joining group: {str(e)}")
+            logger.error(f"Database error in index: {str(e)}")
             db.session.rollback()
-            flash('An error occurred while joining the group')
-            return redirect(url_for('dream_groups'))
-
-    @app.route('/group/<int:group_id>')
-    @login_required
-    def dream_group(group_id):
-        """View a specific dream group."""
-        try:
-            group = DreamGroup.query.get(group_id)
-            if not group:
-                flash('Group not found')
-                return redirect(url_for('dream_groups'))
-                
-            is_member = current_user in group.members
-            if not is_member:
-                flash('You must be a member to view this group')
-                return redirect(url_for('dream_groups'))
-            return render_template('dream_group.html', group=group)
-        except Exception as e:
-            logger.error(f"Database error viewing group: {str(e)}")
-            flash('An error occurred while loading the group')
-            return redirect(url_for('dream_groups'))
-
-    @app.route('/community')
-    @login_required
-    def community_dreams():
-        """View all public dreams from the community."""
-        try:
-            public_dreams = Dream.query.filter_by(is_public=True)\
-                .order_by(Dream.date.desc())\
-                .all()
-            return render_template('community_dreams.html', dreams=public_dreams)
-        except Exception as e:
-            logger.error(f"Database error in community dreams: {str(e)}")
-            flash('An error occurred while loading community dreams')
-            return redirect(url_for('index'))
-
-    @app.route('/groups')
-    @login_required
-    def dream_groups():
-        """View all dream groups."""
-        try:
-            groups = DreamGroup.query.all()
-            return render_template('dream_groups.html', groups=groups)
-        except Exception as e:
-            logger.error(f"Database error in dream groups: {str(e)}")
-            flash('An error occurred while loading dream groups')
-            return redirect(url_for('index'))
-
-    @app.route('/group/create', methods=['GET', 'POST'])
-    @login_required
-    def create_group():
-        """Create a new dream group."""
-        if request.method == 'POST':
-            name = request.form.get('name')
-            description = request.form.get('description')
-            
-            if not name:
-                flash('Group name is required')
-                return render_template('create_group.html')
-            
-            try:
-                group = DreamGroup(name=name, description=description, created_by=current_user.id)
-                db.session.add(group)
-                
-                membership = GroupMembership(user_id=current_user.id, group_id=group.id, is_admin=True)
-                db.session.add(membership)
-                
-                db.session.commit()
-                flash('Group created successfully!')
-                return redirect(url_for('dream_groups'))
-            except Exception as e:
-                logger.error(f"Error creating group: {str(e)}")
-                db.session.rollback()
-                flash('An error occurred while creating the group')
-        
-        return render_template('create_group.html')
+            flash('An error occurred while loading your dreams')
+            return render_template('index.html', dreams=[])
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -211,28 +42,30 @@ def register_routes(app):
             return redirect(url_for('index'))
         
         if request.method == 'POST':
-            username = request.form.get('username')
-            password = request.form.get('password')
-            
-            if not username or not password:
-                flash('Please provide both username and password')
-                return render_template('login.html')
-            
             try:
+                username = request.form.get('username')
+                password = request.form.get('password')
+                
+                if not username or not password:
+                    flash('Please provide both username and password')
+                    return render_template('login.html')
+                
                 user = User.query.filter_by(username=username).first()
+                
                 if user and user.check_password(password):
-                    login_user(user)
+                    login_user(user, remember=True)
                     next_page = request.args.get('next')
                     if not next_page or not next_page.startswith('/'):
                         next_page = url_for('index')
                     return redirect(next_page)
                 
                 flash('Invalid username or password')
-            except Exception as e:
-                logger.error(f"Error during login: {str(e)}")
+                return render_template('login.html')
+            except SQLAlchemyError as e:
+                logger.error(f"Database error during login: {str(e)}")
+                db.session.rollback()
                 flash('An error occurred during login')
-            
-            return render_template('login.html')
+                return render_template('login.html')
         
         return render_template('login.html')
 
@@ -259,11 +92,13 @@ def register_routes(app):
                 return render_template('register.html')
             
             try:
-                if User.query.filter_by(username=username).first():
+                existing_user = User.query.filter_by(username=username).first()
+                if existing_user:
                     flash('Username already exists')
                     return render_template('register.html')
                 
-                if User.query.filter_by(email=email).first():
+                existing_email = User.query.filter_by(email=email).first()
+                if existing_email:
                     flash('Email already registered')
                     return render_template('register.html')
                 
@@ -273,13 +108,110 @@ def register_routes(app):
                 db.session.add(user)
                 db.session.commit()
                 login_user(user)
+                flash('Registration successful! Welcome to DreamLoop!')
                 return redirect(url_for('index'))
-            except Exception as e:
-                logger.error(f"Error registering user: {str(e)}")
+            except SQLAlchemyError as e:
+                logger.error(f"Database error registering user: {str(e)}")
                 db.session.rollback()
                 flash('An error occurred during registration')
+                return render_template('register.html')
         
         return render_template('register.html')
+
+    @app.route('/dream_patterns')
+    @login_required
+    def dream_patterns():
+        """View and analyze dream patterns."""
+        try:
+            logger.info(f"Fetching dreams for pattern analysis - user {current_user.id}")
+            dreams = Dream.query\
+                .filter_by(user_id=current_user.id)\
+                .order_by(Dream.date.desc())\
+                .all()
+            
+            if not dreams:
+                logger.info("No dreams found for pattern analysis")
+                return render_template('dream_patterns.html', patterns=None)
+            
+            try:
+                patterns = analyze_dream_patterns(dreams)
+                if not patterns:
+                    flash('Unable to analyze dream patterns. Please try again.')
+                    return render_template('dream_patterns.html', patterns=None)
+                    
+                logger.info("Successfully analyzed dream patterns")
+                return render_template('dream_patterns.html', patterns=patterns)
+                
+            except Exception as e:
+                logger.error(f"Error analyzing dream patterns: {str(e)}")
+                flash('An error occurred while analyzing dream patterns')
+                return render_template('dream_patterns.html', patterns=None)
+                
+        except SQLAlchemyError as e:
+            logger.error(f"Database error in dream patterns: {str(e)}")
+            db.session.rollback()
+            flash('An error occurred while loading your dreams')
+            return render_template('dream_patterns.html', patterns=None)
+
+    @app.route('/community')
+    @login_required
+    def community_dreams():
+        """View all public dreams from the community."""
+        try:
+            public_dreams = Dream.query\
+                .filter_by(is_public=True)\
+                .order_by(Dream.date.desc())\
+                .all()
+            return render_template('community_dreams.html', dreams=public_dreams)
+        except SQLAlchemyError as e:
+            logger.error(f"Database error in community dreams: {str(e)}")
+            db.session.rollback()
+            flash('An error occurred while loading community dreams')
+            return redirect(url_for('index'))
+
+    @app.route('/groups')
+    @login_required
+    def dream_groups():
+        """View all dream groups."""
+        try:
+            groups = DreamGroup.query.all()
+            return render_template('dream_groups.html', groups=groups)
+        except SQLAlchemyError as e:
+            logger.error(f"Database error in dream groups: {str(e)}")
+            db.session.rollback()
+            flash('An error occurred while loading dream groups')
+            return redirect(url_for('index'))
+
+    @app.route('/group/create', methods=['GET', 'POST'])
+    @login_required
+    def create_group():
+        """Create a new dream group."""
+        if request.method == 'POST':
+            name = request.form.get('name')
+            description = request.form.get('description')
+            
+            if not name:
+                flash('Group name is required')
+                return render_template('create_group.html')
+            
+            try:
+                group = DreamGroup(name=name, description=description, created_by=current_user.id)
+                db.session.add(group)
+                db.session.flush()
+                
+                membership = GroupMembership(user_id=current_user.id, group_id=group.id, is_admin=True)
+                db.session.add(membership)
+                
+                db.session.commit()
+                flash('Group created successfully!')
+                return redirect(url_for('dream_groups'))
+            except SQLAlchemyError as e:
+                logger.error(f"Error creating group: {str(e)}")
+                db.session.rollback()
+                flash('An error occurred while creating the group')
+                return render_template('create_group.html')
+        
+        return render_template('create_group.html')
 
     @app.route('/dream/new', methods=['GET', 'POST'])
     @login_required
@@ -336,10 +268,11 @@ def register_routes(app):
                 db.session.commit()
                 flash('Dream logged successfully!')
                 return redirect(url_for('dream_view', dream_id=dream.id))
-            except Exception as e:
+            except SQLAlchemyError as e:
                 logger.error(f"Error creating dream: {str(e)}")
                 db.session.rollback()
                 flash('An error occurred while saving your dream')
+                return render_template('dream_new.html')
         
         return render_template('dream_new.html')
 
@@ -348,29 +281,197 @@ def register_routes(app):
     def dream_view(dream_id):
         """View a dream entry."""
         try:
-            dream = Dream.query.get(dream_id)
-            if not dream:
-                flash('Dream not found')
-                return redirect(url_for('index'))
-                
+            dream = Dream.query.get_or_404(dream_id)
             if dream.user_id != current_user.id and not dream.is_public:
                 flash('You do not have permission to view this dream')
                 return redirect(url_for('index'))
             return render_template('dream_view.html', dream=dream)
-        except Exception as e:
+        except SQLAlchemyError as e:
             logger.error(f"Database error viewing dream: {str(e)}")
+            db.session.rollback()
             flash('An error occurred while loading the dream')
             return redirect(url_for('index'))
 
-    @app.route('/webhook', methods=['POST'])
-    def stripe_webhook():
-        """Handle Stripe webhook events."""
-        payload = request.get_data()
-        sig_header = request.headers.get('Stripe-Signature')
+    @app.route('/group/<int:group_id>')
+    @login_required
+    def group_view(group_id):
+        """View a dream group."""
+        try:
+            group = DreamGroup.query.get_or_404(group_id)
+            return render_template('group_view.html', group=group)
+        except SQLAlchemyError as e:
+            logger.error(f"Database error viewing group: {str(e)}")
+            db.session.rollback()
+            flash('An error occurred while loading the group')
+            return redirect(url_for('index'))
 
-        success, message = handle_stripe_webhook(payload, sig_header)
-        if success:
-            return jsonify({'status': 'success', 'message': message}), 200
-        return jsonify({'status': 'error', 'message': message}), 400
+    @app.route('/group/<int:group_id>/join', methods=['POST'])
+    @login_required
+    def join_group(group_id):
+        """Join a dream group."""
+        try:
+            group = DreamGroup.query.get_or_404(group_id)
+            
+            membership = GroupMembership.query.filter_by(user_id=current_user.id, group_id=group_id).first()
+            if membership:
+                flash('You are already a member of this group')
+                return redirect(url_for('group_view', group_id=group_id))
+            
+            membership = GroupMembership(user_id=current_user.id, group_id=group_id)
+            db.session.add(membership)
+            db.session.commit()
+            flash('You have successfully joined the group!')
+            return redirect(url_for('group_view', group_id=group_id))
+        except SQLAlchemyError as e:
+            logger.error(f"Database error joining group: {str(e)}")
+            db.session.rollback()
+            flash('An error occurred while joining the group')
+            return redirect(url_for('group_view', group_id=group_id))
+
+    @app.route('/group/<int:group_id>/leave', methods=['POST'])
+    @login_required
+    def leave_group(group_id):
+        """Leave a dream group."""
+        try:
+            group = DreamGroup.query.get_or_404(group_id)
+            membership = GroupMembership.query.filter_by(user_id=current_user.id, group_id=group_id).first()
+            if not membership:
+                flash('You are not a member of this group')
+                return redirect(url_for('group_view', group_id=group_id))
+            
+            db.session.delete(membership)
+            db.session.commit()
+            flash('You have successfully left the group')
+            return redirect(url_for('group_view', group_id=group_id))
+        except SQLAlchemyError as e:
+            logger.error(f"Database error leaving group: {str(e)}")
+            db.session.rollback()
+            flash('An error occurred while leaving the group')
+            return redirect(url_for('group_view', group_id=group_id))
+
+    @app.route('/group/<int:group_id>/dreams')
+    @login_required
+    def group_dreams(group_id):
+        """View dreams shared in a group."""
+        try:
+            group = DreamGroup.query.get_or_404(group_id)
+            
+            # Get all dreams shared in this group
+            group_dreams = Dream.query.filter(Dream.user_id.in_([m.user_id for m in group.members])).all()
+            
+            return render_template('group_dreams.html', group=group, dreams=group_dreams)
+        except SQLAlchemyError as e:
+            logger.error(f"Database error loading group dreams: {str(e)}")
+            db.session.rollback()
+            flash('An error occurred while loading group dreams')
+            return redirect(url_for('group_view', group_id=group_id))
+
+    @app.route('/dream/<int:dream_id>/comment', methods=['POST'])
+    @login_required
+    def add_comment(dream_id):
+        """Add a comment to a dream."""
+        try:
+            dream = Dream.query.get_or_404(dream_id)
+            comment_text = request.form.get('comment_text')
+            if not comment_text:
+                flash('Please enter a comment')
+                return redirect(url_for('dream_view', dream_id=dream_id))
+            
+            comment = Comment(
+                dream_id=dream_id,
+                user_id=current_user.id,
+                content=comment_text
+            )
+            db.session.add(comment)
+            db.session.commit()
+            flash('Comment added successfully!')
+            return redirect(url_for('dream_view', dream_id=dream_id))
+        except SQLAlchemyError as e:
+            logger.error(f"Database error adding comment: {str(e)}")
+            db.session.rollback()
+            flash('An error occurred while adding the comment')
+            return redirect(url_for('dream_view', dream_id=dream_id))
+
+    @app.route('/forum')
+    @login_required
+    def forum():
+        """View the forum."""
+        try:
+            posts = ForumPost.query.order_by(ForumPost.created_at.desc()).all()
+            return render_template('forum.html', posts=posts)
+        except SQLAlchemyError as e:
+            logger.error(f"Database error loading forum posts: {str(e)}")
+            db.session.rollback()
+            flash('An error occurred while loading forum posts')
+            return redirect(url_for('index'))
+
+    @app.route('/forum/create', methods=['GET', 'POST'])
+    @login_required
+    def create_forum_post():
+        """Create a new forum post."""
+        if request.method == 'POST':
+            try:
+                title = request.form.get('title')
+                content = request.form.get('content')
+                if not title or not content:
+                    flash('Please provide both a title and content for your post')
+                    return render_template('create_forum_post.html')
+                
+                post = ForumPost(
+                    user_id=current_user.id,
+                    title=title,
+                    content=content
+                )
+                db.session.add(post)
+                db.session.commit()
+                flash('Forum post created successfully!')
+                return redirect(url_for('forum'))
+            except SQLAlchemyError as e:
+                logger.error(f"Database error creating forum post: {str(e)}")
+                db.session.rollback()
+                flash('An error occurred while creating the forum post')
+                return render_template('create_forum_post.html')
+        
+        return render_template('create_forum_post.html')
+
+    @app.route('/forum/<int:post_id>')
+    @login_required
+    def forum_post(post_id):
+        """View a forum post."""
+        try:
+            post = ForumPost.query.get_or_404(post_id)
+            replies = ForumReply.query.filter_by(post_id=post_id).order_by(ForumReply.created_at.desc()).all()
+            return render_template('forum_post.html', post=post, replies=replies)
+        except SQLAlchemyError as e:
+            logger.error(f"Database error loading forum post: {str(e)}")
+            db.session.rollback()
+            flash('An error occurred while loading the forum post')
+            return redirect(url_for('forum'))
+
+    @app.route('/forum/<int:post_id>/reply', methods=['POST'])
+    @login_required
+    def add_forum_reply(post_id):
+        """Add a reply to a forum post."""
+        try:
+            post = ForumPost.query.get_or_404(post_id)
+            reply_content = request.form.get('reply_content')
+            if not reply_content:
+                flash('Please enter a reply')
+                return redirect(url_for('forum_post', post_id=post_id))
+            
+            reply = ForumReply(
+                post_id=post_id,
+                user_id=current_user.id,
+                content=reply_content
+            )
+            db.session.add(reply)
+            db.session.commit()
+            flash('Reply added successfully!')
+            return redirect(url_for('forum_post', post_id=post_id))
+        except SQLAlchemyError as e:
+            logger.error(f"Database error adding forum reply: {str(e)}")
+            db.session.rollback()
+            flash('An error occurred while adding the reply')
+            return redirect(url_for('forum_post', post_id=post_id))
 
     return app

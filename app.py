@@ -1,10 +1,9 @@
 from flask import Flask
-import markdown
 import os
 from extensions import db, login_manager
-from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply
 import logging
 from sqlalchemy.exc import SQLAlchemyError
+from models import User
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -15,62 +14,61 @@ def create_app():
     
     # Configure the Flask app
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', os.urandom(24))
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+    
+    # Configure database URL using environment variables
+    db_url = os.environ.get('DATABASE_URL')
+    if not db_url:
+        raise ValueError("DATABASE_URL environment variable is not set")
+        
+    if db_url.startswith('postgres://'):
+        db_url = db_url.replace('postgres://', 'postgresql://', 1)
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
         'pool_pre_ping': True,
         'pool_recycle': 300,
-        'pool_size': 10,
-        'max_overflow': 5
+        'pool_size': 20,
+        'max_overflow': 10
     }
 
-    # Initialize extensions
+    # Initialize extensions with the app
     db.init_app(app)
     login_manager.init_app(app)
 
-    # Configure login manager
-    login_manager.login_view = 'login'
-    login_manager.login_message = 'Please log in to access this page.'
-    login_manager.login_message_category = 'info'
-    login_manager.session_protection = 'strong'
+    # Import routes after app creation to avoid circular imports
+    from routes import register_routes
+    register_routes(app)
+    logger.info("Routes registered successfully")
 
+    # Initialize database
     with app.app_context():
-        # Add markdown filter
-        def markdown_filter(text):
-            return markdown.markdown(text) if text else ''
-        app.jinja_env.filters['markdown'] = markdown_filter
-
-        @login_manager.user_loader
-        def load_user(user_id):
-            if not user_id:
-                return None
-            try:
-                return User.query.filter_by(id=int(user_id)).first()
-            except (SQLAlchemyError, ValueError) as e:
-                logger.error(f"Error loading user {user_id}: {str(e)}")
-                return None
-
         try:
-            # Import routes after app creation to avoid circular imports
-            from routes import register_routes
-            
-            # Create database tables if they don't exist
             db.create_all()
             logger.info("Database tables created successfully")
-            
-            # Register routes
-            app = register_routes(app)
-            logger.info("Routes registered successfully")
-
-            return app
-
-        except Exception as e:
-            logger.error(f"Error during app initialization: {str(e)}")
+        except SQLAlchemyError as e:
+            logger.error(f"Error creating database tables: {str(e)}")
+            db.session.rollback()
             raise
+
+    return app
 
 # Create the Flask application instance
 app = create_app()
 
+# Set up login manager user loader
+@login_manager.user_loader
+def load_user(user_id):
+    if not user_id:
+        return None
+    try:
+        with app.app_context():
+            return db.session.get(User, int(user_id))
+    except SQLAlchemyError as e:
+        logger.error(f"Error loading user {user_id}: {str(e)}")
+        db.session.rollback()
+        return None
+
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 3000))
-    app.run(host='0.0.0.0', port=port)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
