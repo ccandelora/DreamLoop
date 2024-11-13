@@ -5,24 +5,25 @@ from sqlalchemy.exc import SQLAlchemyError
 from logging_config import setup_logging, ErrorLogger
 from middleware import setup_request_logging
 
+
 def create_app():
     """Create and configure the Flask application."""
     app = Flask(__name__)
-    
+
     # Setup logging first
     setup_logging(app)
-    
+
     # Configure the Flask app
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', os.urandom(24))
-    
+
     # Configure database URL using environment variables
     db_url = os.environ.get('DATABASE_URL')
     if not db_url:
         raise ValueError("DATABASE_URL environment variable is not set")
-        
+
     if db_url.startswith('postgres://'):
         db_url = db_url.replace('postgres://', 'postgresql://', 1)
-    
+
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
@@ -38,7 +39,7 @@ def create_app():
     login_manager.init_app(app)
 
     # Setup request logging
-    setup_request_logging(app)
+    #setup_request_logging(app)
 
     # Import models and set up user loader
     from models import User
@@ -71,6 +72,7 @@ def create_app():
             raise
 
     return app
+
 
 # Create the Flask application instance
 app = create_app()

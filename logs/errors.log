@@ -1,0 +1,45 @@
+2024-11-12 18:00:46,474 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: ERROR
+Module: routes
+Message: Error in dream_view route: Could not build url for endpoint 'reanalyze_dream' with values ['dream_id']. Did you mean 'group_dreams' instead?
+
+2024-11-12 18:00:51,753 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: ERROR
+Module: routes
+Message: Error in dream_view route: Could not build url for endpoint 'reanalyze_dream' with values ['dream_id']. Did you mean 'group_dreams' instead?
+
+2024-11-12 18:01:01,425 - - - 172.31.196.66 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: ERROR
+Module: routes
+Message: Error in dream_view route: Could not build url for endpoint 'reanalyze_dream' with values ['dream_id']. Did you mean 'group_dreams' instead?
+
+2024-11-12 21:42:27,160 - - - 172.31.196.23 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: ERROR
+Module: routes
+Message: Error in dream_view route: Could not build url for endpoint 'reanalyze_dream' with values ['dream_id']. Did you mean 'group_dreams' instead?
+
+2024-11-12 21:42:44,937 - - - 172.31.196.23 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: ERROR
+Module: routes
+Message: Error in dream_view route: Could not build url for endpoint 'reanalyze_dream' with values ['dream_id']. Did you mean 'group_dreams' instead?
+
+2024-11-12 21:43:21,102 - - - 172.31.196.23 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: ERROR
+Module: routes
+Message: Error in dream_view route: Could not build url for endpoint 'reanalyze_dream' with values ['dream_id']. Did you mean 'group_dreams' instead?
+
+2024-11-12 22:23:20,385 - - - 172.31.196.17 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: ERROR
+Module: routes
+Message: Error in dream_view route: No filter named 'markdown' found.
+
+2024-11-12 22:37:06,954 - - - 172.31.196.17 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: ERROR
+Module: routes
+Message: Error in dream_view route: expected token 'end of statement block', got '='
+
+2024-11-12 22:37:12,745 - - - 172.31.196.17 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: ERROR
+Module: routes
+Message: Error in dream_view route: expected token 'end of statement block', got '='
+
