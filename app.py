@@ -4,6 +4,15 @@ from extensions import db, login_manager
 from sqlalchemy.exc import SQLAlchemyError
 from logging_config import setup_logging, ErrorLogger
 from middleware import setup_request_logging
+from flask_login import current_user
+from datetime import datetime
+
+
+def should_show_premium_ads():
+    """Determine if premium ads should be shown to the current user."""
+    if not current_user or not current_user.is_authenticated:
+        return True
+    return current_user.subscription_type == 'free'
 
 
 def create_app():
@@ -39,7 +48,14 @@ def create_app():
     login_manager.init_app(app)
 
     # Setup request logging
-    #setup_request_logging(app)
+    setup_request_logging(app)
+
+    # Add template context processor
+    @app.context_processor
+    def utility_processor():
+        return {
+            'should_show_premium_ads': should_show_premium_ads
+        }
 
     # Import models and set up user loader
     from models import User

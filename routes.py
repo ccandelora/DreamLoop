@@ -9,7 +9,11 @@ from sqlalchemy import desc
 import os
 import stripe
 from ai_helper import analyze_dream, analyze_dream_patterns
-from activity_tracker import track_user_activity, ACTIVITY_TYPES
+from activity_tracker import (
+    track_user_activity, 
+    track_premium_feature_usage,
+    ACTIVITY_TYPES
+)
 
 logger = logging.getLogger(__name__)
 
@@ -21,16 +25,19 @@ def register_routes(app):
         """Landing page and user dashboard."""
         try:
             if current_user.is_authenticated:
-                track_user_activity(
+                success, error = track_user_activity(
                     current_user.id,
                     ACTIVITY_TYPES['DREAM_VIEW'],
-                    description="Viewed dashboard"
+                    description="Viewed dashboard",
+                    extra_data={'page': 'dashboard'}
                 )
+                if error:
+                    logger.warning(f"Failed to track dashboard view: {error}")
+                
                 dreams = Dream.query.filter_by(user_id=current_user.id)\
                     .order_by(Dream.date.desc())\
                     .limit(5)\
                     .all()
-                logger.info(f"Successfully fetched {len(dreams) if dreams else 0} dreams for user {current_user.id}")
                 return render_template('index.html', dreams=dreams if dreams else [])
             return render_template('index.html')
         except Exception as e:
@@ -48,10 +55,23 @@ def register_routes(app):
                 user = User.query.filter_by(username=request.form['username']).first()
                 if user and user.check_password(request.form['password']):
                     login_user(user)
-                    track_user_activity(user.id, ACTIVITY_TYPES['LOGIN'])
+                    success, error = track_user_activity(
+                        user.id, 
+                        ACTIVITY_TYPES['LOGIN'],
+                        extra_data={'login_method': 'password'}
+                    )
+                    if error:
+                        logger.warning(f"Failed to track login: {error}")
+                    
                     next_page = request.args.get('next')
                     return redirect(next_page if next_page else url_for('index'))
                 flash('Invalid username or password')
+                track_user_activity(
+                    user.id if user else None,
+                    ACTIVITY_TYPES['LOGIN'],
+                    description="Failed login attempt",
+                    extra_data={'reason': 'invalid_credentials'}
+                )
             except Exception as e:
                 logger.error(f"Login error: {str(e)}")
                 flash('An error occurred during login')
@@ -80,7 +100,14 @@ def register_routes(app):
                 db.session.add(user)
                 db.session.commit()
                 
-                track_user_activity(user.id, ACTIVITY_TYPES['REGISTRATION'])
+                success, error = track_user_activity(
+                    user.id,
+                    ACTIVITY_TYPES['REGISTRATION'],
+                    extra_data={'registration_method': 'email'}
+                )
+                if error:
+                    logger.warning(f"Failed to track registration: {error}")
+                
                 login_user(user)
                 return redirect(url_for('index'))
             except Exception as e:
@@ -93,7 +120,12 @@ def register_routes(app):
     @login_required
     def logout():
         if current_user.is_authenticated:
-            track_user_activity(current_user.id, ACTIVITY_TYPES['LOGOUT'])
+            success, error = track_user_activity(
+                current_user.id,
+                ACTIVITY_TYPES['LOGOUT']
+            )
+            if error:
+                logger.warning(f"Failed to track logout: {error}")
         logout_user()
         return redirect(url_for('index'))
 
@@ -109,13 +141,16 @@ def register_routes(app):
                 flash('You do not have permission to view this dream')
                 return redirect(url_for('index'))
             
-            track_user_activity(
+            success, error = track_user_activity(
                 user_id=current_user.id,
                 activity_type=ACTIVITY_TYPES['DREAM_VIEW'],
                 description=f"Viewed dream: {dream.title}",
                 target_type='dream',
-                target_id=dream_id
+                target_id=dream_id,
+                extra_data={'is_public': dream.is_public}
             )
+            if error:
+                logger.warning(f"Failed to track dream view: {error}")
             
             return render_template('dream_view.html', dream=dream)
             
@@ -129,11 +164,13 @@ def register_routes(app):
     def dream_patterns():
         """View dream patterns."""
         try:
-            track_user_activity(
+            success, error = track_user_activity(
                 current_user.id,
                 ACTIVITY_TYPES['DREAM_PATTERNS_VIEW'],
                 description="Viewed dream patterns"
             )
+            if error:
+                logger.warning(f"Failed to track dream patterns view: {error}")
             return render_template('dream_patterns.html')
         except Exception as e:
             logger.error(f"Error viewing dream patterns: {str(e)}")
@@ -150,31 +187,48 @@ def register_routes(app):
                     title=request.form['title'],
                     content=request.form['content'],
                     is_public=bool(request.form.get('is_public')),
-                    user_id=current_user.id
+                    is_anonymous=bool(request.form.get('is_anonymous')),
+                    user_id=current_user.id,
+                    mood=request.form.get('mood'),
+                    lucidity_level=request.form.get('lucidity_level'),
+                    tags=request.form.get('tags'),
+                    sleep_quality=request.form.get('sleep_quality'),
+                    sleep_position=request.form.get('sleep_position'),
+                    sleep_interruptions=request.form.get('sleep_interruptions', 0),
+                    bed_time=datetime.fromisoformat(request.form['bed_time']) if request.form.get('bed_time') else None,
+                    wake_time=datetime.fromisoformat(request.form['wake_time']) if request.form.get('wake_time') else None
                 )
                 
-                # Optional fields
-                if 'mood' in request.form:
-                    dream.mood = request.form['mood']
-                if 'tags' in request.form:
-                    dream.tags = request.form['tags']
-                    
                 db.session.add(dream)
                 db.session.commit()
                 
-                track_user_activity(
+                # Track dream creation with detailed metadata
+                success, error = track_user_activity(
                     current_user.id,
                     ACTIVITY_TYPES['DREAM_CREATE'],
                     description=f"Created new dream: {dream.title}",
                     target_type='dream',
-                    target_id=dream.id
+                    target_id=dream.id,
+                    extra_data={
+                        'is_public': dream.is_public,
+                        'is_anonymous': dream.is_anonymous,
+                        'has_mood': bool(dream.mood),
+                        'has_tags': bool(dream.tags),
+                        'lucidity_level': dream.lucidity_level
+                    }
                 )
+                
+                if error:
+                    logger.warning(f"Failed to track dream creation: {error}")
+                
                 flash('Dream logged successfully!')
                 return redirect(url_for('dream_view', dream_id=dream.id))
+                
             except Exception as e:
                 logger.error(f"Error creating dream: {str(e)}")
                 db.session.rollback()
                 flash('An error occurred while saving your dream')
+                
         return render_template('dream_log.html')
 
     @app.route('/dream/<int:dream_id>/comment', methods=['POST'])
@@ -190,13 +244,15 @@ def register_routes(app):
             db.session.add(comment)
             db.session.commit()
             
-            track_user_activity(
+            success, error = track_user_activity(
                 current_user.id,
                 ACTIVITY_TYPES['COMMENT_ADD'],
                 description=f"Added comment to dream {dream_id}",
                 target_type='dream',
                 target_id=dream_id
             )
+            if error:
+                logger.warning(f"Failed to track comment addition: {error}")
             flash('Comment added successfully!')
         except Exception as e:
             logger.error(f"Error adding comment: {str(e)}")
@@ -209,11 +265,13 @@ def register_routes(app):
     def dream_groups():
         """View all dream groups."""
         try:
-            track_user_activity(
+            success, error = track_user_activity(
                 current_user.id,
                 ACTIVITY_TYPES['DREAM_GROUPS_VIEW'],
                 description="Viewed dream groups"
             )
+            if error:
+                logger.warning(f"Failed to track dream groups view: {error}")
             groups = DreamGroup.query.all()
             return render_template('dream_groups.html', groups=groups)
         except Exception as e:
@@ -233,13 +291,15 @@ def register_routes(app):
             db.session.add(membership)
             db.session.commit()
             
-            track_user_activity(
+            success, error = track_user_activity(
                 current_user.id,
                 ACTIVITY_TYPES['GROUP_JOIN'],
                 description=f"Joined group {group_id}",
                 target_type='group',
                 target_id=group_id
             )
+            if error:
+                logger.warning(f"Failed to track group join: {error}")
             flash('Successfully joined the group!')
         except Exception as e:
             logger.error(f"Error joining group: {str(e)}")
@@ -252,11 +312,13 @@ def register_routes(app):
     def community_dreams():
         """View community shared dreams."""
         try:
-            track_user_activity(
+            success, error = track_user_activity(
                 current_user.id,
                 ACTIVITY_TYPES['COMMUNITY_DREAMS_VIEW'],
                 description="Viewed community dreams"
             )
+            if error:
+                logger.warning(f"Failed to track community dreams view: {error}")
             
             # Get all public dreams excluding user's own dreams
             dreams = Dream.query.filter_by(is_public=True)\
@@ -277,11 +339,13 @@ def register_routes(app):
     def subscription():
         """View subscription page."""
         try:
-            track_user_activity(
+            success, error = track_user_activity(
                 current_user.id,
                 ACTIVITY_TYPES['SUBSCRIPTION_VIEW'],
                 description="Viewed subscription page"
             )
+            if error:
+                logger.warning(f"Failed to track subscription page view: {error}")
             return render_template('subscription.html', 
                                stripe_publishable_key=os.getenv('STRIPE_PUBLISHABLE_KEY'))
         except Exception as e:
