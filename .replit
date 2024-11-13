@@ -51,6 +51,10 @@ args = "Reset DB"
 task = "workflow.run"
 args = "Run Tests"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Scheduled Backup"
+
 [[workflows.workflow]]
 name = "Flask Dream Journal"
 author = "agent"
@@ -191,6 +195,20 @@ task = "packager.installForAll"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python -m pytest"
+
+[[workflows.workflow]]
+name = "Scheduled Backup"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 scheduled_backup.py"
 
 [deployment]
 run = ["sh", "-c", "python3 app.py"]

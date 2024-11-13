@@ -1,0 +1,2821 @@
+2024-11-13 17:53:01,931 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 3.58s ago] {'table_name': 'forum_reply', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:01,954 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE "user" (
+	id SERIAL NOT NULL, 
+	username VARCHAR(64) NOT NULL, 
+	email VARCHAR(120) NOT NULL, 
+	password_hash VARCHAR(256), 
+	subscription_type VARCHAR(20), 
+	subscription_end_date TIMESTAMP WITHOUT TIME ZONE, 
+	monthly_ai_analysis_count INTEGER, 
+	last_analysis_reset TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	UNIQUE (username), 
+	UNIQUE (email)
+)
+
+
+
+2024-11-13 17:53:01,955 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00138s] {}
+
+2024-11-13 17:53:01,980 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE user_activity (
+	id SERIAL NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	activity_type VARCHAR(50) NOT NULL, 
+	description TEXT, 
+	target_type VARCHAR(50), 
+	target_id INTEGER, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	ip_address VARCHAR(45), 
+	user_agent VARCHAR(256), 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:01,980 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00087s] {}
+
+2024-11-13 17:53:02,005 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE dream (
+	id SERIAL NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	title VARCHAR(100) NOT NULL, 
+	content TEXT NOT NULL, 
+	date TIMESTAMP WITHOUT TIME ZONE, 
+	mood VARCHAR(50), 
+	sentiment_score FLOAT, 
+	sentiment_magnitude FLOAT, 
+	dominant_emotions VARCHAR(200), 
+	lucidity_level INTEGER, 
+	tags VARCHAR(200), 
+	is_public BOOLEAN, 
+	is_anonymous BOOLEAN, 
+	ai_analysis TEXT, 
+	sleep_duration FLOAT, 
+	sleep_quality INTEGER, 
+	bed_time TIMESTAMP WITHOUT TIME ZONE, 
+	wake_time TIMESTAMP WITHOUT TIME ZONE, 
+	sleep_interruptions INTEGER, 
+	sleep_position VARCHAR(50), 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:02,006 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00071s] {}
+
+2024-11-13 17:53:02,030 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE dream_group (
+	id SERIAL NOT NULL, 
+	name VARCHAR(100) NOT NULL, 
+	description TEXT, 
+	created_by INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(created_by) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:02,031 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00084s] {}
+
+2024-11-13 17:53:02,056 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE comment (
+	id SERIAL NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	dream_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(dream_id) REFERENCES dream (id)
+)
+
+
+
+2024-11-13 17:53:02,056 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00075s] {}
+
+2024-11-13 17:53:02,081 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE group_membership (
+	user_id INTEGER NOT NULL, 
+	group_id INTEGER NOT NULL, 
+	is_admin BOOLEAN, 
+	joined_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (user_id, group_id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(group_id) REFERENCES dream_group (id)
+)
+
+
+
+2024-11-13 17:53:02,082 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00077s] {}
+
+2024-11-13 17:53:02,105 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE forum_post (
+	id SERIAL NOT NULL, 
+	title VARCHAR(200) NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	group_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(group_id) REFERENCES dream_group (id)
+)
+
+
+
+2024-11-13 17:53:02,106 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00066s] {}
+
+2024-11-13 17:53:02,130 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE forum_reply (
+	id SERIAL NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	post_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(post_id) REFERENCES forum_post (id)
+)
+
+
+
+2024-11-13 17:53:02,131 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00077s] {}
+
+2024-11-13 17:53:02,155 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-13 17:53:02,278 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-13 17:53:02,279 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: INSERT INTO "user" (username, email, password_hash, subscription_type, subscription_end_date, monthly_ai_analysis_count, last_analysis_reset) VALUES (%(username)s, %(email)s, %(password_hash)s, %(subscription_type)s, %(subscription_end_date)s, %(monthly_ai_analysis_count)s, %(last_analysis_reset)s) RETURNING "user".id
+
+2024-11-13 17:53:02,280 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 2.667s ago] {'username': 'testuser', 'email': 'test@example.com', 'password_hash': 'scrypt:32768:8:1$oa1PumP8Gpd8X25L$cb9ff0e9075ba1265dfc8670a80811678306d6197fb2977f0c9358648b57f01640fcaff225eb4cff397d1ae97b2405371bb48abf186bc26ad0c99f5548c32f9d', 'subscription_type': 'free', 'subscription_end_date': None, 'monthly_ai_analysis_count': 0, 'last_analysis_reset': datetime.datetime(2024, 11, 13, 17, 53, 2, 178798)}
+
+2024-11-13 17:53:02,324 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-13 17:53:02,514 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-13 17:53:02,515 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:02,515 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 4.164s ago] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:02,557 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:02,559 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 4.207s ago] {'table_name': 'user_activity', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:02,580 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:02,581 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 4.23s ago] {'table_name': 'dream', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:02,603 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:02,603 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 4.252s ago] {'table_name': 'comment', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:02,625 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:02,626 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 4.274s ago] {'table_name': 'dream_group', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:02,647 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:02,647 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 4.296s ago] {'table_name': 'group_membership', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:02,669 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:02,670 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 4.318s ago] {'table_name': 'forum_post', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:02,691 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:02,692 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 4.34s ago] {'table_name': 'forum_reply', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:02,713 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE forum_reply
+
+2024-11-13 17:53:02,714 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00073s] {}
+
+2024-11-13 17:53:02,736 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE forum_post
+
+2024-11-13 17:53:02,736 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00068s] {}
+
+2024-11-13 17:53:02,758 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE group_membership
+
+2024-11-13 17:53:02,759 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00083s] {}
+
+2024-11-13 17:53:02,781 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE comment
+
+2024-11-13 17:53:02,782 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00075s] {}
+
+2024-11-13 17:53:02,804 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE dream_group
+
+2024-11-13 17:53:02,804 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00084s] {}
+
+2024-11-13 17:53:02,826 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE dream
+
+2024-11-13 17:53:02,827 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00068s] {}
+
+2024-11-13 17:53:02,849 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE user_activity
+
+2024-11-13 17:53:02,849 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00065s] {}
+
+2024-11-13 17:53:02,871 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE "user"
+
+2024-11-13 17:53:02,872 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00062s] {}
+
+2024-11-13 17:53:02,893 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-13 17:53:02,936 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-13 17:53:02,937 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:02,937 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 4.586s ago] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:02,979 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:02,980 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 4.628s ago] {'table_name': 'user_activity', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,002 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,002 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 4.651s ago] {'table_name': 'dream', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,024 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,024 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 4.673s ago] {'table_name': 'comment', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,046 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,047 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 4.695s ago] {'table_name': 'dream_group', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,068 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,069 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 4.717s ago] {'table_name': 'group_membership', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,090 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,091 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 4.739s ago] {'table_name': 'forum_post', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,112 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,113 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 4.761s ago] {'table_name': 'forum_reply', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,135 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE "user" (
+	id SERIAL NOT NULL, 
+	username VARCHAR(64) NOT NULL, 
+	email VARCHAR(120) NOT NULL, 
+	password_hash VARCHAR(256), 
+	subscription_type VARCHAR(20), 
+	subscription_end_date TIMESTAMP WITHOUT TIME ZONE, 
+	monthly_ai_analysis_count INTEGER, 
+	last_analysis_reset TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	UNIQUE (username), 
+	UNIQUE (email)
+)
+
+
+
+2024-11-13 17:53:03,135 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00068s] {}
+
+2024-11-13 17:53:03,160 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE user_activity (
+	id SERIAL NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	activity_type VARCHAR(50) NOT NULL, 
+	description TEXT, 
+	target_type VARCHAR(50), 
+	target_id INTEGER, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	ip_address VARCHAR(45), 
+	user_agent VARCHAR(256), 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:03,160 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00072s] {}
+
+2024-11-13 17:53:03,184 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE dream (
+	id SERIAL NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	title VARCHAR(100) NOT NULL, 
+	content TEXT NOT NULL, 
+	date TIMESTAMP WITHOUT TIME ZONE, 
+	mood VARCHAR(50), 
+	sentiment_score FLOAT, 
+	sentiment_magnitude FLOAT, 
+	dominant_emotions VARCHAR(200), 
+	lucidity_level INTEGER, 
+	tags VARCHAR(200), 
+	is_public BOOLEAN, 
+	is_anonymous BOOLEAN, 
+	ai_analysis TEXT, 
+	sleep_duration FLOAT, 
+	sleep_quality INTEGER, 
+	bed_time TIMESTAMP WITHOUT TIME ZONE, 
+	wake_time TIMESTAMP WITHOUT TIME ZONE, 
+	sleep_interruptions INTEGER, 
+	sleep_position VARCHAR(50), 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:03,185 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00069s] {}
+
+2024-11-13 17:53:03,209 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE dream_group (
+	id SERIAL NOT NULL, 
+	name VARCHAR(100) NOT NULL, 
+	description TEXT, 
+	created_by INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(created_by) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:03,210 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00086s] {}
+
+2024-11-13 17:53:03,234 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE comment (
+	id SERIAL NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	dream_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(dream_id) REFERENCES dream (id)
+)
+
+
+
+2024-11-13 17:53:03,235 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00075s] {}
+
+2024-11-13 17:53:03,259 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE group_membership (
+	user_id INTEGER NOT NULL, 
+	group_id INTEGER NOT NULL, 
+	is_admin BOOLEAN, 
+	joined_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (user_id, group_id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(group_id) REFERENCES dream_group (id)
+)
+
+
+
+2024-11-13 17:53:03,260 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00075s] {}
+
+2024-11-13 17:53:03,283 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE forum_post (
+	id SERIAL NOT NULL, 
+	title VARCHAR(200) NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	group_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(group_id) REFERENCES dream_group (id)
+)
+
+
+
+2024-11-13 17:53:03,284 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00071s] {}
+
+2024-11-13 17:53:03,309 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE forum_reply (
+	id SERIAL NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	post_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(post_id) REFERENCES forum_post (id)
+)
+
+
+
+2024-11-13 17:53:03,311 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00125s] {}
+
+2024-11-13 17:53:03,334 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-13 17:53:03,402 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-13 17:53:03,403 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,404 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 5.053s ago] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,447 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,448 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 5.096s ago] {'table_name': 'user_activity', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,469 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,470 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 5.119s ago] {'table_name': 'dream', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,492 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,493 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 5.141s ago] {'table_name': 'comment', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,515 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,515 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 5.164s ago] {'table_name': 'dream_group', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,537 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,538 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 5.186s ago] {'table_name': 'group_membership', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,559 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,560 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 5.208s ago] {'table_name': 'forum_post', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,581 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,582 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 5.231s ago] {'table_name': 'forum_reply', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,604 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE forum_reply
+
+2024-11-13 17:53:03,605 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00104s] {}
+
+2024-11-13 17:53:03,627 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE forum_post
+
+2024-11-13 17:53:03,628 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00071s] {}
+
+2024-11-13 17:53:03,650 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE group_membership
+
+2024-11-13 17:53:03,651 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00061s] {}
+
+2024-11-13 17:53:03,672 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE comment
+
+2024-11-13 17:53:03,673 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00074s] {}
+
+2024-11-13 17:53:03,696 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE dream_group
+
+2024-11-13 17:53:03,697 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00091s] {}
+
+2024-11-13 17:53:03,719 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE dream
+
+2024-11-13 17:53:03,719 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00076s] {}
+
+2024-11-13 17:53:03,741 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE user_activity
+
+2024-11-13 17:53:03,742 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00093s] {}
+
+2024-11-13 17:53:03,764 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE "user"
+
+2024-11-13 17:53:03,765 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00099s] {}
+
+2024-11-13 17:53:03,786 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-13 17:53:03,829 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-13 17:53:03,830 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,831 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 5.48s ago] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,873 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,874 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 5.522s ago] {'table_name': 'user_activity', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,895 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,896 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 5.544s ago] {'table_name': 'dream', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,917 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,918 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 5.566s ago] {'table_name': 'comment', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,939 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,940 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 5.589s ago] {'table_name': 'dream_group', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,962 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,963 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 5.611s ago] {'table_name': 'group_membership', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:03,986 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:03,987 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 5.635s ago] {'table_name': 'forum_post', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:04,008 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:04,009 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 5.657s ago] {'table_name': 'forum_reply', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:04,031 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE "user" (
+	id SERIAL NOT NULL, 
+	username VARCHAR(64) NOT NULL, 
+	email VARCHAR(120) NOT NULL, 
+	password_hash VARCHAR(256), 
+	subscription_type VARCHAR(20), 
+	subscription_end_date TIMESTAMP WITHOUT TIME ZONE, 
+	monthly_ai_analysis_count INTEGER, 
+	last_analysis_reset TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	UNIQUE (username), 
+	UNIQUE (email)
+)
+
+
+
+2024-11-13 17:53:04,032 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00083s] {}
+
+2024-11-13 17:53:04,057 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE user_activity (
+	id SERIAL NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	activity_type VARCHAR(50) NOT NULL, 
+	description TEXT, 
+	target_type VARCHAR(50), 
+	target_id INTEGER, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	ip_address VARCHAR(45), 
+	user_agent VARCHAR(256), 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:04,057 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00067s] {}
+
+2024-11-13 17:53:04,082 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE dream (
+	id SERIAL NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	title VARCHAR(100) NOT NULL, 
+	content TEXT NOT NULL, 
+	date TIMESTAMP WITHOUT TIME ZONE, 
+	mood VARCHAR(50), 
+	sentiment_score FLOAT, 
+	sentiment_magnitude FLOAT, 
+	dominant_emotions VARCHAR(200), 
+	lucidity_level INTEGER, 
+	tags VARCHAR(200), 
+	is_public BOOLEAN, 
+	is_anonymous BOOLEAN, 
+	ai_analysis TEXT, 
+	sleep_duration FLOAT, 
+	sleep_quality INTEGER, 
+	bed_time TIMESTAMP WITHOUT TIME ZONE, 
+	wake_time TIMESTAMP WITHOUT TIME ZONE, 
+	sleep_interruptions INTEGER, 
+	sleep_position VARCHAR(50), 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:04,083 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00082s] {}
+
+2024-11-13 17:53:04,107 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE dream_group (
+	id SERIAL NOT NULL, 
+	name VARCHAR(100) NOT NULL, 
+	description TEXT, 
+	created_by INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(created_by) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:04,108 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00090s] {}
+
+2024-11-13 17:53:04,133 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE comment (
+	id SERIAL NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	dream_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(dream_id) REFERENCES dream (id)
+)
+
+
+
+2024-11-13 17:53:04,133 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00075s] {}
+
+2024-11-13 17:53:04,158 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE group_membership (
+	user_id INTEGER NOT NULL, 
+	group_id INTEGER NOT NULL, 
+	is_admin BOOLEAN, 
+	joined_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (user_id, group_id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(group_id) REFERENCES dream_group (id)
+)
+
+
+
+2024-11-13 17:53:04,158 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00078s] {}
+
+2024-11-13 17:53:04,181 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE forum_post (
+	id SERIAL NOT NULL, 
+	title VARCHAR(200) NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	group_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(group_id) REFERENCES dream_group (id)
+)
+
+
+
+2024-11-13 17:53:04,182 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00076s] {}
+
+2024-11-13 17:53:04,206 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE forum_reply (
+	id SERIAL NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	post_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(post_id) REFERENCES forum_post (id)
+)
+
+
+
+2024-11-13 17:53:04,207 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00086s] {}
+
+2024-11-13 17:53:04,231 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-13 17:53:04,361 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-13 17:53:04,363 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: INSERT INTO "user" (username, email, password_hash, subscription_type, subscription_end_date, monthly_ai_analysis_count, last_analysis_reset) VALUES (%(username)s, %(email)s, %(password_hash)s, %(subscription_type)s, %(subscription_end_date)s, %(monthly_ai_analysis_count)s, %(last_analysis_reset)s) RETURNING "user".id
+
+2024-11-13 17:53:04,363 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 4.751s ago] {'username': 'testuser', 'email': 'test@example.com', 'password_hash': 'scrypt:32768:8:1$YZH80oH56ZDmPXdt$f58dbb52c168d0f9663b4c1aa64407dc974b806593e2d8a8aec3114a21cb30dc27e8ab6cf23abcd1a0c50d79def528d6eb71a233fd83420e450e335f8d9a6a04', 'subscription_type': 'free', 'subscription_end_date': None, 'monthly_ai_analysis_count': 0, 'last_analysis_reset': datetime.datetime(2024, 11, 13, 17, 53, 4, 255504)}
+
+2024-11-13 17:53:04,408 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-13 17:53:04,736 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-13 17:53:04,737 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:04,737 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 6.386s ago] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:04,779 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:04,780 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 6.428s ago] {'table_name': 'user_activity', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:04,801 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:04,802 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 6.45s ago] {'table_name': 'dream', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:04,824 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:04,824 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 6.473s ago] {'table_name': 'comment', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:04,848 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:04,849 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 6.497s ago] {'table_name': 'dream_group', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:04,871 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:04,871 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 6.52s ago] {'table_name': 'group_membership', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:04,893 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:04,894 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 6.542s ago] {'table_name': 'forum_post', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:04,915 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:04,916 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 6.564s ago] {'table_name': 'forum_reply', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:04,938 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE forum_reply
+
+2024-11-13 17:53:04,938 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00063s] {}
+
+2024-11-13 17:53:04,960 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE forum_post
+
+2024-11-13 17:53:04,960 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00063s] {}
+
+2024-11-13 17:53:04,983 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE group_membership
+
+2024-11-13 17:53:04,983 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00059s] {}
+
+2024-11-13 17:53:05,005 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE comment
+
+2024-11-13 17:53:05,005 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00077s] {}
+
+2024-11-13 17:53:05,028 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE dream_group
+
+2024-11-13 17:53:05,029 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00071s] {}
+
+2024-11-13 17:53:05,051 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE dream
+
+2024-11-13 17:53:05,051 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00086s] {}
+
+2024-11-13 17:53:05,073 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE user_activity
+
+2024-11-13 17:53:05,074 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00070s] {}
+
+2024-11-13 17:53:05,096 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE "user"
+
+2024-11-13 17:53:05,096 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00075s] {}
+
+2024-11-13 17:53:05,118 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-13 17:53:05,162 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-13 17:53:05,163 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:05,164 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 6.812s ago] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:05,206 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:05,206 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 6.855s ago] {'table_name': 'user_activity', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:05,228 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:05,229 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 6.877s ago] {'table_name': 'dream', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:05,251 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:05,251 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 6.9s ago] {'table_name': 'comment', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:05,273 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:05,274 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 6.923s ago] {'table_name': 'dream_group', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:05,296 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:05,297 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 6.945s ago] {'table_name': 'group_membership', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:05,318 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:05,319 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 6.968s ago] {'table_name': 'forum_post', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:05,341 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:05,342 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 6.99s ago] {'table_name': 'forum_reply', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:05,364 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE "user" (
+	id SERIAL NOT NULL, 
+	username VARCHAR(64) NOT NULL, 
+	email VARCHAR(120) NOT NULL, 
+	password_hash VARCHAR(256), 
+	subscription_type VARCHAR(20), 
+	subscription_end_date TIMESTAMP WITHOUT TIME ZONE, 
+	monthly_ai_analysis_count INTEGER, 
+	last_analysis_reset TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	UNIQUE (username), 
+	UNIQUE (email)
+)
+
+
+
+2024-11-13 17:53:05,365 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00092s] {}
+
+2024-11-13 17:53:05,390 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE user_activity (
+	id SERIAL NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	activity_type VARCHAR(50) NOT NULL, 
+	description TEXT, 
+	target_type VARCHAR(50), 
+	target_id INTEGER, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	ip_address VARCHAR(45), 
+	user_agent VARCHAR(256), 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:05,391 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00100s] {}
+
+2024-11-13 17:53:05,416 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE dream (
+	id SERIAL NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	title VARCHAR(100) NOT NULL, 
+	content TEXT NOT NULL, 
+	date TIMESTAMP WITHOUT TIME ZONE, 
+	mood VARCHAR(50), 
+	sentiment_score FLOAT, 
+	sentiment_magnitude FLOAT, 
+	dominant_emotions VARCHAR(200), 
+	lucidity_level INTEGER, 
+	tags VARCHAR(200), 
+	is_public BOOLEAN, 
+	is_anonymous BOOLEAN, 
+	ai_analysis TEXT, 
+	sleep_duration FLOAT, 
+	sleep_quality INTEGER, 
+	bed_time TIMESTAMP WITHOUT TIME ZONE, 
+	wake_time TIMESTAMP WITHOUT TIME ZONE, 
+	sleep_interruptions INTEGER, 
+	sleep_position VARCHAR(50), 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:05,417 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00082s] {}
+
+2024-11-13 17:53:05,444 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE dream_group (
+	id SERIAL NOT NULL, 
+	name VARCHAR(100) NOT NULL, 
+	description TEXT, 
+	created_by INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(created_by) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:05,445 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00092s] {}
+
+2024-11-13 17:53:05,470 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE comment (
+	id SERIAL NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	dream_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(dream_id) REFERENCES dream (id)
+)
+
+
+
+2024-11-13 17:53:05,471 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00112s] {}
+
+2024-11-13 17:53:05,496 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE group_membership (
+	user_id INTEGER NOT NULL, 
+	group_id INTEGER NOT NULL, 
+	is_admin BOOLEAN, 
+	joined_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (user_id, group_id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(group_id) REFERENCES dream_group (id)
+)
+
+
+
+2024-11-13 17:53:05,497 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00089s] {}
+
+2024-11-13 17:53:05,520 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE forum_post (
+	id SERIAL NOT NULL, 
+	title VARCHAR(200) NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	group_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(group_id) REFERENCES dream_group (id)
+)
+
+
+
+2024-11-13 17:53:05,520 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00075s] {}
+
+2024-11-13 17:53:05,545 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE forum_reply (
+	id SERIAL NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	post_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(post_id) REFERENCES forum_post (id)
+)
+
+
+
+2024-11-13 17:53:05,546 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00090s] {}
+
+2024-11-13 17:53:05,571 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-13 17:53:05,693 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-13 17:53:05,695 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: INSERT INTO "user" (username, email, password_hash, subscription_type, subscription_end_date, monthly_ai_analysis_count, last_analysis_reset) VALUES (%(username)s, %(email)s, %(password_hash)s, %(subscription_type)s, %(subscription_end_date)s, %(monthly_ai_analysis_count)s, %(last_analysis_reset)s) RETURNING "user".id
+
+2024-11-13 17:53:05,696 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 6.083s ago] {'username': 'testuser', 'email': 'test@example.com', 'password_hash': 'scrypt:32768:8:1$o1alkiBee3Ezp8Jk$9d0302d2f563c826e293fd923b96daa4cbcfa510c91751c71e76d946b3615761a7fbdc1e271564eaf6a057b8f7a82c72c86cfee82023302891db71a04c2199cd', 'subscription_type': 'free', 'subscription_end_date': None, 'monthly_ai_analysis_count': 0, 'last_analysis_reset': datetime.datetime(2024, 11, 13, 17, 53, 5, 594946)}
+
+2024-11-13 17:53:05,739 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-13 17:53:05,927 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-13 17:53:05,928 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:05,929 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 7.577s ago] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:05,970 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:05,971 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 7.62s ago] {'table_name': 'user_activity', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:05,993 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:05,994 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 7.642s ago] {'table_name': 'dream', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:06,016 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:06,017 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 7.665s ago] {'table_name': 'comment', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:06,038 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:06,039 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 7.687s ago] {'table_name': 'dream_group', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:06,061 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:06,062 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 7.71s ago] {'table_name': 'group_membership', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:06,083 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:06,084 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 7.733s ago] {'table_name': 'forum_post', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:06,106 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:06,106 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 7.755s ago] {'table_name': 'forum_reply', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:06,128 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE forum_reply
+
+2024-11-13 17:53:06,130 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00163s] {}
+
+2024-11-13 17:53:06,151 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE forum_post
+
+2024-11-13 17:53:06,152 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00085s] {}
+
+2024-11-13 17:53:06,175 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE group_membership
+
+2024-11-13 17:53:06,175 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00093s] {}
+
+2024-11-13 17:53:06,197 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE comment
+
+2024-11-13 17:53:06,198 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00092s] {}
+
+2024-11-13 17:53:06,220 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE dream_group
+
+2024-11-13 17:53:06,221 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00088s] {}
+
+2024-11-13 17:53:06,243 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE dream
+
+2024-11-13 17:53:06,244 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00078s] {}
+
+2024-11-13 17:53:06,266 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE user_activity
+
+2024-11-13 17:53:06,266 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00077s] {}
+
+2024-11-13 17:53:06,288 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE "user"
+
+2024-11-13 17:53:06,289 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00072s] {}
+
+2024-11-13 17:53:06,310 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-13 17:53:06,353 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-13 17:53:06,354 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:06,355 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 8.003s ago] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:06,397 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:06,398 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 8.046s ago] {'table_name': 'user_activity', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:06,419 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:06,420 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 8.068s ago] {'table_name': 'dream', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:06,441 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:06,442 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 8.091s ago] {'table_name': 'comment', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:06,464 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:06,464 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 8.113s ago] {'table_name': 'dream_group', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:06,486 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:06,487 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 8.135s ago] {'table_name': 'group_membership', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:06,508 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:06,509 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 8.157s ago] {'table_name': 'forum_post', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:06,531 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:06,531 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 8.18s ago] {'table_name': 'forum_reply', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:06,553 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE "user" (
+	id SERIAL NOT NULL, 
+	username VARCHAR(64) NOT NULL, 
+	email VARCHAR(120) NOT NULL, 
+	password_hash VARCHAR(256), 
+	subscription_type VARCHAR(20), 
+	subscription_end_date TIMESTAMP WITHOUT TIME ZONE, 
+	monthly_ai_analysis_count INTEGER, 
+	last_analysis_reset TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	UNIQUE (username), 
+	UNIQUE (email)
+)
+
+
+
+2024-11-13 17:53:06,554 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00089s] {}
+
+2024-11-13 17:53:06,578 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE user_activity (
+	id SERIAL NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	activity_type VARCHAR(50) NOT NULL, 
+	description TEXT, 
+	target_type VARCHAR(50), 
+	target_id INTEGER, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	ip_address VARCHAR(45), 
+	user_agent VARCHAR(256), 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:06,579 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00089s] {}
+
+2024-11-13 17:53:06,605 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE dream (
+	id SERIAL NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	title VARCHAR(100) NOT NULL, 
+	content TEXT NOT NULL, 
+	date TIMESTAMP WITHOUT TIME ZONE, 
+	mood VARCHAR(50), 
+	sentiment_score FLOAT, 
+	sentiment_magnitude FLOAT, 
+	dominant_emotions VARCHAR(200), 
+	lucidity_level INTEGER, 
+	tags VARCHAR(200), 
+	is_public BOOLEAN, 
+	is_anonymous BOOLEAN, 
+	ai_analysis TEXT, 
+	sleep_duration FLOAT, 
+	sleep_quality INTEGER, 
+	bed_time TIMESTAMP WITHOUT TIME ZONE, 
+	wake_time TIMESTAMP WITHOUT TIME ZONE, 
+	sleep_interruptions INTEGER, 
+	sleep_position VARCHAR(50), 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:06,605 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00080s] {}
+
+2024-11-13 17:53:06,630 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE dream_group (
+	id SERIAL NOT NULL, 
+	name VARCHAR(100) NOT NULL, 
+	description TEXT, 
+	created_by INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(created_by) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:06,631 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00071s] {}
+
+2024-11-13 17:53:06,655 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE comment (
+	id SERIAL NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	dream_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(dream_id) REFERENCES dream (id)
+)
+
+
+
+2024-11-13 17:53:06,656 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00084s] {}
+
+2024-11-13 17:53:06,681 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE group_membership (
+	user_id INTEGER NOT NULL, 
+	group_id INTEGER NOT NULL, 
+	is_admin BOOLEAN, 
+	joined_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (user_id, group_id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(group_id) REFERENCES dream_group (id)
+)
+
+
+
+2024-11-13 17:53:06,690 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00973s] {}
+
+2024-11-13 17:53:07,005 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE forum_post (
+	id SERIAL NOT NULL, 
+	title VARCHAR(200) NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	group_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(group_id) REFERENCES dream_group (id)
+)
+
+
+
+2024-11-13 17:53:07,006 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00081s] {}
+
+2024-11-13 17:53:07,031 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE forum_reply (
+	id SERIAL NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	post_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(post_id) REFERENCES forum_post (id)
+)
+
+
+
+2024-11-13 17:53:07,032 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00078s] {}
+
+2024-11-13 17:53:07,056 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-13 17:53:07,181 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-13 17:53:07,182 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: INSERT INTO "user" (username, email, password_hash, subscription_type, subscription_end_date, monthly_ai_analysis_count, last_analysis_reset) VALUES (%(username)s, %(email)s, %(password_hash)s, %(subscription_type)s, %(subscription_end_date)s, %(monthly_ai_analysis_count)s, %(last_analysis_reset)s) RETURNING "user".id
+
+2024-11-13 17:53:07,183 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 7.57s ago] {'username': 'testuser', 'email': 'test@example.com', 'password_hash': 'scrypt:32768:8:1$TPQW3SkvCSRVZzpJ$f477c2fd5f70966f8cc0f011feece8d17c71d3c7ae6622feea962e90593c38ae2496f5e34d1dce918c93b7c4c68e3896688ee46570b81a530b2e97f0446ca97e', 'subscription_type': 'free', 'subscription_end_date': None, 'monthly_ai_analysis_count': 0, 'last_analysis_reset': datetime.datetime(2024, 11, 13, 17, 53, 7, 78855)}
+
+2024-11-13 17:53:07,226 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-13 17:53:07,430 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-13 17:53:07,431 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:07,432 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 9.08s ago] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:07,475 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:07,476 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 9.124s ago] {'table_name': 'user_activity', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:07,498 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:07,499 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 9.147s ago] {'table_name': 'dream', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:07,520 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:07,521 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 9.169s ago] {'table_name': 'comment', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:07,542 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:07,543 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 9.191s ago] {'table_name': 'dream_group', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:07,564 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:07,565 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 9.213s ago] {'table_name': 'group_membership', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:07,586 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:07,587 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 9.235s ago] {'table_name': 'forum_post', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:07,608 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:07,609 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 9.257s ago] {'table_name': 'forum_reply', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:07,630 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE forum_reply
+
+2024-11-13 17:53:07,631 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00060s] {}
+
+2024-11-13 17:53:07,652 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE forum_post
+
+2024-11-13 17:53:07,653 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00063s] {}
+
+2024-11-13 17:53:07,675 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE group_membership
+
+2024-11-13 17:53:07,676 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00072s] {}
+
+2024-11-13 17:53:07,697 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE comment
+
+2024-11-13 17:53:07,698 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00081s] {}
+
+2024-11-13 17:53:07,720 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE dream_group
+
+2024-11-13 17:53:07,720 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00065s] {}
+
+2024-11-13 17:53:07,742 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE dream
+
+2024-11-13 17:53:07,742 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00077s] {}
+
+2024-11-13 17:53:07,764 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE user_activity
+
+2024-11-13 17:53:07,766 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00223s] {}
+
+2024-11-13 17:53:07,788 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+DROP TABLE "user"
+
+2024-11-13 17:53:07,789 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00076s] {}
+
+2024-11-13 17:53:07,810 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-13 17:53:07,854 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-13 17:53:07,854 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:07,855 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 9.503s ago] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:07,897 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:07,898 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 9.546s ago] {'table_name': 'user_activity', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:07,920 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:07,920 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 9.569s ago] {'table_name': 'dream', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:07,942 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:07,943 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 9.591s ago] {'table_name': 'comment', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:07,964 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:07,965 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 9.613s ago] {'table_name': 'dream_group', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:07,987 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:07,987 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 9.635s ago] {'table_name': 'group_membership', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:08,008 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:08,009 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 9.657s ago] {'table_name': 'forum_post', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:08,030 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:08,031 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 9.68s ago] {'table_name': 'forum_reply', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:08,053 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE "user" (
+	id SERIAL NOT NULL, 
+	username VARCHAR(64) NOT NULL, 
+	email VARCHAR(120) NOT NULL, 
+	password_hash VARCHAR(256), 
+	subscription_type VARCHAR(20), 
+	subscription_end_date TIMESTAMP WITHOUT TIME ZONE, 
+	monthly_ai_analysis_count INTEGER, 
+	last_analysis_reset TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	UNIQUE (username), 
+	UNIQUE (email)
+)
+
+
+
+2024-11-13 17:53:08,054 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00069s] {}
+
+2024-11-13 17:53:08,078 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE user_activity (
+	id SERIAL NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	activity_type VARCHAR(50) NOT NULL, 
+	description TEXT, 
+	target_type VARCHAR(50), 
+	target_id INTEGER, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	ip_address VARCHAR(45), 
+	user_agent VARCHAR(256), 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:08,078 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00078s] {}
+
+2024-11-13 17:53:08,103 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE dream (
+	id SERIAL NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	title VARCHAR(100) NOT NULL, 
+	content TEXT NOT NULL, 
+	date TIMESTAMP WITHOUT TIME ZONE, 
+	mood VARCHAR(50), 
+	sentiment_score FLOAT, 
+	sentiment_magnitude FLOAT, 
+	dominant_emotions VARCHAR(200), 
+	lucidity_level INTEGER, 
+	tags VARCHAR(200), 
+	is_public BOOLEAN, 
+	is_anonymous BOOLEAN, 
+	ai_analysis TEXT, 
+	sleep_duration FLOAT, 
+	sleep_quality INTEGER, 
+	bed_time TIMESTAMP WITHOUT TIME ZONE, 
+	wake_time TIMESTAMP WITHOUT TIME ZONE, 
+	sleep_interruptions INTEGER, 
+	sleep_position VARCHAR(50), 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:08,103 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00074s] {}
+
+2024-11-13 17:53:08,127 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE dream_group (
+	id SERIAL NOT NULL, 
+	name VARCHAR(100) NOT NULL, 
+	description TEXT, 
+	created_by INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(created_by) REFERENCES "user" (id)
+)
+
+
+
+2024-11-13 17:53:08,128 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00097s] {}
+
+2024-11-13 17:53:08,153 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE comment (
+	id SERIAL NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	dream_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(dream_id) REFERENCES dream (id)
+)
+
+
+
+2024-11-13 17:53:08,153 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00061s] {}
+
+2024-11-13 17:53:08,182 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE group_membership (
+	user_id INTEGER NOT NULL, 
+	group_id INTEGER NOT NULL, 
+	is_admin BOOLEAN, 
+	joined_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (user_id, group_id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(group_id) REFERENCES dream_group (id)
+)
+
+
+
+2024-11-13 17:53:08,183 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00053s] {}
+
+2024-11-13 17:53:08,205 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE forum_post (
+	id SERIAL NOT NULL, 
+	title VARCHAR(200) NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	group_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(group_id) REFERENCES dream_group (id)
+)
+
+
+
+2024-11-13 17:53:08,206 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00089s] {}
+
+2024-11-13 17:53:08,230 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: 
+CREATE TABLE forum_reply (
+	id SERIAL NOT NULL, 
+	content TEXT NOT NULL, 
+	user_id INTEGER NOT NULL, 
+	post_id INTEGER NOT NULL, 
+	created_at TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(user_id) REFERENCES "user" (id), 
+	FOREIGN KEY(post_id) REFERENCES forum_post (id)
+)
+
+
+
+2024-11-13 17:53:08,231 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [no key 0.00071s] {}
+
+2024-11-13 17:53:08,255 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-13 17:53:08,380 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-13 17:53:08,382 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: INSERT INTO "user" (username, email, password_hash, subscription_type, subscription_end_date, monthly_ai_analysis_count, last_analysis_reset) VALUES (%(username)s, %(email)s, %(password_hash)s, %(subscription_type)s, %(subscription_end_date)s, %(monthly_ai_analysis_count)s, %(last_analysis_reset)s) RETURNING "user".id
+
+2024-11-13 17:53:08,382 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 8.77s ago] {'username': 'testuser', 'email': 'test@example.com', 'password_hash': 'scrypt:32768:8:1$uVCb0CwvNzflcq1P$3bcb44dc30bdb4aff332ef8528a3c81e68f0de3f133bf24f0f410d72f0093e39bda54b738ec33d753845ed710aeb54687bb0d16711e4c916c2007e6d0437f361', 'subscription_type': 'free', 'subscription_end_date': None, 'monthly_ai_analysis_count': 0, 'last_analysis_reset': datetime.datetime(2024, 11, 13, 17, 53, 8, 278497)}
+
+2024-11-13 17:53:08,426 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: COMMIT
+
+2024-11-13 17:53:08,728 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: BEGIN (implicit)
+
+2024-11-13 17:53:08,729 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:08,730 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 10.38s ago] {'table_name': 'user', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:08,772 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:08,773 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 10.42s ago] {'table_name': 'user_activity', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+
+2024-11-13 17:53:08,795 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: SELECT pg_catalog.pg_class.relname 
+FROM pg_catalog.pg_class JOIN pg_catalog.pg_namespace ON pg_catalog.pg_namespace.oid = pg_catalog.pg_class.relnamespace 
+WHERE pg_catalog.pg_class.relname = %(table_name)s AND pg_catalog.pg_class.relkind = ANY (ARRAY[%(param_1)s, %(param_2)s, %(param_3)s, %(param_4)s, %(param_5)s]) AND pg_catalog.pg_table_is_visible(pg_catalog.pg_class.oid) AND pg_catalog.pg_namespace.nspname != %(nspname_1)s
+
+2024-11-13 17:53:08,796 - - - None - GET http://localhost.localdomain/
+Level: INFO
+Module: base
+Message: [cached since 10.44s ago] {'table_name': 'dream', 'param_1': 'r', 'param_2': 'p', 'param_3': 'f', 'param_4': 'v', 'param_5': 'm', 'nspname_1': 'pg_catalog'}
+

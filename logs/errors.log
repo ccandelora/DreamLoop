@@ -1318,3 +1318,83 @@ Level: ERROR
 Module: logging_config
 Message: Application Error: {'timestamp': '2024-11-13T17:49:25.772291', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-13T17:49:25.772272'}, 'url': 'http://localhost/', 'method': 'GET', 'headers': {'Host': 'localhost'}, 'remote_addr': None}
 
+2024-11-13 17:50:56,724 - - - 127.0.0.1 - POST http://localhost.localdomain/login
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-13 17:50:56,724 - - - 127.0.0.1 - POST http://localhost.localdomain/login
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-13 17:50:56,837 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-13 17:50:56,837 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-13 17:50:57,042 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-13 17:50:57,042 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-13 17:50:58,780 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-13 17:50:58,780 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-13 17:50:58,878 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-13 17:50:58,878 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-13 17:50:59,041 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-13 17:50:59,041 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-13 17:51:12,361 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-13T17:51:12.361675', 'error_type': 'ValueError', 'error_message': 'Test error', 'traceback': 'NoneType: None\n', 'context': {'test': 'context'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-13 17:51:12,361 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-13T17:51:12.361675', 'error_type': 'ValueError', 'error_message': 'Test error', 'traceback': 'NoneType: None\n', 'context': {'test': 'context'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-13 17:51:12,363 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-13T17:51:12.363009', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-13T17:51:12.362991'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-13 17:51:12,363 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-13T17:51:12.363009', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-13T17:51:12.362991'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
