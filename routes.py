@@ -247,6 +247,31 @@ def register_routes(app):
             flash('An error occurred while joining the group')
         return redirect(url_for('dream_group', group_id=group_id))
 
+    @app.route('/community')
+    @login_required
+    def community_dreams():
+        """View community shared dreams."""
+        try:
+            track_user_activity(
+                current_user.id,
+                ACTIVITY_TYPES['COMMUNITY_DREAMS_VIEW'],
+                description="Viewed community dreams"
+            )
+            
+            # Get all public dreams excluding user's own dreams
+            dreams = Dream.query.filter_by(is_public=True)\
+                .filter(Dream.user_id != current_user.id)\
+                .order_by(Dream.date.desc())\
+                .all()
+                
+            logger.info(f"Successfully fetched {len(dreams)} community dreams for user {current_user.id}")
+            return render_template('community_dreams.html', dreams=dreams)
+            
+        except Exception as e:
+            logger.error(f"Error viewing community dreams: {str(e)}")
+            flash('An error occurred while loading community dreams')
+            return redirect(url_for('index'))
+    
     @app.route('/subscription')
     @login_required
     def subscription():
