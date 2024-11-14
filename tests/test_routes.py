@@ -2,6 +2,9 @@ import pytest
 from flask import url_for
 from flask_login import current_user
 from models import User, Dream, Comment, DreamGroup, ForumPost
+import logging
+
+logger = logging.getLogger(__name__)
 
 def test_index_route(client):
     """Test the index route."""
@@ -59,10 +62,12 @@ def test_dream_creation(authenticated_client, test_user):
     response = authenticated_client.post('/dream/new', data={
         'title': 'New Dream',
         'content': 'Dream content',
-        'is_public': True,
+        'is_public': 'true',  # Changed to string as form data
         'mood': 'happy',
         'tags': 'test,dream',
-        'lucidity_level': '3'
+        'lucidity_level': '3',
+        'sleep_quality': '4',
+        'sleep_position': 'back'
     }, follow_redirects=True)
     assert response.status_code == 200
     assert b'Dream logged successfully!' in response.data
@@ -94,6 +99,7 @@ def test_group_creation(authenticated_client):
         'description': 'Test description'
     }, follow_redirects=True)
     assert response.status_code == 200
+    assert b'Group created successfully!' in response.data
 
 def test_protected_routes(client):
     """Test routes that require authentication."""

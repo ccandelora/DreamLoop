@@ -26,4 +26,13 @@ dependencies = [
     "click>=8.1.7",
     "schedule>=1.2.2",
     "gzip-reader>=0.1",
+    "flask-testing",
+    "flask-wtf",
+    "pytest-xdist",
+    "pytest-timeout",
+    "coverage",
+    "faker>=32.1.0",
+    "pytest-randomly>=3.16.0",
+    "pytest-env",
+    "freezegun",
 ]

@@ -1,152 +1,312 @@
 import pytest
-from app import create_app
-from extensions import db
-from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply
-from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine, text, inspect
+from sqlalchemy.orm import scoped_session, sessionmaker
+import logging
 import os
+from app import create_app, db as _db
+from models import User, Dream, DreamGroup, ForumPost, UserActivity
+from datetime import datetime, timedelta
+from sqlalchemy.exc import SQLAlchemyError, ProgrammingError, OperationalError
+from urllib.parse import urlparse, urlunparse
+
+logger = logging.getLogger(__name__)
+
+def create_test_database(db_url):
+    """Create a test database if it doesn't exist."""
+    try:
+        parsed = urlparse(db_url)
+        base_db_name = parsed.path.strip('/')
+        test_db_name = f"{base_db_name}_test" if not base_db_name.endswith('_test') else base_db_name
+
+        # Connect to default database for admin operations
+        admin_url = urlunparse((
+            parsed.scheme,
+            parsed.netloc,
+            '/postgres',
+            '',
+            parsed.query,
+            ''
+        ))
+
+        engine = create_engine(admin_url)
+        
+        with engine.connect() as conn:
+            conn.execution_options(isolation_level="AUTOCOMMIT")
+            
+            # Check if database exists
+            result = conn.execute(text(
+                "SELECT 1 FROM pg_database WHERE datname = :db_name"
+            ), {"db_name": test_db_name})
+            
+            if not result.scalar():
+                try:
+                    conn.execute(text(f'CREATE DATABASE "{test_db_name}"'))
+                    logger.info(f"Created test database: {test_db_name}")
+                except Exception as e:
+                    logger.error(f"Error creating database {test_db_name}: {str(e)}")
+                    raise
+
+        # Return complete test database URL
+        test_url = urlunparse((
+            parsed.scheme,
+            parsed.netloc,
+            f'/{test_db_name}',
+            '',
+            parsed.query,
+            ''
+        ))
+        return test_url
+
+    except Exception as e:
+        logger.error(f"Error creating test database: {str(e)}")
+        raise
+
+def reset_db_state(connection):
+    """Reset database state between tests."""
+    try:
+        # Get all tables
+        result = connection.execute(text("""
+            SELECT tablename 
+            FROM pg_tables 
+            WHERE schemaname = 'public'
+            ORDER BY tablename
+        """))
+        tables = [row[0] for row in result]
+        
+        # Start a transaction
+        with connection.begin():
+            # Disable triggers temporarily
+            connection.execute(text("SET session_replication_role = 'replica'"))
+            
+            # Truncate all tables
+            for table in tables:
+                connection.execute(text(f'TRUNCATE TABLE "{table}" CASCADE'))
+            
+            # Reset sequences
+            result = connection.execute(text("""
+                SELECT sequence_name 
+                FROM information_schema.sequences 
+                WHERE sequence_schema = 'public'
+            """))
+            sequences = [row[0] for row in result]
+            
+            for sequence in sequences:
+                try:
+                    connection.execute(text(f'ALTER SEQUENCE "{sequence}" RESTART WITH 1'))
+                except Exception as e:
+                    logger.warning(f"Could not reset sequence {sequence}: {str(e)}")
+            
+            # Re-enable triggers
+            connection.execute(text("SET session_replication_role = 'origin'"))
+    
+    except Exception as e:
+        logger.error(f"Error resetting database state: {str(e)}")
+        raise
+
+def verify_db_schema(db):
+    """Verify database schema integrity."""
+    try:
+        inspector = inspect(db.engine)
+        existing_tables = set(inspector.get_table_names())
+        
+        required_tables = {
+            'user', 'dream', 'comment', 'dream_group', 'group_membership',
+            'forum_post', 'forum_reply', 'user_activity'
+        }
+        
+        missing_tables = required_tables - existing_tables
+        if missing_tables:
+            raise Exception(f"Missing required tables: {missing_tables}")
+        
+        logger.info("Database schema verified successfully")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Schema verification failed: {str(e)}")
+        raise
 
 @pytest.fixture(scope='session')
 def app():
     """Create and configure a test Flask application."""
-    # Use a separate test database
-    if not os.environ.get('DATABASE_URL'):
-        raise ValueError("DATABASE_URL environment variable is not set")
+    try:
+        # Get database URL and ensure proper format
+        db_url = os.environ.get('DATABASE_URL')
+        if not db_url:
+            db_url = f"postgresql://{os.environ['PGUSER']}:{os.environ['PGPASSWORD']}@{os.environ['PGHOST']}:{os.environ['PGPORT']}/{os.environ['PGDATABASE']}"
         
-    test_db_url = os.environ.get('DATABASE_URL').replace('dreamshare', 'dreamshare_test')
-    os.environ['TEST_DATABASE_URL'] = test_db_url
-    
-    app = create_app()
-    app.config.update({
-        'TESTING': True,
-        'WTF_CSRF_ENABLED': False,
-        'SQLALCHEMY_DATABASE_URI': test_db_url,
-        'SERVER_NAME': 'localhost.localdomain'
-    })
-    
-    yield app
-    
-    # Clean up after all tests
+        if db_url.startswith('postgres://'):
+            db_url = db_url.replace('postgres://', 'postgresql://', 1)
+        
+        # Create test database
+        test_db_url = create_test_database(db_url)
+        
+        # Create and configure app
+        app = create_app()
+        app.config.update({
+            'TESTING': True,
+            'SQLALCHEMY_DATABASE_URI': test_db_url,
+            'SQLALCHEMY_TRACK_MODIFICATIONS': False,
+            'WTF_CSRF_ENABLED': False,
+            'SERVER_NAME': 'localhost.localdomain'
+        })
+        
+        return app
+        
+    except Exception as e:
+        logger.error(f"Error creating test application: {str(e)}")
+        raise
+
+@pytest.fixture(scope='session')
+def db(app):
+    """Session-wide test database."""
     with app.app_context():
-        db.session.remove()
-        db.drop_all()
+        try:
+            # Drop and recreate all tables
+            _db.drop_all()
+            _db.create_all()
+            
+            # Verify schema
+            verify_db_schema(_db)
+            yield _db
+            
+        except Exception as e:
+            logger.error(f"Database setup failed: {str(e)}")
+            raise
+        finally:
+            _db.session.remove()
+            _db.drop_all()
 
-@pytest.fixture(autouse=True)
-def setup_database(app):
-    """Set up fresh database tables before each test."""
-    with app.app_context():
-        # Drop all tables
-        db.drop_all()
-        # Create all tables
-        db.create_all()
-        yield
-        # Clean up after test
-        db.session.remove()
+@pytest.fixture(scope='function')
+def session(app, db):
+    """Create a new database session for each test."""
+    connection = db.engine.connect()
+    transaction = connection.begin()
+    
+    session_factory = sessionmaker(bind=connection)
+    session = scoped_session(session_factory)
+    
+    db.session = session
+    
+    try:
+        # Reset database state before test
+        reset_db_state(connection)
+        yield session
+        
+    except Exception as e:
+        logger.error(f"Session setup failed: {str(e)}")
+        raise
+    finally:
+        session.close()
+        transaction.rollback()
+        connection.close()
 
-@pytest.fixture
-def client(app):
-    """Test client for the Flask application."""
-    return app.test_client()
-
-@pytest.fixture
-def runner(app):
-    """Test CLI runner for the Flask application."""
-    return app.test_cli_runner()
-
-@pytest.fixture
-def test_user(app):
+@pytest.fixture(scope='function')
+def test_user(session):
     """Create a test user."""
-    with app.app_context():
-        user = User(username='testuser', email='test@example.com')
+    try:
+        user = User(
+            username='testuser',
+            email='test@example.com',
+            subscription_type='free'
+        )
         user.set_password('testpass')
-        db.session.add(user)
-        db.session.commit()
+        session.add(user)
+        session.commit()
         return user
+    except SQLAlchemyError as e:
+        session.rollback()
+        logger.error(f"Error creating test user: {str(e)}")
+        raise
 
-@pytest.fixture
-def test_user_2(app):
+@pytest.fixture(scope='function')
+def test_user_2(session):
     """Create a second test user."""
-    with app.app_context():
-        user = User(username='testuser2', email='test2@example.com')
+    try:
+        user = User(
+            username='testuser2',
+            email='test2@example.com',
+            subscription_type='free'
+        )
         user.set_password('testpass2')
-        db.session.add(user)
-        db.session.commit()
+        session.add(user)
+        session.commit()
         return user
+    except SQLAlchemyError as e:
+        session.rollback()
+        logger.error(f"Error creating test user: {str(e)}")
+        raise
 
-@pytest.fixture
-def test_dream(app, test_user):
+@pytest.fixture(scope='function')
+def test_dream(session, test_user):
     """Create a test dream."""
-    with app.app_context():
+    try:
         dream = Dream(
             user_id=test_user.id,
             title='Test Dream',
             content='Test dream content',
-            date=datetime.utcnow(),
-            mood='happy',
-            tags='test,dream',
-            is_public=True,
-            lucidity_level=3,
-            sleep_quality=4,
-            sleep_position='back'
+            is_public=True
         )
-        db.session.add(dream)
-        db.session.commit()
+        dream.date = datetime.utcnow()
+        dream.mood = 'happy'
+        dream.tags = 'test,dream'
+        dream.lucidity_level = 3
+        session.add(dream)
+        session.commit()
         return dream
+    except SQLAlchemyError as e:
+        session.rollback()
+        logger.error(f"Error creating test dream: {str(e)}")
+        raise
 
-@pytest.fixture
-def test_comment(app, test_user, test_dream):
-    """Create a test comment."""
-    with app.app_context():
-        comment = Comment(
-            content='Test comment',
-            user_id=test_user.id,
-            dream_id=test_dream.id,
-            created_at=datetime.utcnow()
-        )
-        db.session.add(comment)
-        db.session.commit()
-        return comment
-
-@pytest.fixture
-def test_group(app, test_user):
+@pytest.fixture(scope='function')
+def test_group(session, test_user):
     """Create a test dream group."""
-    with app.app_context():
+    try:
         group = DreamGroup(
             name='Test Group',
-            description='Test description',
-            created_by=test_user.id,
-            created_at=datetime.utcnow()
+            description='Test group description',
+            created_by=test_user.id
         )
-        db.session.add(group)
-        db.session.commit()
-        
-        membership = GroupMembership(
-            user_id=test_user.id,
-            group_id=group.id,
-            is_admin=True,
-            joined_at=datetime.utcnow()
-        )
-        db.session.add(membership)
-        db.session.commit()
+        session.add(group)
+        session.commit()
         return group
+    except SQLAlchemyError as e:
+        session.rollback()
+        logger.error(f"Error creating test group: {str(e)}")
+        raise
 
-@pytest.fixture
-def test_forum_post(app, test_user, test_group):
+@pytest.fixture(scope='function')
+def test_forum_post(session, test_user, test_group):
     """Create a test forum post."""
-    with app.app_context():
+    try:
         post = ForumPost(
             title='Test Post',
-            content='Test content',
+            content='Test post content',
             user_id=test_user.id,
-            group_id=test_group.id,
-            created_at=datetime.utcnow()
+            group_id=test_group.id
         )
-        db.session.add(post)
-        db.session.commit()
+        session.add(post)
+        session.commit()
         return post
+    except SQLAlchemyError as e:
+        session.rollback()
+        logger.error(f"Error creating test forum post: {str(e)}")
+        raise
 
-@pytest.fixture
+@pytest.fixture(scope='function')
+def client(app):
+    """Test client for the Flask application."""
+    return app.test_client()
+
+@pytest.fixture(scope='function')
 def authenticated_client(client, test_user):
-    """Create an authenticated client session."""
-    with client.session_transaction() as session:
-        session['_user_id'] = str(test_user.id)
-    return client
+    """Create an authenticated test client."""
+    with client:
+        response = client.post('/login', data={
+            'username': test_user.username,
+            'password': 'testpass'
+        }, follow_redirects=True)
+        if response.status_code != 200 or b'Invalid username or password' in response.data:
+            raise Exception("Failed to authenticate test client")
+        yield client

@@ -82,11 +82,12 @@ class Dream(db.Model):
     # Relationships
     comments = db.relationship('Comment', backref='dream', lazy='dynamic', cascade='all, delete-orphan')
 
-    def __init__(self, user_id=None, title=None, content=None):
+    def __init__(self, user_id=None, title=None, content=None, is_public=False):
         self.user_id = user_id
         self.title = title
         self.content = content
         self.date = datetime.utcnow()
+        self.is_public = is_public
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
