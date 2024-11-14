@@ -30373,3 +30373,18 @@ Traceback (most recent call last):
   File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/werkzeug/routing/map.py", line 924, in build
     raise BuildError(endpoint, values, method, self)
 werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'dream_new'. Did you mean 'register' instead?
+2024-11-14 20:34:32,543 - - - 172.31.196.35 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 20:34:32,567 - - - 172.31.196.35 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 20:34:32,972 - - - 172.31.196.35 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
