@@ -26563,3 +26563,2051 @@ Level: ERROR
 Module: conftest
 Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
 
+2024-11-14 13:53:30,175 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 13:53:30,175 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 13:53:30,263 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 13:53:30,263 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 13:53:30,415 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 13:53:30,415 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 13:53:30,548 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 13:53:30,548 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 13:53:31,029 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:53:31.029614', 'error_type': 'ValueError', 'error_message': 'Test error', 'traceback': 'NoneType: None\n', 'context': {'test': 'context'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:53:31,029 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:53:31.029614', 'error_type': 'ValueError', 'error_message': 'Test error', 'traceback': 'NoneType: None\n', 'context': {'test': 'context'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:53:31,031 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:53:31.031270', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-14T13:53:31.031251'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:53:31,031 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:53:31.031270', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-14T13:53:31.031251'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:54:18,606 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:18,606 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:18,608 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:18,608 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:19,953 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:19,953 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:19,954 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:19,954 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:20,752 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:20,752 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:20,755 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:20,755 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:21,949 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:21,949 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:22,007 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:22,007 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:23,147 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:23,147 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:23,151 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:23,151 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:23,934 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: This Connection is closed
+
+2024-11-14 13:54:23,934 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: This Connection is closed
+
+2024-11-14 13:54:23,948 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: This Connection is closed
+
+2024-11-14 13:54:23,948 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: This Connection is closed
+
+2024-11-14 13:54:24,101 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:24,101 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:24,103 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:24,103 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:25,025 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:25,025 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:25,026 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:25,026 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:25,838 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:25,838 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:25,840 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:25,840 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:26,635 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:26,635 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:26,638 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:26,638 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:27,555 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:27,555 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:27,556 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:27,556 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:28,386 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:28,386 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:28,387 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:28,387 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:29,181 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:29,181 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:29,182 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:29,182 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:29,865 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:54:29.865286', 'error_type': 'ValueError', 'error_message': 'Test error', 'traceback': 'NoneType: None\n', 'context': {'test': 'context'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:54:29,865 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:54:29.865286', 'error_type': 'ValueError', 'error_message': 'Test error', 'traceback': 'NoneType: None\n', 'context': {'test': 'context'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:54:29,868 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:54:29.868016', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-14T13:54:29.868000'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:54:29,868 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:54:29.868016', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-14T13:54:29.868000'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:54:30,008 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:30,008 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:30,016 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:30,016 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:30,722 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:30,722 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:30,724 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:30,724 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:31,528 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:31,528 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:31,530 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:31,530 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:32,506 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:32,506 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:32,508 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:32,508 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:33,313 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:33,313 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:33,315 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:33,315 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:34,227 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:34,227 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:34,228 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:34,228 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:35,073 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:35,073 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:35,075 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:35,075 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:35,827 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:35,827 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:35,829 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:35,829 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:36,624 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:36,624 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:36,625 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:36,625 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:37,326 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:37,326 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:37,328 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:54:37,328 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:07,917 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:55:07.917451', 'error_type': 'ValueError', 'error_message': 'Test error', 'traceback': 'NoneType: None\n', 'context': {'test': 'context'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:55:07,917 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:55:07.917451', 'error_type': 'ValueError', 'error_message': 'Test error', 'traceback': 'NoneType: None\n', 'context': {'test': 'context'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:55:07,924 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:55:07.924031', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-14T13:55:07.924012'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:55:07,924 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:55:07.924031', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-14T13:55:07.924012'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:55:09,019 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:09,019 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:09,021 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:09,021 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:09,791 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:09,791 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:09,792 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:09,792 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:10,324 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:10,324 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:10,325 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:10,325 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:10,972 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:10,972 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:10,974 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:10,974 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:11,622 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:11,622 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:11,623 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:11,623 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:12,154 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:12,154 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:12,156 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:12,156 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:12,763 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:12,763 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:12,764 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:12,764 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:13,422 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:13,422 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:13,423 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:13,423 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:13,956 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:13,956 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:13,961 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:13,961 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:14,742 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: This Connection is closed
+
+2024-11-14 13:55:14,742 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: This Connection is closed
+
+2024-11-14 13:55:14,748 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: This Connection is closed
+
+2024-11-14 13:55:14,748 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: This Connection is closed
+
+2024-11-14 13:55:14,847 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:14,847 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:14,849 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:14,849 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:15,457 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:15,457 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:15,459 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:15,459 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:15,975 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:15,975 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:15,976 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:15,976 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:16,639 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:16,639 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:16,641 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:16,641 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:17,190 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:17,190 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:17,192 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:17,192 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:17,830 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:17,830 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:17,832 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:17,832 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:18,492 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:18,492 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:18,494 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:18,494 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:19,044 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:19,044 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:19,045 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:19,045 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:19,698 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:19,698 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:19,700 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:19,700 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:20,422 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:20,422 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:20,424 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:20,424 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:20,908 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:20,908 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:20,910 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:20,910 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:21,475 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:21,475 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:21,477 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:21,477 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:22,102 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:22,102 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:22,103 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:22,103 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: (psycopg2.errors.InsufficientPrivilege) permission denied to set parameter "session_replication_role"
+
+[SQL: SET session_replication_role = 'replica']
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 13:55:58,141 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,141 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,144 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,144 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,351 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,351 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,353 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,353 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,559 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:55:58.559075', 'error_type': 'ValueError', 'error_message': 'Test error', 'traceback': 'NoneType: None\n', 'context': {'test': 'context'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:55:58,559 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:55:58.559075', 'error_type': 'ValueError', 'error_message': 'Test error', 'traceback': 'NoneType: None\n', 'context': {'test': 'context'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:55:58,560 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:55:58.560504', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-14T13:55:58.560489'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:55:58,560 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:55:58.560504', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-14T13:55:58.560489'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:55:58,568 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,568 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,569 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,569 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,668 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,668 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,669 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,669 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,762 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,762 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,764 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,764 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,849 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,849 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,851 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:55:58,851 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:55:59,448 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 13:55:59,448 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 13:55:59,537 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 13:55:59,537 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 13:55:59,709 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 13:55:59,709 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 13:55:59,853 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:55:59,853 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:55:59,854 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:55:59,854 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:00,366 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:00,366 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:00,368 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:00,368 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:00,585 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:00,585 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:00,586 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:00,586 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:00,682 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 13:56:00,682 - - - 127.0.0.1 - GET http://localhost.localdomain/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 13:56:00,832 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:00,832 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:00,835 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:00,835 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:00,932 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:00,932 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:00,934 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:00,934 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,023 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,023 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,025 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,025 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,228 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,228 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,229 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,229 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,316 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,316 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,318 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,318 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,406 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,406 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,408 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,408 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,507 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,507 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,508 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,508 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,725 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,725 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,728 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,728 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,827 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,827 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,828 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,828 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,927 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,927 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,928 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:01,928 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:02,020 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:02,020 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:02,021 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:02,021 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:02,234 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:02,234 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:02,235 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:02,235 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:02,330 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:02,330 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:56:02,331 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:56:02,331 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+

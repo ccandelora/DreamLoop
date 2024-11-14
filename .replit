@@ -198,7 +198,7 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python -m pytest -v tests/test_integration.py -s"
+args = "python -m pytest -v --tb=short"
 
 [[workflows.workflow]]
 name = "Scheduled Backup"

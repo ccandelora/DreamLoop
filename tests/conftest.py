@@ -62,29 +62,28 @@ def create_test_database(db_url):
         logger.error(f"Error creating test database: {str(e)}")
         raise
 
-def reset_db_state(connection):
+def reset_db_state(session):
     """Reset database state between tests."""
     try:
-        # Get all tables
-        result = connection.execute(text("""
-            SELECT tablename 
-            FROM pg_tables 
-            WHERE schemaname = 'public'
-            ORDER BY tablename
-        """))
-        tables = [row[0] for row in result]
-        
-        # Start a transaction
-        with connection.begin():
+        with session.begin():
+            # Get all tables
+            result = session.execute(text("""
+                SELECT tablename 
+                FROM pg_tables 
+                WHERE schemaname = 'public'
+                ORDER BY tablename
+            """))
+            tables = [row[0] for row in result]
+            
             # Disable triggers temporarily
-            connection.execute(text("SET session_replication_role = 'replica'"))
+            session.execute(text("SET session_replication_role = 'replica'"))
             
             # Truncate all tables
             for table in tables:
-                connection.execute(text(f'TRUNCATE TABLE "{table}" CASCADE'))
+                session.execute(text(f'TRUNCATE TABLE "{table}" CASCADE'))
             
             # Reset sequences
-            result = connection.execute(text("""
+            result = session.execute(text("""
                 SELECT sequence_name 
                 FROM information_schema.sequences 
                 WHERE sequence_schema = 'public'
@@ -93,12 +92,12 @@ def reset_db_state(connection):
             
             for sequence in sequences:
                 try:
-                    connection.execute(text(f'ALTER SEQUENCE "{sequence}" RESTART WITH 1'))
+                    session.execute(text(f'ALTER SEQUENCE "{sequence}" RESTART WITH 1'))
                 except Exception as e:
                     logger.warning(f"Could not reset sequence {sequence}: {str(e)}")
             
             # Re-enable triggers
-            connection.execute(text("SET session_replication_role = 'origin'"))
+            session.execute(text("SET session_replication_role = 'origin'"))
     
     except Exception as e:
         logger.error(f"Error resetting database state: {str(e)}")
@@ -162,14 +161,10 @@ def db(app):
     """Session-wide test database."""
     with app.app_context():
         try:
-            # Drop and recreate all tables
             _db.drop_all()
             _db.create_all()
-            
-            # Verify schema
             verify_db_schema(_db)
             yield _db
-            
         except Exception as e:
             logger.error(f"Database setup failed: {str(e)}")
             raise
@@ -180,26 +175,40 @@ def db(app):
 @pytest.fixture(scope='function')
 def session(app, db):
     """Create a new database session for each test."""
-    connection = db.engine.connect()
-    transaction = connection.begin()
+    # Configure session factory with proper isolation level
+    session_factory = sessionmaker(
+        bind=db.engine,
+        expire_on_commit=False,
+    )
     
-    session_factory = sessionmaker(bind=connection)
-    session = scoped_session(session_factory)
+    # Create a scoped session
+    Session = scoped_session(session_factory)
     
-    db.session = session
+    # Create new session
+    session = Session()
     
     try:
-        # Reset database state before test
-        reset_db_state(connection)
-        yield session
-        
+        # Begin a nested transaction
+        with session.begin_nested():
+            # Reset database state
+            reset_db_state(session)
+            
+            # Make session available to app
+            db.session = session
+            
+            yield session
+            
+            # Roll back the nested transaction
+            session.rollback()
+            
     except Exception as e:
-        logger.error(f"Session setup failed: {str(e)}")
+        logger.error(f"Error in test session: {str(e)}")
+        session.rollback()
         raise
     finally:
+        # Clean up session
+        Session.remove()
         session.close()
-        transaction.rollback()
-        connection.close()
 
 @pytest.fixture(scope='function')
 def test_user(session):
