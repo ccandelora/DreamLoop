@@ -30198,3 +30198,8 @@ Level: ERROR
 Module: activity_tracker
 Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
 
+2024-11-14 20:28:55,475 - - - 172.31.196.35 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: routes
+Message: Error during login after registration: Instance <User at 0x7fd20bdd0750> is not bound to a Session; attribute refresh operation cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+
