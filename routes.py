@@ -182,4 +182,129 @@ def register_routes(app):
         logout_user()
         return redirect(url_for('index'))
 
+    @app.route('/dream/new', methods=['GET', 'POST'])
+    @login_required
+    def dream_new():
+        """Create a new dream entry."""
+        if request.method == 'POST':
+            try:
+                with session_manager.session_scope() as session:
+                    dream = Dream(
+                        user_id=current_user.id,
+                        title=request.form['title'],
+                        content=request.form['content'],
+                        mood=request.form.get('mood'),
+                        tags=request.form.get('tags'),
+                        is_public=bool(request.form.get('is_public')),
+                        is_anonymous=bool(request.form.get('is_anonymous')),
+                        lucidity_level=int(request.form.get('lucidity_level', 0)),
+                        sleep_quality=int(request.form.get('sleep_quality', 0)),
+                        sleep_position=request.form.get('sleep_position'),
+                        sleep_interruptions=int(request.form.get('sleep_interruptions', 0))
+                    )
+                    session.add(dream)
+                    session.flush()
+
+                    track_user_activity(
+                        current_user.id,
+                        ACTIVITY_TYPES['DREAM_CREATE'],
+                        target_id=dream.id,
+                        description=f"Created new dream: {dream.title}"
+                    )
+
+                    flash('Dream logged successfully!')
+                    return redirect(url_for('index'))
+            except Exception as e:
+                logger.error(f"Error creating dream: {str(e)}")
+                flash('An error occurred while saving your dream')
+                
+        return render_template('dream_new.html')
+
+    @app.route('/dream/patterns')
+    @login_required
+    def dream_patterns():
+        """View dream patterns and analytics."""
+        try:
+            with session_manager.session_scope() as session:
+                dreams = session.query(Dream).filter_by(user_id=current_user.id).all()
+                patterns = analyze_dream_patterns(dreams) if dreams else None
+
+                track_user_activity(
+                    current_user.id,
+                    ACTIVITY_TYPES['PATTERNS_VIEW'],
+                    description="Viewed dream patterns"
+                )
+
+                return render_template('dream_patterns.html', 
+                                    patterns=patterns,
+                                    dreams=dreams)
+        except Exception as e:
+            logger.error(f"Error viewing patterns: {str(e)}")
+            flash('An error occurred while analyzing dream patterns')
+            return redirect(url_for('index'))
+
+    @app.route('/groups')
+    @login_required
+    def dream_groups():
+        """View and manage dream groups."""
+        try:
+            with session_manager.session_scope() as session:
+                groups = session.query(DreamGroup)\
+                    .join(GroupMembership)\
+                    .filter(GroupMembership.user_id == current_user.id)\
+                    .all()
+
+                track_user_activity(
+                    current_user.id,
+                    ACTIVITY_TYPES['GROUPS_VIEW'],
+                    description="Viewed dream groups"
+                )
+
+                return render_template('dream_groups.html', groups=groups)
+        except Exception as e:
+            logger.error(f"Error viewing groups: {str(e)}")
+            flash('An error occurred while loading dream groups')
+            return redirect(url_for('index'))
+
+    @app.route('/subscription')
+    @login_required
+    def subscription():
+        """View and manage subscription settings."""
+        try:
+            track_user_activity(
+                current_user.id,
+                ACTIVITY_TYPES['SUBSCRIPTION_VIEW'],
+                description="Viewed subscription page"
+            )
+            return render_template('subscription.html',
+                               stripe_publishable_key=os.getenv('STRIPE_PUBLISHABLE_KEY'))
+        except Exception as e:
+            logger.error(f"Error viewing subscription: {str(e)}")
+            flash('An error occurred while loading subscription information')
+            return redirect(url_for('index'))
+
+    @app.route('/community')
+    def community_dreams():
+        """View public dreams from the community."""
+        try:
+            with session_manager.session_scope() as session:
+                dreams = session.query(Dream)\
+                    .filter(Dream.is_public == True)\
+                    .order_by(Dream.date.desc())\
+                    .limit(20)\
+                    .all()
+
+                if current_user.is_authenticated:
+                    track_user_activity(
+                        current_user.id,
+                        ACTIVITY_TYPES['COMMUNITY_VIEW'],
+                        description="Viewed community dreams"
+                    )
+
+                return render_template('community_dreams.html', dreams=dreams)
+        except Exception as e:
+            logger.error(f"Error viewing community dreams: {str(e)}")
+            flash('An error occurred while loading community dreams')
+            return redirect(url_for('index'))
+
     return app
