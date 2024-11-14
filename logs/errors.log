@@ -30107,3 +30107,45 @@ Module: routes
 Message: Registration error: (psycopg2.ProgrammingError) set_session cannot be used inside a transaction
 (Background on this error at: https://sqlalche.me/e/20/f405)
 
+2024-11-14 20:13:05,844 - - - 172.31.196.35 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: extensions
+Message: Error executing connection configuration: permission denied to set parameter "session_replication_role"
+
+
+2024-11-14 20:13:05,865 - - - 172.31.196.35 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: extensions
+Message: Failed to configure connection settings
+
+2024-11-14 20:13:05,871 - - - 172.31.196.35 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: extensions
+Message: Session operation failed: Could not configure connection
+
+2024-11-14 20:13:05,872 - - - 172.31.196.35 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: routes
+Message: Error checking existing user: Could not configure connection
+
+2024-11-14 20:13:06,243 - - - 172.31.196.35 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: extensions
+Message: Error executing connection configuration: permission denied to set parameter "session_replication_role"
+
+
+2024-11-14 20:13:06,262 - - - 172.31.196.35 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: extensions
+Message: Failed to configure connection settings
+
+2024-11-14 20:13:06,263 - - - 172.31.196.35 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: extensions
+Message: Session operation failed: Could not configure connection
+
+2024-11-14 20:13:06,263 - - - 172.31.196.35 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: routes
+Message: Error creating user: Could not configure connection
+

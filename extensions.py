@@ -30,7 +30,7 @@ db = SQLAlchemy()
 
 # Initialize LoginManager
 login_manager = LoginManager()
-login_manager.login_view = 'auth.login'
+login_manager.login_view = 'login'
 login_manager.login_message = 'Please log in to access this page.'
 login_manager.login_message_category = 'info'
 login_manager.session_protection = 'strong'
@@ -118,14 +118,10 @@ def configure_connection_settings(dbapi_connection):
         # Configure connection parameters using raw commands
         cursor = dbapi_connection.cursor()
         try:
-            # Configure session parameters
+            # Configure only essential session parameters as specified
             cursor.execute("SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL REPEATABLE READ")
             cursor.execute("SET statement_timeout = '30s'")
             cursor.execute("SET idle_in_transaction_session_timeout = '60s'")
-            cursor.execute("SET session_replication_role = 'origin'")
-            
-            # Additional connection settings
-            cursor.execute("SET application_name = 'DreamShare'")
             cursor.execute("SET timezone = 'UTC'")
             
             logger.info("Connection parameters configured successfully")
