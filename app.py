@@ -5,6 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from logging_config import setup_logging, ErrorLogger
 from middleware import setup_request_logging
 from flask_login import current_user
+from transaction_debugger import init_transaction_debugger
 
 def should_show_premium_ads():
     """Determine if premium ads should be shown to the current user."""
@@ -37,6 +38,9 @@ def create_app():
     db = init_db_pool(app)
     login_manager.init_app(app)
     setup_request_logging(app)
+    
+    # Initialize transaction debugger
+    init_transaction_debugger(app)
     
     # Import models and set up user loader
     from models import User
