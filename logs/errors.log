@@ -26083,3 +26083,483 @@ Level: ERROR
 Module: conftest
 Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
 
+2024-11-14 13:48:12,678 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:12,678 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:12,679 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:12,679 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:12,922 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:12,922 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:12,923 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:12,923 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,061 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,061 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,062 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,062 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,302 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,302 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,304 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,304 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,443 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,443 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,444 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,444 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,586 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,586 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,588 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,588 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,728 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,728 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,729 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,729 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,894 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,894 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,896 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:13,896 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,038 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,038 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,039 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,039 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,354 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,354 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,356 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,356 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,507 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,507 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,509 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,509 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,660 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,660 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,661 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,661 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,813 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,813 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,814 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,814 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,975 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,975 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,976 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:14,976 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,060 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:48:15.060269', 'error_type': 'ValueError', 'error_message': 'Test error', 'traceback': 'NoneType: None\n', 'context': {'test': 'context'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:48:15,060 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:48:15.060269', 'error_type': 'ValueError', 'error_message': 'Test error', 'traceback': 'NoneType: None\n', 'context': {'test': 'context'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:48:15,062 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:48:15.061902', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-14T13:48:15.061886'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:48:15,062 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:48:15.061902', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-14T13:48:15.061886'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:48:15,128 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,128 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,129 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,129 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,366 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: This Connection is closed
+
+2024-11-14 13:48:15,366 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: This Connection is closed
+
+2024-11-14 13:48:15,372 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: This Connection is closed
+
+2024-11-14 13:48:15,372 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: This Connection is closed
+
+2024-11-14 13:48:15,445 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,445 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,446 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,446 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,617 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,617 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,619 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,619 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,770 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,770 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,771 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,771 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,910 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,910 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,911 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:15,911 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:16,059 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:16,059 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:16,060 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:16,060 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:16,230 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:16,230 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:16,232 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:16,232 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:16,472 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:16,472 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:16,473 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
+2024-11-14 13:48:16,473 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Session setup failed: This connection has already initialized a SQLAlchemy Transaction() object via begin() or autobegin; can't call begin() here unless rollback() or commit() is called first.
+
