@@ -1,6 +1,6 @@
 from flask import Flask
 import os
-from extensions import db, login_manager, ISOLATION_LEVEL
+from extensions import db, login_manager, ISOLATION_LEVEL, get_db_connection, init_db_pool
 from sqlalchemy.exc import SQLAlchemyError
 from logging_config import setup_logging, ErrorLogger
 from middleware import setup_request_logging
@@ -33,19 +33,9 @@ def create_app():
 
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    
-    # Configure SQLAlchemy engine options with proper isolation level
-    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-        'pool_pre_ping': True,
-        'pool_recycle': 300,
-        'pool_size': 20,
-        'max_overflow': 10,
-        'echo': True,  # Enable SQL query logging in development
-        'isolation_level': ISOLATION_LEVEL
-    }
 
-    # Initialize the database
-    db.init_app(app)
+    # Initialize database with connection pooling
+    init_db_pool(app)
 
     # Initialize extensions
     login_manager.init_app(app)
@@ -68,10 +58,11 @@ def create_app():
         if not user_id:
             return None
         try:
-            return User.query.get(int(user_id))
+            # Use get_db_connection to ensure proper connection handling
+            with app.app_context():
+                return User.query.get(int(user_id))
         except SQLAlchemyError as e:
             ErrorLogger.log_error(e, {'user_id': user_id})
-            db.session.rollback()
             return None
 
     # Import and register routes
@@ -87,7 +78,6 @@ def create_app():
             app.logger.info("Routes registered successfully")
         except SQLAlchemyError as e:
             error_details = ErrorLogger.log_error(e)
-            db.session.rollback()
             raise
 
     return app
