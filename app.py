@@ -34,12 +34,12 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
-    # Initialize database and dependencies
+    # Initialize database connection pool
     db = init_db_pool(app)
+    
+    # Initialize other components
     login_manager.init_app(app)
     setup_request_logging(app)
-    
-    # Initialize transaction debugger
     init_transaction_debugger(app)
     
     # Import models and set up user loader
@@ -56,28 +56,22 @@ def create_app():
             ErrorLogger.log_error(e, {'user_id': user_id})
             return None
     
-    with app.app_context():
-        try:
-            # Initialize database tables
-            db.create_all()
-            app.logger.info("Database tables created successfully")
-            
-            # Import and register routes
-            from routes import register_routes
-            register_routes(app)
-            app.logger.info("Routes registered successfully")
-            
-        except SQLAlchemyError as e:
-            error_details = ErrorLogger.log_error(e)
-            app.logger.error(f"Database initialization failed: {str(e)}")
-            raise
-    
     # Add template context processor
     @app.context_processor
     def utility_processor():
         return {
             'should_show_premium_ads': should_show_premium_ads
         }
+    
+    # Import and register routes
+    with app.app_context():
+        try:
+            from routes import register_routes
+            register_routes(app)
+            app.logger.info("Routes registered successfully")
+        except Exception as e:
+            app.logger.error(f"Error registering routes: {str(e)}")
+            raise
     
     return app
 

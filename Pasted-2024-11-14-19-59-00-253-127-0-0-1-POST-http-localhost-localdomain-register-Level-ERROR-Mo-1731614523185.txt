@@ -1,0 +1,35 @@
+2024-11-14 19:59:00,253 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: (psycopg2.ProgrammingError) set_session cannot be used inside a transaction
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 19:59:00,565 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: (psycopg2.errors.UndefinedTable) relation "user" does not exist
+LINE 2: FROM "user" 
+             ^
+
+[SQL: SELECT "user".id AS user_id, "user".username AS user_username, "user".email AS user_email, "user".password_hash AS user_password_hash, "user".subscription_type AS user_subscription_type, "user".subscription_end_date AS user_subscription_end_date, "user".monthly_ai_analysis_count AS user_monthly_ai_analysis_count, "user".last_analysis_reset AS user_last_analysis_reset 
+FROM "user" 
+WHERE "user".username = %(username_1)s 
+ LIMIT %(param_1)s]
+[parameters: {'username_1': 'newuser', 'param_1': 1}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 19:59:03,554 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T19:59:03.554579', 'error_type': 'ValueError', 'error_message': 'Test error', 'traceback': 'NoneType: None\n', 'context': {'test': 'context'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 19:59:03,555 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T19:59:03.555616', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-14T19:59:03.555602'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 20:00:04,338 - - - 172.31.196.35 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: routes
+Message: Registration error: (psycopg2.ProgrammingError) set_session cannot be used inside a transaction
+(Background on this error at: https://sqlalche.me/e/20/f405)
