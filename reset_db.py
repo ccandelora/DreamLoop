@@ -33,15 +33,33 @@ def reset_database():
     
     with app.app_context():
         try:
-            # Drop existing tables
-            db.drop_all()
-            logger.info("All tables dropped successfully")
+            # Get raw connection with autocommit for schema operations
+            connection = db.engine.raw_connection()
+            connection.autocommit = True
             
-            # Create new tables
-            db.create_all()
-            logger.info("Database tables created successfully")
+            try:
+                # Drop all tables if they exist
+                with connection.cursor() as cursor:
+                    cursor.execute("""
+                        DROP TABLE IF EXISTS group_membership CASCADE;
+                        DROP TABLE IF EXISTS forum_reply CASCADE;
+                        DROP TABLE IF EXISTS forum_post CASCADE;
+                        DROP TABLE IF EXISTS user_activity CASCADE;
+                        DROP TABLE IF EXISTS comment CASCADE;
+                        DROP TABLE IF EXISTS dream CASCADE;
+                        DROP TABLE IF EXISTS dream_group CASCADE;
+                        DROP TABLE IF EXISTS "user" CASCADE;
+                    """)
+                logger.info("All tables dropped successfully")
+                
+                # Create tables using SQLAlchemy models
+                db.create_all()
+                logger.info("Database tables created successfully")
+                
+            finally:
+                connection.close()
             
-            # Create test data using session manager
+            # Create test data within a transaction using session manager
             with session_manager.session_scope() as session:
                 # Create test user
                 test_user = User(
@@ -81,7 +99,7 @@ def reset_database():
                     is_admin=True
                 )
                 session.add(membership)
-                
+            
             logger.info("Sample data created successfully")
             return True
             

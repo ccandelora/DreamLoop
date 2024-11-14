@@ -34,15 +34,12 @@ login_manager.login_message_category = 'info'
 login_manager.session_protection = 'strong'
 
 class SQLAlchemySessionManager:
-    """Session manager for SQLAlchemy."""
-    
     def __init__(self, db):
         self.db = db
         self._session_factory = None
         self._scoped_session = None
     
     def init_session_factory(self, app):
-        """Initialize the session factory with application context."""
         if not self._session_factory:
             self._session_factory = sessionmaker(
                 bind=self.db.engine,
@@ -54,7 +51,6 @@ class SQLAlchemySessionManager:
             )
     
     def cleanup_sessions(self):
-        """Clean up all sessions."""
         if self._scoped_session:
             try:
                 if hasattr(g, 'db_session'):
@@ -71,7 +67,6 @@ class SQLAlchemySessionManager:
     
     @contextmanager
     def session_scope(self):
-        """Provide a transactional scope around a series of operations."""
         if not self._scoped_session:
             raise RuntimeError("Session factory not initialized. Call init_session_factory first.")
             
@@ -92,13 +87,11 @@ class SQLAlchemySessionManager:
                 logger.error(f"Error closing session: {str(e)}")
 
     def get_session(self):
-        """Get the current scoped session."""
         if not self._scoped_session:
             raise RuntimeError("Session factory not initialized. Call init_session_factory first.")
         return self._scoped_session()
 
     def remove_session(self):
-        """Safely remove the current session."""
         if self._scoped_session:
             try:
                 self._scoped_session.remove()
@@ -109,6 +102,24 @@ class SQLAlchemySessionManager:
         return False
 
 session_manager = SQLAlchemySessionManager(db)
+
+def configure_connection(dbapi_connection):
+    """Configure connection parameters outside of any transaction."""
+    if dbapi_connection is None:
+        return
+        
+    try:
+        # Set autocommit to true temporarily to execute connection settings
+        dbapi_connection.autocommit = True
+        with dbapi_connection.cursor() as cursor:
+            cursor.execute("SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL REPEATABLE READ")
+            cursor.execute("SET statement_timeout = '30s'")
+            cursor.execute("SET idle_in_transaction_session_timeout = '60s'")
+        # Reset autocommit to false for normal operation
+        dbapi_connection.autocommit = False
+    except Exception as e:
+        logger.error(f"Failed to configure connection parameters: {str(e)}")
+        raise
 
 def init_db_pool(app):
     """Initialize database pool with application context."""
@@ -143,20 +154,10 @@ def init_db_pool(app):
 def _setup_engine_events(engine):
     """Set up all engine events."""
     
-    @event.listens_for(engine, 'connect', insert=True)
-    def set_isolation_level(dbapi_connection, connection_record):
-        """Set isolation level and other connection parameters."""
-        if dbapi_connection is None:
-            return
-            
-        try:
-            with dbapi_connection.cursor() as cursor:
-                cursor.execute("SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL REPEATABLE READ")
-                cursor.execute("SET statement_timeout = '30s'")
-                cursor.execute("SET idle_in_transaction_session_timeout = '60s'")
-        except Exception as e:
-            logger.error(f"Failed to set connection parameters: {str(e)}")
-            raise
+    @event.listens_for(engine, 'connect')
+    def on_connect(dbapi_connection, connection_record):
+        """Configure connection on connect."""
+        configure_connection(dbapi_connection)
 
     @event.listens_for(engine, 'checkout')
     def connection_checkout(dbapi_connection, connection_record, connection_proxy):
