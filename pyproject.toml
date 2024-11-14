@@ -35,4 +35,6 @@ dependencies = [
     "pytest-randomly>=3.16.0",
     "pytest-env",
     "freezegun",
+    "flask-migrate>=4.0.7",
+    "alembic",
 ]

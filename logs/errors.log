@@ -30388,3 +30388,121 @@ Level: ERROR
 Module: activity_tracker
 Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
 
+2024-11-14 20:35:40,168 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:35:55,388 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:36:34,266 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:36:37,574 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:36:40,483 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:37:19,355 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:37:19,982 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:37:21,936 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:37:42,452 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:37:42,807 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:37:45,171 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:37:52,711 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:38:39,974 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:38:40,563 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:38:41,690 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:39:44,985 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:39:47,786 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:39:51,610 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:40:13,468 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:40:13,704 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-14 20:43:21,790 - None - None - None None
+Level: ERROR
+Module: migrations_setup
+Message: Error setting up migrations: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-14 20:43:57,976 - None - None - None None
+Level: ERROR
+Module: migrations_setup
+Message: Error setting up migrations: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+

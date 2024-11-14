@@ -6,6 +6,7 @@ from logging_config import setup_logging, ErrorLogger
 from flask_login import current_user
 from models import User
 from transaction_debugger import init_transaction_debugger
+from flask_migrate import Migrate
 
 def should_show_premium_ads():
     """Determine if premium ads should be shown to the current user."""
@@ -33,10 +34,20 @@ def create_app():
     
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        'pool_pre_ping': True,
+        'pool_size': 10,
+        'max_overflow': 20,
+        'pool_recycle': 300
+    }
     
     # Initialize database and other extensions
     db.init_app(app)
     login_manager.init_app(app)
+    
+    # Initialize migrations with directory configuration
+    migrations_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'migrations')
+    Migrate(app, db, directory=migrations_dir)
     
     # Initialize transaction debugger
     init_transaction_debugger(app)

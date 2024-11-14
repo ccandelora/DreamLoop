@@ -63,6 +63,54 @@ args = "Run All Tests"
 task = "workflow.run"
 args = "Flask App"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Initialize Migrations"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Create Migrations"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Create Initial Migration"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Apply Migrations"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Init DB Migrations"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Apply Migration"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Generate Initial Migration"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Apply Schema Migration"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Initialize Fresh Migrations"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Generate Schema Migration"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Setup Fresh Migrations"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Generate Migration"
+
 [[workflows.workflow]]
 name = "Flask Dream Journal"
 author = "agent"
@@ -246,6 +294,174 @@ task = "packager.installForAll"
 task = "shell.exec"
 args = "python3 app.py"
 waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Initialize Migrations"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python migrations_setup.py"
+
+[[workflows.workflow]]
+name = "Create Migrations"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python manage.py db init"
+
+[[workflows.workflow]]
+name = "Create Initial Migration"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python manage.py db migrate -m 'initial migration'"
+
+[[workflows.workflow]]
+name = "Apply Migrations"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "flask db upgrade"
+
+[[workflows.workflow]]
+name = "Init DB Migrations"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "flask db init"
+
+[[workflows.workflow]]
+name = "Apply Migration"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python manage.py db upgrade"
+
+[[workflows.workflow]]
+name = "Generate Initial Migration"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python manage.py db migrate -m 'initial schema'"
+
+[[workflows.workflow]]
+name = "Apply Schema Migration"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python manage.py db upgrade"
+
+[[workflows.workflow]]
+name = "Initialize Fresh Migrations"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python migrations_setup.py"
+
+[[workflows.workflow]]
+name = "Generate Schema Migration"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python manage.py db migrate -m 'initial schema with all models'"
+
+[[workflows.workflow]]
+name = "Setup Fresh Migrations"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python migrations_setup.py"
+
+[[workflows.workflow]]
+name = "Generate Migration"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python manage.py db migrate -m 'Initial migration with all models'"
 
 [deployment]
 run = ["sh", "-c", "python3 app.py"]
