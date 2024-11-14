@@ -1,8 +1,9 @@
-from flask import request, g
+from flask import request, g, current_app
 import time
 import logging
 from uuid import uuid4
 from functools import wraps
+from sqlalchemy.exc import SQLAlchemyError
 
 logger = logging.getLogger(__name__)
 
@@ -46,10 +47,40 @@ def log_response(response):
     
     return response
 
+def cleanup_session(response):
+    """Clean up database session after each request."""
+    try:
+        # Only attempt cleanup if we're in an application context
+        if current_app:
+            if 'sqlalchemy' in current_app.extensions:
+                db = current_app.extensions['sqlalchemy'].db
+                if hasattr(db, 'session'):
+                    try:
+                        # Rollback any uncommitted changes
+                        if db.session.is_active:
+                            db.session.rollback()
+                            logger.debug("Rolling back uncommitted database changes")
+                        
+                        # Remove session
+                        db.session.remove()
+                        logger.debug("Database session removed")
+                    except Exception as e:
+                        logger.error(f"Error during session operations: {str(e)}", exc_info=True)
+        
+        return response
+    except (RuntimeError, SQLAlchemyError) as e:
+        logger.error(f"Error during session cleanup: {str(e)}", exc_info=True)
+        return response
+    except Exception as e:
+        logger.error(f"Unexpected error during session cleanup: {str(e)}", exc_info=True)
+        return response
+
 def setup_request_logging(app):
     """Setup request logging middleware."""
     app.before_request(log_request)
     app.after_request(log_response)
+    # Add session cleanup after response
+    app.after_request(cleanup_session)
 
 def log_function_execution(f):
     """Decorator to log function execution time and details."""

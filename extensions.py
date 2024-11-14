@@ -31,41 +31,6 @@ login_manager.login_message = 'Please log in to access this page.'
 login_manager.login_message_category = 'info'
 login_manager.session_protection = 'strong'
 
-def init_db_pool(app):
-    """Initialize database pool with application context."""
-    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-        'isolation_level': ISOLATION_LEVEL,
-        'pool_size': POOL_SIZE,
-        'max_overflow': MAX_OVERFLOW,
-        'pool_timeout': POOL_TIMEOUT,
-        'pool_recycle': POOL_RECYCLE,
-        'pool_pre_ping': POOL_PRE_PING,
-        'poolclass': QueuePool,
-        'connect_args': {
-            'options': f'-c default_transaction_isolation=repeatable read',
-            'connect_timeout': 10,
-            'keepalives': 1,
-            'keepalives_idle': 30,
-            'keepalives_interval': 10,
-            'keepalives_count': 5
-        }
-    }
-    
-    db.init_app(app)
-    _setup_engine_events(db.engine)
-    return db
-
-def get_db_connection(retries=MAX_RETRIES):
-    """Get a database connection with retry logic."""
-    for attempt in range(retries):
-        try:
-            return db.engine.connect()
-        except SQLAlchemyError as e:
-            if attempt == retries - 1:
-                logger.error(f"Failed to get database connection after {retries} attempts: {str(e)}")
-                raise
-            time.sleep(RETRY_INTERVAL)
-
 def _setup_engine_events(engine):
     """Set up all engine events."""
     
@@ -121,11 +86,6 @@ def _setup_engine_events(engine):
             logger.error(f"Connection reset failed: {str(e)}")
             raise
 
-    @event.listens_for(engine, 'invalidate')
-    def connection_invalidate(dbapi_connection, connection_record, exception):
-        """Log when connections are invalidated."""
-        logger.warning(f"Connection invalidated due to error: {str(exception)}")
-
     @event.listens_for(engine, 'begin')
     def on_begin(conn):
         """Ensure isolation level is set at the start of each transaction."""
@@ -134,3 +94,36 @@ def _setup_engine_events(engine):
         except Exception as e:
             logger.error(f"Failed to set transaction isolation level: {str(e)}")
             raise
+
+def init_db_pool(app):
+    """Initialize database pool with application context."""
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        'isolation_level': ISOLATION_LEVEL,
+        'pool_size': POOL_SIZE,
+        'max_overflow': MAX_OVERFLOW,
+        'pool_timeout': POOL_TIMEOUT,
+        'pool_recycle': POOL_RECYCLE,
+        'pool_pre_ping': POOL_PRE_PING,
+        'poolclass': QueuePool,
+        'connect_args': {
+            'connect_timeout': 10,
+            'keepalives': 1,
+            'keepalives_idle': 30,
+            'keepalives_interval': 10,
+            'keepalives_count': 5
+        }
+    }
+    
+    db.init_app(app)
+    return db
+
+def get_db_connection(retries=MAX_RETRIES):
+    """Get a database connection with retry logic."""
+    for attempt in range(retries):
+        try:
+            return db.engine.connect()
+        except SQLAlchemyError as e:
+            if attempt == retries - 1:
+                logger.error(f"Failed to get database connection after {retries} attempts: {str(e)}")
+                raise
+            time.sleep(RETRY_INTERVAL)

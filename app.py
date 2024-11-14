@@ -1,6 +1,6 @@
 from flask import Flask
 import os
-from extensions import db, login_manager, ISOLATION_LEVEL, get_db_connection, init_db_pool
+from extensions import db, login_manager, init_db_pool
 from sqlalchemy.exc import SQLAlchemyError
 from logging_config import setup_logging, ErrorLogger
 from middleware import setup_request_logging
@@ -26,22 +26,37 @@ def create_app():
     # Configure database URL using environment variables
     db_url = os.environ.get('DATABASE_URL')
     if not db_url:
-        raise ValueError("DATABASE_URL environment variable is not set")
+        db_url = f"postgresql://{os.environ['PGUSER']}:{os.environ['PGPASSWORD']}@{os.environ['PGHOST']}:{os.environ['PGPORT']}/{os.environ['PGDATABASE']}"
 
     if db_url.startswith('postgres://'):
         db_url = db_url.replace('postgres://', 'postgresql://', 1)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-    # Initialize database with connection pooling
-    init_db_pool(app)
+    
+    # Setup request logging with session cleanup
+    setup_request_logging(app)
 
     # Initialize extensions
     login_manager.init_app(app)
+    
+    # Initialize database with connection pooling
+    with app.app_context():
+        init_db_pool(app)
 
-    # Setup request logging
-    setup_request_logging(app)
+        try:
+            # Initialize database tables
+            db.create_all()
+            app.logger.info("Database tables created successfully")
+
+            # Import and register routes
+            from routes import register_routes
+            register_routes(app)
+            app.logger.info("Routes registered successfully")
+
+        except SQLAlchemyError as e:
+            error_details = ErrorLogger.log_error(e)
+            raise
 
     # Add template context processor
     @app.context_processor
@@ -58,33 +73,14 @@ def create_app():
         if not user_id:
             return None
         try:
-            # Use get_db_connection to ensure proper connection handling
-            with app.app_context():
-                return User.query.get(int(user_id))
+            return User.query.get(int(user_id))
         except SQLAlchemyError as e:
             ErrorLogger.log_error(e, {'user_id': user_id})
             return None
 
-    # Import and register routes
-    with app.app_context():
-        try:
-            # Initialize database
-            db.create_all()
-            app.logger.info("Database tables created successfully")
-
-            # Register routes after db initialization
-            from routes import register_routes
-            register_routes(app)
-            app.logger.info("Routes registered successfully")
-        except SQLAlchemyError as e:
-            error_details = ErrorLogger.log_error(e)
-            raise
-
     return app
 
-# Create the Flask application instance
-app = create_app()
-
 if __name__ == '__main__':
+    app = create_app()
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port)

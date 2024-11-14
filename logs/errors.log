@@ -29551,3 +29551,178 @@ Level: ERROR
 Module: routes
 Message: Registration error: Session.__init__() got an unexpected keyword argument 'isolation_level'
 
+2024-11-14 14:06:19,990 - None - None - None None
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T14:06:19.975979', 'error_type': 'OperationalError', 'error_message': '(psycopg2.OperationalError) connection to server at "ep-calm-flower-a52bsx00.us-east-2.aws.neon.tech" (3.131.64.200), port 5432 failed: ERROR:  invalid value for parameter "default_transaction_isolation": "repeatable"\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)', 'traceback': 'Traceback (most recent call last):\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 146, in __init__\n    self._dbapi_connection = engine.raw_connection()\n                             ^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3302, in raw_connection\n    return self.pool.connect()\n           ^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 449, in connect\n    return _ConnectionFairy._checkout(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 1263, in _checkout\n    fairy = _ConnectionRecord.checkout(pool)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 712, in checkout\n    rec = pool._do_get()\n          ^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/impl.py", line 179, in _do_get\n    with util.safe_reraise():\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__\n    raise exc_value.with_traceback(exc_tb)\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/impl.py", line 177, in _do_get\n    return self._create_connection()\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 390, in _create_connection\n    return _ConnectionRecord(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 674, in __init__\n    self.__connect()\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 900, in __connect\n    with util.safe_reraise():\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__\n    raise exc_value.with_traceback(exc_tb)\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 896, in __connect\n    self.dbapi_connection = connection = pool._invoke_creator(self)\n                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/create.py", line 643, in connect\n    return dialect.connect(*cargs, **cparams)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 621, in connect\n    return self.loaded_dbapi.connect(*cargs, **cparams)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/psycopg2/__init__.py", line 122, in connect\n    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npsycopg2.OperationalError: connection to server at "ep-calm-flower-a52bsx00.us-east-2.aws.neon.tech" (3.131.64.200), port 5432 failed: ERROR:  invalid value for parameter "default_transaction_isolation": "repeatable"\n\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File "/home/runner/DreamShare/app.py", line 73, in create_app\n    db.create_all()\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 900, in create_all\n    self._call_for_binds(bind_key, "create_all")\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 881, in _call_for_binds\n    getattr(metadata, op_name)(bind=engine)\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/sql/schema.py", line 5868, in create_all\n    bind._run_ddl_visitor(\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3252, in _run_ddl_visitor\n    with self.begin() as conn:\n  File "/nix/store/f98g7xbckgqbkagdvpzc2r6lv3h1p9ki-python3-3.11.9/lib/python3.11/contextlib.py", line 137, in __enter__\n    return next(self.gen)\n           ^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3242, in begin\n    with self.connect() as conn:\n         ^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3278, in connect\n    return self._connection_cls(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 148, in __init__\n    Connection._handle_dbapi_exception_noconnection(\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2442, in _handle_dbapi_exception_noconnection\n    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 146, in __init__\n    self._dbapi_connection = engine.raw_connection()\n                             ^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3302, in raw_connection\n    return self.pool.connect()\n           ^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 449, in connect\n    return _ConnectionFairy._checkout(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 1263, in _checkout\n    fairy = _ConnectionRecord.checkout(pool)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 712, in checkout\n    rec = pool._do_get()\n          ^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/impl.py", line 179, in _do_get\n    with util.safe_reraise():\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__\n    raise exc_value.with_traceback(exc_tb)\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/impl.py", line 177, in _do_get\n    return self._create_connection()\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 390, in _create_connection\n    return _ConnectionRecord(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 674, in __init__\n    self.__connect()\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 900, in __connect\n    with util.safe_reraise():\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__\n    raise exc_value.with_traceback(exc_tb)\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 896, in __connect\n    self.dbapi_connection = connection = pool._invoke_creator(self)\n                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/create.py", line 643, in connect\n    return dialect.connect(*cargs, **cparams)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 621, in connect\n    return self.loaded_dbapi.connect(*cargs, **cparams)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/psycopg2/__init__.py", line 122, in connect\n    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsqlalchemy.exc.OperationalError: (psycopg2.OperationalError) connection to server at "ep-calm-flower-a52bsx00.us-east-2.aws.neon.tech" (3.131.64.200), port 5432 failed: ERROR:  invalid value for parameter "default_transaction_isolation": "repeatable"\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)\n', 'context': {}}
+
+2024-11-14 14:06:54,483 - None - None - None None
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T14:06:54.479030', 'error_type': 'OperationalError', 'error_message': '(psycopg2.OperationalError) connection to server at "ep-calm-flower-a52bsx00.us-east-2.aws.neon.tech" (3.143.47.40), port 5432 failed: ERROR:  invalid value for parameter "default_transaction_isolation": "repeatable"\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)', 'traceback': 'Traceback (most recent call last):\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 146, in __init__\n    self._dbapi_connection = engine.raw_connection()\n                             ^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3302, in raw_connection\n    return self.pool.connect()\n           ^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 449, in connect\n    return _ConnectionFairy._checkout(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 1263, in _checkout\n    fairy = _ConnectionRecord.checkout(pool)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 712, in checkout\n    rec = pool._do_get()\n          ^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/impl.py", line 179, in _do_get\n    with util.safe_reraise():\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__\n    raise exc_value.with_traceback(exc_tb)\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/impl.py", line 177, in _do_get\n    return self._create_connection()\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 390, in _create_connection\n    return _ConnectionRecord(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 674, in __init__\n    self.__connect()\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 900, in __connect\n    with util.safe_reraise():\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__\n    raise exc_value.with_traceback(exc_tb)\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 896, in __connect\n    self.dbapi_connection = connection = pool._invoke_creator(self)\n                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/create.py", line 643, in connect\n    return dialect.connect(*cargs, **cparams)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 621, in connect\n    return self.loaded_dbapi.connect(*cargs, **cparams)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/psycopg2/__init__.py", line 122, in connect\n    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\npsycopg2.OperationalError: connection to server at "ep-calm-flower-a52bsx00.us-east-2.aws.neon.tech" (3.143.47.40), port 5432 failed: ERROR:  invalid value for parameter "default_transaction_isolation": "repeatable"\n\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File "/home/runner/DreamShare/app.py", line 73, in create_app\n    db.create_all()\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 900, in create_all\n    self._call_for_binds(bind_key, "create_all")\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 881, in _call_for_binds\n    getattr(metadata, op_name)(bind=engine)\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/sql/schema.py", line 5868, in create_all\n    bind._run_ddl_visitor(\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3252, in _run_ddl_visitor\n    with self.begin() as conn:\n  File "/nix/store/f98g7xbckgqbkagdvpzc2r6lv3h1p9ki-python3-3.11.9/lib/python3.11/contextlib.py", line 137, in __enter__\n    return next(self.gen)\n           ^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3242, in begin\n    with self.connect() as conn:\n         ^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3278, in connect\n    return self._connection_cls(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 148, in __init__\n    Connection._handle_dbapi_exception_noconnection(\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2442, in _handle_dbapi_exception_noconnection\n    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 146, in __init__\n    self._dbapi_connection = engine.raw_connection()\n                             ^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3302, in raw_connection\n    return self.pool.connect()\n           ^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 449, in connect\n    return _ConnectionFairy._checkout(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 1263, in _checkout\n    fairy = _ConnectionRecord.checkout(pool)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 712, in checkout\n    rec = pool._do_get()\n          ^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/impl.py", line 179, in _do_get\n    with util.safe_reraise():\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__\n    raise exc_value.with_traceback(exc_tb)\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/impl.py", line 177, in _do_get\n    return self._create_connection()\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 390, in _create_connection\n    return _ConnectionRecord(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 674, in __init__\n    self.__connect()\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 900, in __connect\n    with util.safe_reraise():\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__\n    raise exc_value.with_traceback(exc_tb)\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 896, in __connect\n    self.dbapi_connection = connection = pool._invoke_creator(self)\n                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/create.py", line 643, in connect\n    return dialect.connect(*cargs, **cparams)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 621, in connect\n    return self.loaded_dbapi.connect(*cargs, **cparams)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/psycopg2/__init__.py", line 122, in connect\n    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsqlalchemy.exc.OperationalError: (psycopg2.OperationalError) connection to server at "ep-calm-flower-a52bsx00.us-east-2.aws.neon.tech" (3.143.47.40), port 5432 failed: ERROR:  invalid value for parameter "default_transaction_isolation": "repeatable"\n\n(Background on this error at: https://sqlalche.me/e/20/e3q8)\n', 'context': {}}
+
+2024-11-14 14:07:40,867 - - - 172.31.196.18 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 14:07:40,883 - - - 172.31.196.18 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 14:07:40,897 - - - 172.31.196.18 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 14:08:25,899 - - - 172.31.196.18 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 14:08:26,530 - - - 172.31.196.18 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 14:08:26,581 - - - 172.31.196.18 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 14:10:07,867 - - - 172.31.196.18 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 14:10:08,295 - - - 172.31.196.18 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 14:10:08,296 - - - 172.31.196.18 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 14:10:10,958 - - - 172.31.196.18 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 14:10:11,160 - - - 172.31.196.18 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 14:10:11,318 - - - 172.31.196.18 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 19:32:12,543 - - - 172.31.196.46 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 19:32:12,560 - - - 172.31.196.46 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 19:32:12,578 - - - 172.31.196.46 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
