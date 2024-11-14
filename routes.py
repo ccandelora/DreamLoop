@@ -1,11 +1,11 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
-from extensions import db
+from extensions import db, session_manager
 from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply
 from datetime import datetime
 import logging
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy import desc
+from sqlalchemy import desc, text
 import os
 import stripe
 from ai_helper import analyze_dream, analyze_dream_patterns
@@ -18,6 +18,46 @@ from activity_tracker import (
 logger = logging.getLogger(__name__)
 
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
+
+def check_existing_user(username, email):
+    """Check if a user with given username or email already exists."""
+    try:
+        with session_manager.session_scope() as session:
+            existing_user = session.query(User).filter(
+                (User.username == username) | (User.email == email)
+            ).first()
+            return existing_user
+    except Exception as e:
+        logger.error(f"Error checking existing user: {str(e)}")
+        return None
+
+def create_user(username, email, password):
+    """Create a new user in a separate transaction."""
+    try:
+        with session_manager.session_scope() as session:
+            user = User(username=username, email=email)
+            user.set_password(password)
+            session.add(user)
+            session.flush()  # Get the user ID
+            return user
+    except Exception as e:
+        logger.error(f"Error creating user: {str(e)}")
+        return None
+
+def handle_user_login(user):
+    """Handle user login in a separate transaction."""
+    try:
+        success = login_user(user)
+        if success:
+            track_user_activity(
+                user.id,
+                ACTIVITY_TYPES['LOGIN'],
+                extra_data={'login_method': 'registration'}
+            )
+        return success
+    except Exception as e:
+        logger.error(f"Error during login after registration: {str(e)}")
+        return False
 
 def register_routes(app):
     @app.route('/')
@@ -42,8 +82,55 @@ def register_routes(app):
             return render_template('index.html')
         except Exception as e:
             logger.error(f"Error in index route: {str(e)}")
-            db.session.rollback()
             return render_template('index.html', dreams=[])
+
+    @app.route('/register', methods=['GET', 'POST'])
+    def register():
+        """Handle user registration with separate transactions."""
+        if current_user.is_authenticated:
+            return redirect(url_for('index'))
+            
+        if request.method == 'POST':
+            username = request.form['username']
+            email = request.form['email']
+            password = request.form['password']
+
+            try:
+                # Check for existing user outside transaction
+                existing_user = check_existing_user(username, email)
+                
+                if existing_user:
+                    if existing_user.username == username:
+                        flash('Username already exists')
+                    else:
+                        flash('Email already registered')
+                    return render_template('register.html')
+
+                # Create user in separate transaction
+                user = create_user(username, email, password)
+                if not user:
+                    flash('An error occurred during registration')
+                    return render_template('register.html')
+
+                # Handle login in separate transaction
+                if handle_user_login(user):
+                    # Track successful registration
+                    track_user_activity(
+                        user.id,
+                        ACTIVITY_TYPES['REGISTRATION'],
+                        extra_data={'registration_method': 'email'}
+                    )
+                    return redirect(url_for('index'))
+                else:
+                    flash('Registration successful but login failed. Please try logging in.')
+                    return redirect(url_for('login'))
+
+            except Exception as e:
+                logger.error(f"Registration error: {str(e)}")
+                flash('An error occurred during registration')
+                return render_template('register.html')
+
+        return render_template('register.html')
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -76,45 +163,6 @@ def register_routes(app):
                 logger.error(f"Login error: {str(e)}")
                 flash('An error occurred during login')
         return render_template('login.html')
-
-    @app.route('/register', methods=['GET', 'POST'])
-    def register():
-        if current_user.is_authenticated:
-            return redirect(url_for('index'))
-            
-        if request.method == 'POST':
-            try:
-                if User.query.filter_by(username=request.form['username']).first():
-                    flash('Username already exists')
-                    return render_template('register.html')
-                    
-                if User.query.filter_by(email=request.form['email']).first():
-                    flash('Email already registered')
-                    return render_template('register.html')
-                    
-                user = User(
-                    username=request.form['username'],
-                    email=request.form['email']
-                )
-                user.set_password(request.form['password'])
-                db.session.add(user)
-                db.session.commit()
-                
-                success, error = track_user_activity(
-                    user.id,
-                    ACTIVITY_TYPES['REGISTRATION'],
-                    extra_data={'registration_method': 'email'}
-                )
-                if error:
-                    logger.warning(f"Failed to track registration: {error}")
-                
-                login_user(user)
-                return redirect(url_for('index'))
-            except Exception as e:
-                logger.error(f"Registration error: {str(e)}")
-                db.session.rollback()
-                flash('An error occurred during registration')
-        return render_template('register.html')
 
     @app.route('/logout')
     @login_required
