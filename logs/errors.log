@@ -28611,3 +28611,943 @@ Level: ERROR
 Module: conftest
 Message: Error in test session: A transaction is already begun on this Session.
 
+2024-11-14 13:58:58,443 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:58,443 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:58,445 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:58:58,445 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:58:58,641 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:58,641 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:58,642 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:58:58,642 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:58:58,821 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:58,821 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:58,823 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:58:58,823 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:58:58,917 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:58,917 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:58,918 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:58:58,918 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,038 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,038 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,039 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,039 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,170 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: Session.__init__() got an unexpected keyword argument 'isolation_level'
+
+2024-11-14 13:58:59,170 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: Session.__init__() got an unexpected keyword argument 'isolation_level'
+
+2024-11-14 13:58:59,613 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,613 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,614 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,614 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,689 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,689 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,690 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,690 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,804 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,804 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,805 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,805 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,997 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,997 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,999 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:58:59,999 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,067 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,067 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,069 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,069 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,136 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,136 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,137 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,137 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,225 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,225 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,226 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,226 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,414 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,414 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,416 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,416 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,497 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,497 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,499 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,499 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,584 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,584 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,585 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,585 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,782 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,782 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,783 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,783 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,872 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,872 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,874 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,874 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,960 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:59:00.960752', 'error_type': 'ValueError', 'error_message': 'Test error', 'traceback': 'NoneType: None\n', 'context': {'test': 'context'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:59:00,960 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:59:00.960752', 'error_type': 'ValueError', 'error_message': 'Test error', 'traceback': 'NoneType: None\n', 'context': {'test': 'context'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:59:00,963 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:59:00.963853', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-14T13:59:00.963836'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:59:00,963 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T13:59:00.963853', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-14T13:59:00.963836'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 13:59:00,967 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,967 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,969 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:00,969 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:01,052 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:01,052 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:01,054 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:01,054 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:01,137 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:01,137 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:01,138 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:01,138 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:01,333 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:01,333 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:01,335 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:01,335 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:01,415 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:01,415 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 13:59:01,417 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 13:59:01,417 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,155 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,155 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,156 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,156 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,327 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,327 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,328 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,328 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,522 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,522 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,524 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,524 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,607 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,607 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,608 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,608 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,690 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,690 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,691 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,691 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,764 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,764 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,765 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,765 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,945 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,945 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,947 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:01,947 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,020 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,020 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,022 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,022 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,099 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,099 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,100 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,100 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,175 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T14:00:02.175150', 'error_type': 'ValueError', 'error_message': 'Test error', 'traceback': 'NoneType: None\n', 'context': {'test': 'context'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 14:00:02,175 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T14:00:02.175150', 'error_type': 'ValueError', 'error_message': 'Test error', 'traceback': 'NoneType: None\n', 'context': {'test': 'context'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 14:00:02,177 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T14:00:02.176871', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-14T14:00:02.176853'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 14:00:02,177 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T14:00:02.176871', 'error_type': 'Exception', 'error_message': 'Complex error', 'traceback': 'NoneType: None\n', 'context': {'user_id': 1, 'action': 'test_action', 'timestamp': '2024-11-14T14:00:02.176853'}, 'url': 'http://localhost.localdomain/', 'method': 'GET', 'headers': {'Host': 'localhost.localdomain'}, 'remote_addr': None}
+
+2024-11-14 14:00:02,181 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,181 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,182 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,182 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,360 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,360 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,361 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,361 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,438 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,438 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,439 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,439 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,513 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,513 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,514 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,514 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,594 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,594 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,595 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,595 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,769 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,769 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,771 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,771 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,853 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,853 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,854 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,854 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,934 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,934 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,936 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:02,936 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,012 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,012 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,014 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,014 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,183 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,183 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,184 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,184 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,264 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,264 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,265 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,265 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,352 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,352 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,354 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,354 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,481 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,481 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error resetting database state: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,482 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,482 - - - None - GET http://localhost.localdomain/
+Level: ERROR
+Module: conftest
+Message: Error in test session: A transaction is already begun on this Session.
+
+2024-11-14 14:00:03,685 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: Session.__init__() got an unexpected keyword argument 'isolation_level'
+
+2024-11-14 14:00:03,685 - - - 127.0.0.1 - POST http://localhost.localdomain/register
+Level: ERROR
+Module: routes
+Message: Registration error: Session.__init__() got an unexpected keyword argument 'isolation_level'
+

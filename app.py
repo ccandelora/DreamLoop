@@ -1,19 +1,17 @@
 from flask import Flask
 import os
-from extensions import db, login_manager
+from extensions import db, login_manager, ISOLATION_LEVEL
 from sqlalchemy.exc import SQLAlchemyError
 from logging_config import setup_logging, ErrorLogger
 from middleware import setup_request_logging
 from flask_login import current_user
 from datetime import datetime
 
-
 def should_show_premium_ads():
     """Determine if premium ads should be shown to the current user."""
     if not current_user or not current_user.is_authenticated:
         return True
     return current_user.subscription_type == 'free'
-
 
 def create_app():
     """Create and configure the Flask application."""
@@ -35,16 +33,21 @@ def create_app():
 
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
+    # Configure SQLAlchemy engine options with proper isolation level
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
         'pool_pre_ping': True,
         'pool_recycle': 300,
         'pool_size': 20,
         'max_overflow': 10,
-        'echo': True  # Enable SQL query logging in development
+        'echo': True,  # Enable SQL query logging in development
+        'isolation_level': ISOLATION_LEVEL
     }
 
-    # Initialize extensions
+    # Initialize the database
     db.init_app(app)
+
+    # Initialize extensions
     login_manager.init_app(app)
 
     # Setup request logging
@@ -88,7 +91,6 @@ def create_app():
             raise
 
     return app
-
 
 # Create the Flask application instance
 app = create_app()
