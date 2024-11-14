@@ -1,9 +1,10 @@
-from flask import request, g, current_app
+from flask import request, g, current_app, has_app_context
 import time
 import logging
 from uuid import uuid4
 from functools import wraps
 from sqlalchemy.exc import SQLAlchemyError
+from extensions import session_manager, db
 
 logger = logging.getLogger(__name__)
 
@@ -47,40 +48,35 @@ def log_response(response):
     
     return response
 
-def cleanup_session(response):
+def cleanup_session(exception=None):
     """Clean up database session after each request."""
+    if not has_app_context():
+        logger.debug("No application context available for session cleanup")
+        return
+
     try:
-        # Only attempt cleanup if we're in an application context
-        if current_app:
-            if 'sqlalchemy' in current_app.extensions:
-                db = current_app.extensions['sqlalchemy'].db
-                if hasattr(db, 'session'):
-                    try:
-                        # Rollback any uncommitted changes
-                        if db.session.is_active:
-                            db.session.rollback()
-                            logger.debug("Rolling back uncommitted database changes")
-                        
-                        # Remove session
-                        db.session.remove()
-                        logger.debug("Database session removed")
-                    except Exception as e:
-                        logger.error(f"Error during session operations: {str(e)}", exc_info=True)
-        
-        return response
-    except (RuntimeError, SQLAlchemyError) as e:
-        logger.error(f"Error during session cleanup: {str(e)}", exc_info=True)
-        return response
+        session_manager.cleanup_sessions()
     except Exception as e:
         logger.error(f"Unexpected error during session cleanup: {str(e)}", exc_info=True)
-        return response
 
 def setup_request_logging(app):
-    """Setup request logging middleware."""
+    """Setup request logging and session cleanup middleware."""
     app.before_request(log_request)
     app.after_request(log_response)
-    # Add session cleanup after response
-    app.after_request(cleanup_session)
+    app.teardown_appcontext(cleanup_session)
+
+def with_session(f):
+    """Decorator to handle database sessions for route handlers."""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        try:
+            with session_manager.session_scope() as session:
+                g.db_session = session
+                return f(*args, **kwargs)
+        except SQLAlchemyError as e:
+            logger.error(f"Database error in {f.__name__}: {str(e)}")
+            raise
+    return decorated_function
 
 def log_function_execution(f):
     """Decorator to log function execution time and details."""
@@ -90,16 +86,18 @@ def log_function_execution(f):
         logger.debug(f"Starting execution of {f.__name__}")
         
         try:
-            result = f(*args, **kwargs)
-            execution_time = time.time() - start_time
-            logger.debug(
-                f"Completed execution of {f.__name__}",
-                extra={
-                    'execution_time': f"{execution_time:.2f}s",
-                    'success': True
-                }
-            )
-            return result
+            with session_manager.session_scope() as session:
+                g.db_session = session
+                result = f(*args, **kwargs)
+                execution_time = time.time() - start_time
+                logger.debug(
+                    f"Completed execution of {f.__name__}",
+                    extra={
+                        'execution_time': f"{execution_time:.2f}s",
+                        'success': True
+                    }
+                )
+                return result
         except Exception as e:
             execution_time = time.time() - start_time
             logger.error(

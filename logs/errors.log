@@ -29726,3 +29726,245 @@ Traceback (most recent call last):
   File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
     raise AttributeError(name)
 AttributeError: db
+2024-11-14 19:32:21,248 - - - 172.31.196.46 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 19:32:21,876 - - - 172.31.196.46 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 19:32:21,943 - - - 172.31.196.46 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 19:32:31,456 - - - 172.31.196.46 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 19:32:31,667 - - - 172.31.196.46 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 19:32:31,734 - - - 172.31.196.46 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 19:32:40,955 - - - 172.31.196.46 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-14 19:32:40,977 - - - 172.31.196.46 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 19:32:41,059 - - - 172.31.196.46 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 19:32:41,077 - - - 172.31.196.46 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 19:32:45,005 - - - 172.31.196.46 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 19:32:45,123 - - - 172.31.196.46 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/css/output.css
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 19:32:45,132 - - - 172.31.196.46 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/static/images/dreamlooplogo.svg
+Level: ERROR
+Module: middleware
+Message: Unexpected error during session cleanup: db
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/middleware.py", line 56, in cleanup_session
+    db = current_app.extensions['sqlalchemy'].db
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 1008, in __getattr__
+    raise AttributeError(name)
+AttributeError: db
+2024-11-14 19:39:17,123 - None - None - None None
+Level: ERROR
+Module: extensions
+Message: Connection checkout failed: 'psycopg2.extensions.connection' object has no attribute 'is_valid'
+
+2024-11-14 19:39:17,445 - None - None - None None
+Level: ERROR
+Module: extensions
+Message: Connection checkout failed: 'psycopg2.extensions.connection' object has no attribute 'is_valid'
+
+2024-11-14 19:39:17,658 - None - None - None None
+Level: ERROR
+Module: extensions
+Message: Connection checkin cleanup failed: 'NoneType' object has no attribute 'cursor'
+
+2024-11-14 19:40:16,986 - None - None - None None
+Level: ERROR
+Module: extensions
+Message: Connection checkout failed: 'psycopg2.extensions.connection' object has no attribute 'is_valid'
+
+2024-11-14 19:40:17,217 - None - None - None None
+Level: ERROR
+Module: extensions
+Message: Connection checkout failed: 'psycopg2.extensions.connection' object has no attribute 'is_valid'
+
+2024-11-14 19:40:17,471 - None - None - None None
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T19:40:17.462198', 'error_type': 'InvalidRequestError', 'error_message': 'This connection is closed', 'traceback': 'Traceback (most recent call last):\n  File "/home/runner/DreamShare/app.py", line 50, in create_app\n    db.create_all()\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 900, in create_all\n    self._call_for_binds(bind_key, "create_all")\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 881, in _call_for_binds\n    getattr(metadata, op_name)(bind=engine)\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/sql/schema.py", line 5868, in create_all\n    bind._run_ddl_visitor(\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3252, in _run_ddl_visitor\n    with self.begin() as conn:\n  File "/nix/store/f98g7xbckgqbkagdvpzc2r6lv3h1p9ki-python3-3.11.9/lib/python3.11/contextlib.py", line 137, in __enter__\n    return next(self.gen)\n           ^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3242, in begin\n    with self.connect() as conn:\n         ^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3278, in connect\n    return self._connection_cls(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 146, in __init__\n    self._dbapi_connection = engine.raw_connection()\n                             ^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3302, in raw_connection\n    return self.pool.connect()\n           ^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 449, in connect\n    return _ConnectionFairy._checkout(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 1379, in _checkout\n    raise exc.InvalidRequestError("This connection is closed")\nsqlalchemy.exc.InvalidRequestError: This connection is closed\n', 'context': {}}
+
+2024-11-14 19:41:21,079 - None - None - None None
+Level: ERROR
+Module: extensions
+Message: Connection checkout failed: 'psycopg2.extensions.connection' object has no attribute 'is_valid'
+
+2024-11-14 19:41:21,313 - None - None - None None
+Level: ERROR
+Module: extensions
+Message: Connection checkout failed: 'psycopg2.extensions.connection' object has no attribute 'is_valid'
+
+2024-11-14 19:41:21,543 - None - None - None None
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T19:41:21.534892', 'error_type': 'InvalidRequestError', 'error_message': 'This connection is closed', 'traceback': 'Traceback (most recent call last):\n  File "/home/runner/DreamShare/app.py", line 55, in create_app\n    db.create_all()\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 900, in create_all\n    self._call_for_binds(bind_key, "create_all")\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 881, in _call_for_binds\n    getattr(metadata, op_name)(bind=engine)\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/sql/schema.py", line 5868, in create_all\n    bind._run_ddl_visitor(\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3252, in _run_ddl_visitor\n    with self.begin() as conn:\n  File "/nix/store/f98g7xbckgqbkagdvpzc2r6lv3h1p9ki-python3-3.11.9/lib/python3.11/contextlib.py", line 137, in __enter__\n    return next(self.gen)\n           ^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3242, in begin\n    with self.connect() as conn:\n         ^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3278, in connect\n    return self._connection_cls(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 146, in __init__\n    self._dbapi_connection = engine.raw_connection()\n                             ^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3302, in raw_connection\n    return self.pool.connect()\n           ^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 449, in connect\n    return _ConnectionFairy._checkout(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 1379, in _checkout\n    raise exc.InvalidRequestError("This connection is closed")\nsqlalchemy.exc.InvalidRequestError: This connection is closed\n', 'context': {}}
+
+2024-11-14 19:41:21,544 - None - None - None None
+Level: ERROR
+Module: app
+Message: Database initialization failed: This connection is closed
+
+2024-11-14 19:41:21,544 - None - None - None None
+Level: ERROR
+Module: app
+Message: Database initialization failed: This connection is closed
+
+2024-11-14 19:43:21,062 - None - None - None None
+Level: ERROR
+Module: extensions
+Message: Connection checkout failed: 'psycopg2.extensions.connection' object has no attribute 'is_valid'
+
+2024-11-14 19:43:21,286 - None - None - None None
+Level: ERROR
+Module: extensions
+Message: Connection checkout failed: 'psycopg2.extensions.connection' object has no attribute 'is_valid'
+
+2024-11-14 19:43:21,501 - None - None - None None
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T19:43:21.498654', 'error_type': 'InvalidRequestError', 'error_message': 'This connection is closed', 'traceback': 'Traceback (most recent call last):\n  File "/home/runner/DreamShare/app.py", line 49, in create_app\n    db.create_all()\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 900, in create_all\n    self._call_for_binds(bind_key, "create_all")\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 881, in _call_for_binds\n    getattr(metadata, op_name)(bind=engine)\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/sql/schema.py", line 5868, in create_all\n    bind._run_ddl_visitor(\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3252, in _run_ddl_visitor\n    with self.begin() as conn:\n  File "/nix/store/f98g7xbckgqbkagdvpzc2r6lv3h1p9ki-python3-3.11.9/lib/python3.11/contextlib.py", line 137, in __enter__\n    return next(self.gen)\n           ^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3242, in begin\n    with self.connect() as conn:\n         ^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3278, in connect\n    return self._connection_cls(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 146, in __init__\n    self._dbapi_connection = engine.raw_connection()\n                             ^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3302, in raw_connection\n    return self.pool.connect()\n           ^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 449, in connect\n    return _ConnectionFairy._checkout(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 1379, in _checkout\n    raise exc.InvalidRequestError("This connection is closed")\nsqlalchemy.exc.InvalidRequestError: This connection is closed\n', 'context': {}}
+
+2024-11-14 19:43:21,501 - None - None - None None
+Level: ERROR
+Module: app
+Message: Database initialization failed: This connection is closed
+
+2024-11-14 19:43:21,501 - None - None - None None
+Level: ERROR
+Module: app
+Message: Database initialization failed: This connection is closed
+
+2024-11-14 19:44:26,824 - None - None - None None
+Level: ERROR
+Module: extensions
+Message: Connection checkout failed: 'psycopg2.extensions.connection' object has no attribute 'is_valid'
+
+2024-11-14 19:44:27,070 - None - None - None None
+Level: ERROR
+Module: extensions
+Message: Connection checkout failed: 'psycopg2.extensions.connection' object has no attribute 'is_valid'
+
+2024-11-14 19:44:27,310 - None - None - None None
+Level: ERROR
+Module: logging_config
+Message: Application Error: {'timestamp': '2024-11-14T19:44:27.307592', 'error_type': 'InvalidRequestError', 'error_message': 'This connection is closed', 'traceback': 'Traceback (most recent call last):\n  File "/home/runner/DreamShare/app.py", line 63, in create_app\n    db.create_all()\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 900, in create_all\n    self._call_for_binds(bind_key, "create_all")\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/extension.py", line 881, in _call_for_binds\n    getattr(metadata, op_name)(bind=engine)\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/sql/schema.py", line 5868, in create_all\n    bind._run_ddl_visitor(\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3252, in _run_ddl_visitor\n    with self.begin() as conn:\n  File "/nix/store/f98g7xbckgqbkagdvpzc2r6lv3h1p9ki-python3-3.11.9/lib/python3.11/contextlib.py", line 137, in __enter__\n    return next(self.gen)\n           ^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3242, in begin\n    with self.connect() as conn:\n         ^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3278, in connect\n    return self._connection_cls(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 146, in __init__\n    self._dbapi_connection = engine.raw_connection()\n                             ^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 3302, in raw_connection\n    return self.pool.connect()\n           ^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 449, in connect\n    return _ConnectionFairy._checkout(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/pool/base.py", line 1379, in _checkout\n    raise exc.InvalidRequestError("This connection is closed")\nsqlalchemy.exc.InvalidRequestError: This connection is closed\n', 'context': {}}
+
+2024-11-14 19:44:27,310 - None - None - None None
+Level: ERROR
+Module: app
+Message: Database initialization failed: This connection is closed
+
+2024-11-14 19:44:27,310 - None - None - None None
+Level: ERROR
+Module: app
+Message: Database initialization failed: This connection is closed
+
