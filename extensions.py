@@ -2,14 +2,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import logging
 from sqlalchemy.pool import QueuePool
-from sqlalchemy import event, text
+from sqlalchemy import event
 from sqlalchemy.exc import DisconnectionError, SQLAlchemyError
 from sqlalchemy.orm import scoped_session, sessionmaker
 import time
-from flask import current_app, g
-from contextlib import contextmanager
+from flask import current_app
 import psycopg2
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED
+from contextlib import contextmanager
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -34,75 +33,24 @@ login_manager.login_message = 'Please log in to access this page.'
 login_manager.login_message_category = 'info'
 login_manager.session_protection = 'strong'
 
-class SQLAlchemySessionManager:
-    def __init__(self, db):
-        self.db = db
-        self._session_factory = None
-        self._scoped_session = None
-    
-    def init_session_factory(self, app):
-        if not self._session_factory:
-            self._session_factory = sessionmaker(
-                bind=self.db.engine,
-                expire_on_commit=False
-            )
-            self._scoped_session = scoped_session(
-                self._session_factory,
-                scopefunc=lambda: id(current_app.app_context()) if current_app else None
-            )
-    
-    def cleanup_sessions(self):
-        if self._scoped_session:
-            try:
-                if hasattr(g, 'db_session'):
-                    try:
-                        if g.db_session.is_active:
-                            g.db_session.rollback()
-                        g.db_session.close()
-                    except Exception as e:
-                        logger.error(f"Error cleaning up request session: {str(e)}")
-                self._scoped_session.remove()
-                logger.debug("All sessions cleaned up")
-            except Exception as e:
-                logger.error(f"Error during session cleanup: {str(e)}")
-    
+class SessionManager:
+    def __init__(self):
+        self._session = None
+
     @contextmanager
     def session_scope(self):
-        if not self._scoped_session:
-            raise RuntimeError("Session factory not initialized. Call init_session_factory first.")
-            
-        session = self._scoped_session()
+        """Provide a transactional scope around a series of operations."""
+        session = db.session
         try:
             yield session
-            if session.is_active:
-                session.commit()
-        except Exception as e:
-            if session.is_active:
-                session.rollback()
-            logger.error(f"Session operation failed: {str(e)}")
+            session.commit()
+        except Exception:
+            session.rollback()
             raise
         finally:
-            try:
-                session.close()
-            except Exception as e:
-                logger.error(f"Error closing session: {str(e)}")
+            session.close()
 
-    def get_session(self):
-        if not self._scoped_session:
-            raise RuntimeError("Session factory not initialized. Call init_session_factory first.")
-        return self._scoped_session()
-
-    def remove_session(self):
-        if self._scoped_session:
-            try:
-                self._scoped_session.remove()
-                return True
-            except Exception as e:
-                logger.error(f"Error removing session: {str(e)}")
-                return False
-        return False
-
-session_manager = SQLAlchemySessionManager(db)
+session_manager = SessionManager()
 
 def configure_connection_settings(dbapi_connection):
     """Configure connection parameters outside of any transaction."""
@@ -113,21 +61,15 @@ def configure_connection_settings(dbapi_connection):
     try:
         cursor = dbapi_connection.cursor()
         try:
-            # Configure only essential parameters
-            cursor.execute("SET statement_timeout = '30s'")
-            cursor.execute("SET idle_in_transaction_session_timeout = '60s'")
+            # Configure only timezone
             cursor.execute("SET timezone = 'UTC'")
-            
             logger.info("Connection parameters configured successfully")
             return True
-            
         except Exception as e:
             logger.error(f"Error executing connection configuration: {str(e)}")
             return False
-            
         finally:
             cursor.close()
-            
     except Exception as e:
         logger.error(f"Failed to configure connection parameters: {str(e)}")
         return False
@@ -151,13 +93,11 @@ def init_db_pool(app):
         }
     }
     
-    # Initialize database first
+    # Initialize database
     db.init_app(app)
     
-    # Initialize session factory within app context
-    with app.app_context():
-        session_manager.init_session_factory(app)
-        _setup_engine_events(db.engine)
+    # Set up engine events
+    _setup_engine_events(db.engine)
     
     return db
 
@@ -177,7 +117,6 @@ def _setup_engine_events(engine):
         """Verify connection health on checkout from pool."""
         if dbapi_connection is None:
             raise DisconnectionError("Received null connection on checkout")
-            
         try:
             cursor = dbapi_connection.cursor()
             try:
@@ -188,28 +127,6 @@ def _setup_engine_events(engine):
         except Exception as e:
             logger.error(f"Connection checkout failed: {str(e)}")
             raise DisconnectionError("Invalid connection") from e
-
-    @event.listens_for(engine, 'checkin')
-    def connection_checkin(dbapi_connection, connection_record):
-        """Clean up connection on checkin back to pool."""
-        if dbapi_connection is None:
-            logger.warning("Received null connection on checkin")
-            return
-            
-        try:
-            if not connection_record.connection.closed:
-                cursor = dbapi_connection.cursor()
-                try:
-                    cursor.execute("RESET ALL")
-                finally:
-                    cursor.close()
-                logger.debug("Connection cleaned up on checkin")
-        except Exception as e:
-            logger.error(f"Connection checkin cleanup failed: {str(e)}")
-
-def get_db_session():
-    """Get a database session from the scoped session."""
-    return session_manager.get_session()
 
 def get_db_connection(retries=MAX_RETRIES):
     """Get a database connection with retry logic."""

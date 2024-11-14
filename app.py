@@ -1,10 +1,10 @@
 from flask import Flask
 import os
-from extensions import db, login_manager, init_db_pool, session_manager
+from extensions import db, login_manager, init_db_pool
 from sqlalchemy.exc import SQLAlchemyError
 from logging_config import setup_logging, ErrorLogger
-from middleware import setup_request_logging
 from flask_login import current_user
+from models import User
 from transaction_debugger import init_transaction_debugger
 
 def should_show_premium_ads():
@@ -34,24 +34,19 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
-    # Initialize database connection pool
-    db = init_db_pool(app)
-    
-    # Initialize other components
+    # Initialize database and other extensions
+    db.init_app(app)
     login_manager.init_app(app)
-    setup_request_logging(app)
-    init_transaction_debugger(app)
     
-    # Import models and set up user loader
-    from models import User
+    # Initialize transaction debugger
+    init_transaction_debugger(app)
     
     @login_manager.user_loader
     def load_user(user_id):
         if not user_id:
             return None
         try:
-            with session_manager.session_scope() as session:
-                return session.query(User).get(int(user_id))
+            return User.query.get(int(user_id))
         except SQLAlchemyError as e:
             ErrorLogger.log_error(e, {'user_id': user_id})
             return None
@@ -67,7 +62,7 @@ def create_app():
     with app.app_context():
         try:
             from routes import register_routes
-            register_routes(app)
+            app = register_routes(app)
             app.logger.info("Routes registered successfully")
         except Exception as e:
             app.logger.error(f"Error registering routes: {str(e)}")
