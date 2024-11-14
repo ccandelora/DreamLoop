@@ -9,6 +9,7 @@ import time
 from flask import current_app, g
 from contextlib import contextmanager
 import psycopg2
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -104,20 +105,24 @@ class SQLAlchemySessionManager:
 
 session_manager = SQLAlchemySessionManager(db)
 
-def configure_connection_settings(connection):
+def configure_connection_settings(dbapi_connection):
     """Configure connection parameters outside of any transaction."""
-    try:
-        # Temporarily set autocommit to true
-        connection.set_session(autocommit=True)
+    if not isinstance(dbapi_connection, psycopg2.extensions.connection):
+        logger.error("Invalid connection type")
+        return False
         
-        # Set session characteristics
-        with connection.cursor() as cursor:
+    try:
+        # Set autocommit mode to True to execute commands outside transaction
+        dbapi_connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        
+        # Configure connection parameters
+        with dbapi_connection.cursor() as cursor:
             cursor.execute("SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL REPEATABLE READ")
             cursor.execute("SET statement_timeout = '30s'")
             cursor.execute("SET idle_in_transaction_session_timeout = '60s'")
         
-        # Reset autocommit to false for normal operations
-        connection.set_session(autocommit=False)
+        # Reset to normal transaction mode
+        dbapi_connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_READ_COMMITTED)
         return True
     except Exception as e:
         logger.error(f"Failed to configure connection parameters: {str(e)}")
@@ -159,8 +164,7 @@ def _setup_engine_events(engine):
     @event.listens_for(engine, 'connect')
     def on_connect(dbapi_connection, connection_record):
         """Configure connection on connect."""
-        if isinstance(dbapi_connection, psycopg2.extensions.connection):
-            configure_connection_settings(dbapi_connection)
+        configure_connection_settings(dbapi_connection)
 
     @event.listens_for(engine, 'checkout')
     def connection_checkout(dbapi_connection, connection_record, connection_proxy):
@@ -169,8 +173,10 @@ def _setup_engine_events(engine):
             raise DisconnectionError("Received null connection on checkout")
             
         try:
-            with dbapi_connection.cursor() as cursor:
-                cursor.execute("SELECT 1")  # Simple connection test
+            # Use raw psycopg2 cursor for connection test
+            cursor = dbapi_connection.cursor()
+            cursor.execute("SELECT 1")
+            cursor.close()
         except Exception as e:
             logger.error(f"Connection checkout failed: {str(e)}")
             raise DisconnectionError("Invalid connection") from e
@@ -184,8 +190,9 @@ def _setup_engine_events(engine):
             
         try:
             if not connection_record.connection.closed:
-                with dbapi_connection.cursor() as cursor:
-                    cursor.execute("RESET ALL")
+                cursor = dbapi_connection.cursor()
+                cursor.execute("RESET ALL")
+                cursor.close()
                 logger.debug("Connection cleaned up on checkin")
         except Exception as e:
             logger.error(f"Connection checkin cleanup failed: {str(e)}")

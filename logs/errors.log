@@ -30095,3 +30095,9 @@ Module: routes
 Message: Registration error: (psycopg2.ProgrammingError) set_session cannot be used inside a transaction
 (Background on this error at: https://sqlalche.me/e/20/f405)
 
+2024-11-14 20:08:06,204 - - - 172.31.196.35 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: routes
+Message: Registration error: (psycopg2.ProgrammingError) set_session cannot be used inside a transaction
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
