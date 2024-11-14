@@ -47,14 +47,19 @@ def create_user(username, email, password):
 def handle_user_login(user):
     """Handle user login in a separate transaction."""
     try:
-        success = login_user(user)
-        if success:
-            track_user_activity(
-                user.id,
-                ACTIVITY_TYPES['LOGIN'],
-                extra_data={'login_method': 'registration'}
-            )
-        return success
+        # Get fresh user object from database
+        with session_manager.session_scope() as session:
+            fresh_user = session.query(User).get(user.id)
+            if fresh_user:
+                success = login_user(fresh_user)
+                if success:
+                    track_user_activity(
+                        fresh_user.id,
+                        ACTIVITY_TYPES['LOGIN'],
+                        extra_data={'login_method': 'registration'}
+                    )
+                return success
+        return False
     except Exception as e:
         logger.error(f"Error during login after registration: {str(e)}")
         return False
@@ -139,26 +144,28 @@ def register_routes(app):
         
         if request.method == 'POST':
             try:
-                user = User.query.filter_by(username=request.form['username']).first()
-                if user and user.check_password(request.form['password']):
-                    login_user(user)
-                    success, error = track_user_activity(
-                        user.id, 
-                        ACTIVITY_TYPES['LOGIN'],
-                        extra_data={'login_method': 'password'}
-                    )
-                    if error:
-                        logger.warning(f"Failed to track login: {error}")
-                    
-                    next_page = request.args.get('next')
-                    return redirect(next_page if next_page else url_for('index'))
-                flash('Invalid username or password')
-                track_user_activity(
-                    user.id if user else None,
-                    ACTIVITY_TYPES['LOGIN'],
-                    description="Failed login attempt",
-                    extra_data={'reason': 'invalid_credentials'}
-                )
+                with session_manager.session_scope() as session:
+                    user = session.query(User).filter_by(username=request.form['username']).first()
+                    if user and user.check_password(request.form['password']):
+                        if login_user(user):
+                            success, error = track_user_activity(
+                                user.id, 
+                                ACTIVITY_TYPES['LOGIN'],
+                                extra_data={'login_method': 'password'}
+                            )
+                            if error:
+                                logger.warning(f"Failed to track login: {error}")
+                            
+                            next_page = request.args.get('next')
+                            return redirect(next_page if next_page else url_for('index'))
+                    flash('Invalid username or password')
+                    if user:
+                        track_user_activity(
+                            user.id,
+                            ACTIVITY_TYPES['LOGIN'],
+                            description="Failed login attempt",
+                            extra_data={'reason': 'invalid_credentials'}
+                        )
             except Exception as e:
                 logger.error(f"Login error: {str(e)}")
                 flash('An error occurred during login')
