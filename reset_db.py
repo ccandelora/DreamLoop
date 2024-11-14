@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 import logging
 import os
 import psycopg2
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from sqlalchemy import text
 
 logging.basicConfig(level=logging.INFO)
@@ -61,49 +61,50 @@ def drop_all_tables(conn):
         logger.error(f"Error dropping tables: {str(e)}")
         return False
 
-def create_sample_data(session):
+def create_sample_data():
     """Create initial sample data."""
     try:
-        # Create test user
-        test_user = User(
-            username="testuser",
-            email="test@example.com",
-            subscription_type="free"
-        )
-        test_user.set_password("password123")
-        session.add(test_user)
-        
-        # Create premium user
-        premium_user = User(
-            username="premium_user",
-            email="premium@example.com",
-            subscription_type="premium"
-        )
-        premium_user.set_password("premium123")
-        premium_user.subscription_end_date = datetime.utcnow() + timedelta(days=30)
-        session.add(premium_user)
-        
-        # Flush to get user IDs
-        session.flush()
-        
-        # Create sample dream group
-        dream_group = DreamGroup(
-            name="Lucid Dreamers",
-            description="A group for sharing and discussing lucid dreaming experiences",
-            created_by=test_user.id
-        )
-        session.add(dream_group)
-        session.flush()
-        
-        # Create group membership
-        membership = GroupMembership(
-            user_id=test_user.id,
-            group_id=dream_group.id,
-            is_admin=True
-        )
-        session.add(membership)
-        
-        return True
+        with session_manager.session_scope() as session:
+            # Create test user
+            test_user = User(
+                username="testuser",
+                email="test@example.com",
+                subscription_type="free"
+            )
+            test_user.set_password("password123")
+            session.add(test_user)
+            
+            # Create premium user
+            premium_user = User(
+                username="premium_user",
+                email="premium@example.com",
+                subscription_type="premium"
+            )
+            premium_user.set_password("premium123")
+            premium_user.subscription_end_date = datetime.utcnow() + timedelta(days=30)
+            session.add(premium_user)
+            
+            # Flush to get user IDs
+            session.flush()
+            
+            # Create sample dream group
+            dream_group = DreamGroup(
+                name="Lucid Dreamers",
+                description="A group for sharing and discussing lucid dreaming experiences",
+                created_by=test_user.id
+            )
+            session.add(dream_group)
+            session.flush()
+            
+            # Create group membership
+            membership = GroupMembership(
+                user_id=test_user.id,
+                group_id=dream_group.id,
+                is_admin=True
+            )
+            session.add(membership)
+            
+            return True
     except Exception as e:
         logger.error(f"Error creating sample data: {str(e)}")
         return False
@@ -117,25 +118,19 @@ def reset_database():
         try:
             # First establish a direct connection
             conn = get_psycopg2_connection()
-            
-            # Set isolation level to AUTOCOMMIT for schema operations
             conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
             
             # Drop all tables
             if not drop_all_tables(conn):
                 return False
-                
-            # Switch to READ COMMITTED for table creation
-            conn.set_isolation_level(ISOLATION_LEVEL_READ_COMMITTED)
             
-            # Create tables using SQLAlchemy
+            # Create tables using SQLAlchemy outside transaction
             db.create_all()
             logger.info("Database tables created successfully")
             
-            # Create sample data within a transaction
-            with session_manager.session_scope() as session:
-                if not create_sample_data(session):
-                    return False
+            # Create sample data
+            if not create_sample_data():
+                return False
             
             logger.info("Database reset completed successfully")
             return True

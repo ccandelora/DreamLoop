@@ -30149,3 +30149,15 @@ Level: ERROR
 Module: routes
 Message: Error creating user: Could not configure connection
 
+2024-11-14 20:15:26,847 - - - 172.31.196.35 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: extensions
+Message: Session operation failed: (psycopg2.ProgrammingError) set_session cannot be used inside a transaction
+(Background on this error at: https://sqlalche.me/e/20/f405)
+
+2024-11-14 20:15:26,848 - - - 172.31.196.35 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: routes
+Message: Error creating user: (psycopg2.ProgrammingError) set_session cannot be used inside a transaction
+(Background on this error at: https://sqlalche.me/e/20/f405)
+

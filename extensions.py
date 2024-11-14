@@ -9,14 +9,13 @@ import time
 from flask import current_app, g
 from contextlib import contextmanager
 import psycopg2
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Define constants for database configuration
-ISOLATION_LEVEL = 'REPEATABLE READ'
 POOL_SIZE = 20
 MAX_OVERFLOW = 10
 POOL_TIMEOUT = 30
@@ -112,14 +111,9 @@ def configure_connection_settings(dbapi_connection):
         return False
         
     try:
-        # Set autocommit mode to True to execute commands outside transaction
-        dbapi_connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-        
-        # Configure connection parameters using raw commands
         cursor = dbapi_connection.cursor()
         try:
-            # Configure only essential session parameters as specified
-            cursor.execute("SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL REPEATABLE READ")
+            # Configure only essential parameters
             cursor.execute("SET statement_timeout = '30s'")
             cursor.execute("SET idle_in_transaction_session_timeout = '60s'")
             cursor.execute("SET timezone = 'UTC'")
@@ -133,8 +127,6 @@ def configure_connection_settings(dbapi_connection):
             
         finally:
             cursor.close()
-            # Reset to normal transaction mode after configuration
-            dbapi_connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_READ_COMMITTED)
             
     except Exception as e:
         logger.error(f"Failed to configure connection parameters: {str(e)}")
@@ -143,7 +135,6 @@ def configure_connection_settings(dbapi_connection):
 def init_db_pool(app):
     """Initialize database pool with application context."""
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-        'isolation_level': ISOLATION_LEVEL,
         'pool_size': POOL_SIZE,
         'max_overflow': MAX_OVERFLOW,
         'pool_timeout': POOL_TIMEOUT,
