@@ -8,6 +8,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 import time
 from flask import current_app, g
 from contextlib import contextmanager
+import psycopg2
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -103,23 +104,24 @@ class SQLAlchemySessionManager:
 
 session_manager = SQLAlchemySessionManager(db)
 
-def configure_connection(dbapi_connection):
+def configure_connection_settings(connection):
     """Configure connection parameters outside of any transaction."""
-    if dbapi_connection is None:
-        return
-        
     try:
-        # Set autocommit to true temporarily to execute connection settings
-        dbapi_connection.autocommit = True
-        with dbapi_connection.cursor() as cursor:
+        # Temporarily set autocommit to true
+        connection.set_session(autocommit=True)
+        
+        # Set session characteristics
+        with connection.cursor() as cursor:
             cursor.execute("SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL REPEATABLE READ")
             cursor.execute("SET statement_timeout = '30s'")
             cursor.execute("SET idle_in_transaction_session_timeout = '60s'")
-        # Reset autocommit to false for normal operation
-        dbapi_connection.autocommit = False
+        
+        # Reset autocommit to false for normal operations
+        connection.set_session(autocommit=False)
+        return True
     except Exception as e:
         logger.error(f"Failed to configure connection parameters: {str(e)}")
-        raise
+        return False
 
 def init_db_pool(app):
     """Initialize database pool with application context."""
@@ -157,7 +159,8 @@ def _setup_engine_events(engine):
     @event.listens_for(engine, 'connect')
     def on_connect(dbapi_connection, connection_record):
         """Configure connection on connect."""
-        configure_connection(dbapi_connection)
+        if isinstance(dbapi_connection, psycopg2.extensions.connection):
+            configure_connection_settings(dbapi_connection)
 
     @event.listens_for(engine, 'checkout')
     def connection_checkout(dbapi_connection, connection_record, connection_proxy):

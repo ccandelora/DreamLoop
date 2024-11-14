@@ -4,6 +4,8 @@ from models import User, DreamGroup, GroupMembership
 from datetime import datetime, timedelta
 import logging
 import os
+import psycopg2
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -27,19 +29,29 @@ def create_init_app():
     db = init_db_pool(app)
     return app
 
+def get_psycopg2_connection():
+    """Create a direct psycopg2 connection for schema operations."""
+    return psycopg2.connect(
+        dbname=os.environ['PGDATABASE'],
+        user=os.environ['PGUSER'],
+        password=os.environ['PGPASSWORD'],
+        host=os.environ['PGHOST'],
+        port=os.environ['PGPORT']
+    )
+
 def reset_database():
     """Reset and initialize the database with initial data."""
     app = create_init_app()
     
     with app.app_context():
         try:
-            # Get raw connection with autocommit for schema operations
-            connection = db.engine.raw_connection()
-            connection.autocommit = True
+            # First establish a direct connection with autocommit for schema operations
+            conn = get_psycopg2_connection()
+            conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
             
             try:
-                # Drop all tables if they exist
-                with connection.cursor() as cursor:
+                with conn.cursor() as cursor:
+                    # Drop existing tables
                     cursor.execute("""
                         DROP TABLE IF EXISTS group_membership CASCADE;
                         DROP TABLE IF EXISTS forum_reply CASCADE;
@@ -51,15 +63,14 @@ def reset_database():
                         DROP TABLE IF EXISTS "user" CASCADE;
                     """)
                 logger.info("All tables dropped successfully")
-                
-                # Create tables using SQLAlchemy models
-                db.create_all()
-                logger.info("Database tables created successfully")
-                
             finally:
-                connection.close()
+                conn.close()
             
-            # Create test data within a transaction using session manager
+            # Create tables using SQLAlchemy
+            db.create_all()
+            logger.info("Database tables created successfully")
+            
+            # Create test data within a transaction
             with session_manager.session_scope() as session:
                 # Create test user
                 test_user = User(
