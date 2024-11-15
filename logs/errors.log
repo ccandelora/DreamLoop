@@ -30910,3 +30910,33 @@ Level: ERROR
 Module: __init__
 Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
 
+2024-11-15 02:55:47,250 - - - 172.31.196.33 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/login
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-15 02:56:05,070 - - - 172.31.196.33 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-15 02:56:05,092 - - - 172.31.196.33 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/register
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-15 02:56:05,291 - - - 172.31.196.33 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
+2024-11-15 02:56:14,126 - - - 172.31.196.33 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/community
+Level: ERROR
+Module: routes
+Message: Error viewing community dreams: 'COMMUNITY_VIEW'
+
+2024-11-15 02:56:14,360 - - - 172.31.196.33 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: ERROR
+Module: activity_tracker
+Message: Error tracking activity: __init__() got an unexpected keyword argument 'created_at'
+
