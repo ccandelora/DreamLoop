@@ -11,7 +11,7 @@
             <div class="dream-card hover:shadow-xl transition-all duration-300">
                 <div class="p-6">
                     <h2 class="text-xl font-semibold text-slate-900 mb-2">
-                        <a href="{{ url_for('dreams.view_dream', dream_id=dream.id) }}" 
+                        <a href="{{ url_for('dream_view', dream_id=dream.id) }}" 
                            class="hover:text-purple-600 transition-colors">
                             {{ dream.title }}
                         </a>
@@ -50,7 +50,7 @@
         <!-- Pagination Controls -->
         <div class="flex justify-center items-center space-x-4 mt-8">
             {% if has_prev %}
-            <a href="{{ url_for('dreams.public_dreams', page=page-1, per_page=per_page) }}" 
+            <a href="{{ url_for('public_dreams', page=page-1, per_page=per_page) }}" 
                class="dream-button">Previous</a>
             {% endif %}
             
@@ -59,7 +59,7 @@
             </span>
             
             {% if has_next %}
-            <a href="{{ url_for('dreams.public_dreams', page=page+1, per_page=per_page) }}" 
+            <a href="{{ url_for('public_dreams', page=page+1, per_page=per_page) }}" 
                class="dream-button">Next</a>
             {% endif %}
         </div>

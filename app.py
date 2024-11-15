@@ -9,10 +9,9 @@ from transaction_debugger import init_transaction_debugger
 from flask_migrate import Migrate
 from health_checks import health_checker
 from middleware import setup_request_logging
-from blueprints import all_blueprints
-from blueprints.dreams import dreams_bp
 import atexit
 import logging
+from routes import register_routes
 
 logger = logging.getLogger(__name__)
 
@@ -130,15 +129,8 @@ def create_app():
             'should_show_premium_ads': should_show_premium_ads
         }
     
-    # Register dreams blueprint first (contains root route)
-    app.register_blueprint(dreams_bp)
-    
-    # Register other blueprints
-    for blueprint in all_blueprints:
-        if blueprint != dreams_bp:  # Skip dreams_bp since it's already registered
-            app.register_blueprint(blueprint)
-            
-    app.logger.info("Blueprints registered successfully")
+    # Register all routes
+    app = register_routes(app)
     
     # Initialize health checker
     health_checker.init_app(app)
