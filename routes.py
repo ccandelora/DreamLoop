@@ -655,13 +655,28 @@ def register_routes(app):
             flash('An error occurred while loading community dreams')
             return redirect(url_for('index'))
 
-    @app.route('/groups', methods=['GET', 'POST'])
+    @app.route('/subscription')
     @login_required
-    def groups_view():
+    def subscription():
+        """View and manage subscription settings."""
+        try:
+            track_user_activity(
+                current_user.id,
+                ACTIVITY_TYPES['SUBSCRIPTION_VIEW'],
+                description="Viewed subscription page"
+            )
+            return render_template('subscription.html')
+        except Exception as e:
+            logger.error(f"Error viewing subscription: {str(e)}")
+            flash('An error occurred while loading subscription information')
+            return redirect(url_for('index'))
+
+    @app.route('/groups')
+    @login_required
+    def groups():
         """View and manage dream groups."""
         try:
             with session_manager.session_scope() as session:
-                # Get all groups the user is a member of or public groups
                 groups = session.query(DreamGroup).all()
                 
                 track_user_activity(
@@ -670,24 +685,21 @@ def register_routes(app):
                     description="Viewed dream groups"
                 )
                 
-                return render_template('groups.html', groups=groups)
+                return render_template('dream_groups.html', groups=groups)
         except Exception as e:
-            logger.error(f"Error viewing dream groups: {str(e)}")
-            flash('An error occurred while loading dream groups')
+            logger.error(f"Error viewing groups: {str(e)}")
+            flash('An error occurred while loading groups')
             return redirect(url_for('index'))
 
-    @app.route('/dream/patterns', methods=['GET', 'POST'])
+    @app.route('/dream/patterns')
     @login_required
-    def patterns_view():
+    def patterns():
         """View dream patterns and analysis."""
         try:
             with session_manager.session_scope() as session:
-                # Get user's dreams for pattern analysis
-                dreams = session.query(Dream).filter_by(user_id=current_user.id).all()
-                
-                # Get patterns analysis
+                user_dreams = session.query(Dream).filter_by(user_id=current_user.id).all()
                 patterns = analyze_dream_patterns(
-                    dreams,
+                    user_dreams,
                     is_premium=(current_user.subscription_type == 'premium')
                 )
                 
@@ -697,21 +709,20 @@ def register_routes(app):
                     description="Viewed dream patterns"
                 )
                 
-                return render_template('dream/patterns.html', patterns=patterns)
+                return render_template('dream_patterns.html', patterns=patterns)
         except Exception as e:
-            logger.error(f"Error viewing dream patterns: {str(e)}")
-            flash('An error occurred while analyzing dream patterns')
+            logger.error(f"Error viewing patterns: {str(e)}")
+            flash('An error occurred while analyzing patterns')
             return redirect(url_for('index'))
 
-    @app.route('/community', methods=['GET', 'POST'])
+    @app.route('/community')
     @login_required
-    def community_view():
+    def community():
         """View community shared dreams."""
         try:
             with session_manager.session_scope() as session:
-                # Get all public dreams with their authors
                 public_dreams = session.query(Dream)\
-                    .filter(Dream.is_public == True)\
+                    .filter_by(is_public=True)\
                     .order_by(Dream.date.desc())\
                     .all()
                 
@@ -721,10 +732,7 @@ def register_routes(app):
                     description="Viewed community dreams"
                 )
                 
-                return render_template(
-                    'community.html',
-                    dreams=public_dreams
-                )
+                return render_template('community_dreams.html', dreams=public_dreams)
         except Exception as e:
             logger.error(f"Error viewing community dreams: {str(e)}")
             flash('An error occurred while loading community dreams')

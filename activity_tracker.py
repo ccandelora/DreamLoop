@@ -27,8 +27,7 @@ def track_user_activity(user_id, activity_type, description=None, target_type=No
             'target_type': target_type,
             'target_id': target_id,
             'ip_address': request.remote_addr,
-            'user_agent': request.user_agent.string if request.user_agent else None,
-            'created_at': datetime.utcnow()
+            'user_agent': request.user_agent.string if request.user_agent else None
         }
 
         # Add any extra data as part of description if provided
