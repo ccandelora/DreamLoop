@@ -3,11 +3,10 @@ import json
 import shutil
 from datetime import datetime
 import logging
-from sqlalchemy import create_engine, MetaData, Table
 import psycopg2
-from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply, UserActivity
-from extensions import db
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import gzip
+import subprocess
 
 logger = logging.getLogger(__name__)
 
@@ -20,8 +19,9 @@ class BackupManager:
         # Ensure backup subdirectories exist
         self.db_backup_dir = os.path.join(backup_dir, 'database')
         self.logs_backup_dir = os.path.join(backup_dir, 'logs')
+        self.schema_backup_dir = os.path.join(backup_dir, 'schema')
         
-        for directory in [self.db_backup_dir, self.logs_backup_dir]:
+        for directory in [self.db_backup_dir, self.logs_backup_dir, self.schema_backup_dir]:
             if not os.path.exists(directory):
                 os.makedirs(directory)
 
@@ -32,8 +32,13 @@ class BackupManager:
             backup_path = os.path.join(self.backup_dir, f'backup_{timestamp}')
             os.makedirs(backup_path, exist_ok=True)
 
-            # Backup database
+            # Backup database schema and data
             db_backup_file = os.path.join(backup_path, 'database.sql.gz')
+            schema_backup_file = os.path.join(backup_path, 'schema.sql.gz')
+            
+            # Create schema-only backup first
+            self._backup_schema(schema_backup_file)
+            # Then create complete backup
             self._backup_database(db_backup_file)
 
             # Backup logs if requested
@@ -47,7 +52,8 @@ class BackupManager:
                 'timestamp': timestamp,
                 'includes_logs': include_logs,
                 'database_file': 'database.sql.gz',
-                'version': '1.0'
+                'schema_file': 'schema.sql.gz',
+                'version': '1.1'
             }
             
             with open(os.path.join(backup_path, 'metadata.json'), 'w') as f:
@@ -61,18 +67,138 @@ class BackupManager:
             logger.error(error_msg)
             return False, error_msg
 
+    def _backup_schema(self, output_file):
+        """Create a schema-only backup."""
+        try:
+            conn_string = "postgresql://{user}:{password}@{host}:{port}/{dbname}".format(
+                user=os.environ['PGUSER'],
+                password=os.environ['PGPASSWORD'],
+                host=os.environ['PGHOST'],
+                port=os.environ['PGPORT'],
+                dbname=os.environ['PGDATABASE']
+            )
+
+            with gzip.open(output_file, 'wb') as f:
+                # Use psql to dump schema only
+                process = subprocess.Popen([
+                    'psql',
+                    conn_string,
+                    '-X',  # No .psqlrc
+                    '-q',  # Quiet mode
+                    '-A',  # Unaligned output mode
+                    '-t',  # Print rows only
+                    '-c', '\dt'  # List tables
+                ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                
+                tables = process.communicate()[0].decode().strip().split('\n')
+                
+                for table in tables:
+                    if not table:
+                        continue
+                    
+                    # Get schema for each table
+                    schema_process = subprocess.Popen([
+                        'psql',
+                        conn_string,
+                        '-X',
+                        '-q',
+                        '-c', f'\\d+ {table}'
+                    ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    
+                    schema = schema_process.communicate()[0]
+                    if schema:
+                        f.write(schema)
+
+            logger.info(f"Schema backup created at {output_file}")
+            return True
+        except Exception as e:
+            logger.error(f"Schema backup failed: {str(e)}")
+            raise
+
+    def _backup_database(self, output_file):
+        """Create a complete database backup."""
+        try:
+            with gzip.open(output_file, 'wb') as f:
+                # Use psql to dump complete database
+                process = subprocess.Popen([
+                    'psql',
+                    '--dbname=postgresql://{user}:{password}@{host}:{port}/{dbname}'.format(
+                        user=os.environ['PGUSER'],
+                        password=os.environ['PGPASSWORD'],
+                        host=os.environ['PGHOST'],
+                        port=os.environ['PGPORT'],
+                        dbname=os.environ['PGDATABASE']
+                    ),
+                    '-X',  # No .psqlrc
+                    '-c', 'SELECT pg_catalog.pg_export_snapshot();'  # Create a snapshot
+                ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                
+                # Get the snapshot ID
+                snapshot_id = process.communicate()[0].decode().strip()
+                
+                if process.returncode != 0:
+                    raise Exception("Failed to create database snapshot")
+
+                # Dump using the snapshot
+                dump_process = subprocess.Popen([
+                    'psql',
+                    '--dbname=postgresql://{user}:{password}@{host}:{port}/{dbname}'.format(
+                        user=os.environ['PGUSER'],
+                        password=os.environ['PGPASSWORD'],
+                        host=os.environ['PGHOST'],
+                        port=os.environ['PGPORT'],
+                        dbname=os.environ['PGDATABASE']
+                    ),
+                    '-X',  # No .psqlrc
+                    '-c', f'\\copy (SELECT * FROM pg_catalog.pg_dump_all_tables(true)) TO STDOUT'
+                ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+                # Stream output to gzipped file
+                for line in dump_process.stdout:
+                    f.write(line)
+
+                dump_process.wait()
+                if dump_process.returncode != 0:
+                    error = dump_process.stderr.read().decode()
+                    raise Exception(f"Database dump failed: {error}")
+
+            logger.info(f"Database backup created at {output_file}")
+            return True
+
+        except Exception as e:
+            logger.error(f"Database backup failed: {str(e)}")
+            raise
+
+    def _backup_logs(self, backup_dir):
+        """Backup log files."""
+        try:
+            log_dir = 'logs'
+            if os.path.exists(log_dir):
+                for log_file in os.listdir(log_dir):
+                    src = os.path.join(log_dir, log_file)
+                    dst = os.path.join(backup_dir, log_file)
+                    if os.path.isfile(src):
+                        shutil.copy2(src, dst)
+            return True
+        except Exception as e:
+            logger.error(f"Error backing up logs: {str(e)}")
+            raise
+
     def restore_backup(self, backup_path):
         """Restore the application from a backup."""
         try:
-            # Verify backup integrity
             if not self._verify_backup(backup_path):
                 raise ValueError("Invalid or corrupted backup")
 
-            # Read metadata
             with open(os.path.join(backup_path, 'metadata.json'), 'r') as f:
                 metadata = json.load(f)
 
-            # Restore database
+            # First restore schema
+            schema_backup_file = os.path.join(backup_path, metadata.get('schema_file'))
+            if os.path.exists(schema_backup_file):
+                self._restore_schema(schema_backup_file)
+
+            # Then restore data
             db_backup_file = os.path.join(backup_path, metadata['database_file'])
             self._restore_database(db_backup_file)
 
@@ -90,116 +216,62 @@ class BackupManager:
             logger.error(error_msg)
             return False, error_msg
 
-    def list_backups(self):
-        """List all available backups with their metadata."""
-        backups = []
+    def _restore_schema(self, backup_file):
+        """Restore database schema from backup."""
         try:
-            for item in os.listdir(self.backup_dir):
-                backup_path = os.path.join(self.backup_dir, item)
-                if os.path.isdir(backup_path):
-                    metadata_file = os.path.join(backup_path, 'metadata.json')
-                    if os.path.exists(metadata_file):
-                        with open(metadata_file, 'r') as f:
-                            metadata = json.load(f)
-                            backups.append({
-                                'path': backup_path,
-                                'metadata': metadata
-                            })
-            return sorted(backups, key=lambda x: x['metadata']['timestamp'], reverse=True)
-        except Exception as e:
-            logger.error(f"Error listing backups: {str(e)}")
-            return []
-
-    def cleanup_old_backups(self, keep_last=5):
-        """Remove old backups keeping only the specified number of recent ones."""
-        try:
-            backups = self.list_backups()
-            if len(backups) > keep_last:
-                for backup in backups[keep_last:]:
-                    backup_path = backup['path']
-                    shutil.rmtree(backup_path)
-                    logger.info(f"Removed old backup: {backup_path}")
-            return True, None
-        except Exception as e:
-            error_msg = f"Error cleaning up old backups: {str(e)}"
-            logger.error(error_msg)
-            return False, error_msg
-
-    def _backup_database(self, output_file):
-        """Create a compressed database backup."""
-        try:
-            db_url = os.environ['DATABASE_URL']
-            if db_url.startswith('postgres://'):
-                db_url = db_url.replace('postgres://', 'postgresql://', 1)
-
-            # Create a database dump
-            with gzip.open(output_file, 'wt') as f:
-                engine = create_engine(db_url)
-                metadata = MetaData()
-                metadata.reflect(bind=engine)
+            with gzip.open(backup_file, 'rb') as f:
+                process = subprocess.Popen([
+                    'psql',
+                    '--dbname=postgresql://{user}:{password}@{host}:{port}/{dbname}'.format(
+                        user=os.environ['PGUSER'],
+                        password=os.environ['PGPASSWORD'],
+                        host=os.environ['PGHOST'],
+                        port=os.environ['PGPORT'],
+                        dbname=os.environ['PGDATABASE']
+                    ),
+                    '-X',  # No .psqlrc
+                    '-q'   # Quiet mode
+                ], stdin=subprocess.PIPE, stderr=subprocess.PIPE)
                 
-                # Export schema
-                for table in metadata.sorted_tables:
-                    schema = str(CreateTable(table).compile(engine))
-                    f.write(f"{schema}\n")
+                process.communicate(input=f.read())
                 
-                # Export data
-                with engine.connect() as conn:
-                    for table in metadata.sorted_tables:
-                        result = conn.execute(table.select())
-                        for row in result:
-                            insert = table.insert().values(row._mapping)
-                            f.write(f"{str(insert.compile(engine))}\n")
+                if process.returncode != 0:
+                    raise Exception("Schema restore failed")
 
-            logger.info(f"Database backup created at {output_file}")
+            logger.info("Database schema restored successfully")
             return True
 
         except Exception as e:
-            logger.error(f"Database backup failed: {str(e)}")
+            logger.error(f"Schema restore failed: {str(e)}")
             raise
 
     def _restore_database(self, backup_file):
-        """Restore database from a compressed backup."""
+        """Restore database from backup."""
         try:
-            db_url = os.environ['DATABASE_URL']
-            if db_url.startswith('postgres://'):
-                db_url = db_url.replace('postgres://', 'postgresql://', 1)
-
-            engine = create_engine(db_url)
-            
-            # Drop all existing tables
-            metadata = MetaData()
-            metadata.reflect(bind=engine)
-            metadata.drop_all(engine)
-
-            # Restore from backup
-            with gzip.open(backup_file, 'rt') as f:
-                statements = f.read().split('\n')
-                with engine.begin() as conn:
-                    for statement in statements:
-                        if statement.strip():
-                            conn.execute(text(statement))
+            with gzip.open(backup_file, 'rb') as f:
+                process = subprocess.Popen([
+                    'psql',
+                    '--dbname=postgresql://{user}:{password}@{host}:{port}/{dbname}'.format(
+                        user=os.environ['PGUSER'],
+                        password=os.environ['PGPASSWORD'],
+                        host=os.environ['PGHOST'],
+                        port=os.environ['PGPORT'],
+                        dbname=os.environ['PGDATABASE']
+                    ),
+                    '-X',  # No .psqlrc
+                    '-q'   # Quiet mode
+                ], stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+                
+                process.communicate(input=f.read())
+                
+                if process.returncode != 0:
+                    raise Exception("Database restore failed")
 
             logger.info("Database restored successfully")
             return True
 
         except Exception as e:
             logger.error(f"Database restore failed: {str(e)}")
-            raise
-
-    def _backup_logs(self, backup_dir):
-        """Backup log files."""
-        try:
-            log_dir = 'logs'
-            if os.path.exists(log_dir):
-                for log_file in os.listdir(log_dir):
-                    src = os.path.join(log_dir, log_file)
-                    dst = os.path.join(backup_dir, log_file)
-                    if os.path.isfile(src):
-                        shutil.copy2(src, dst)
-            return True
-        except Exception as e:
-            logger.error(f"Error backing up logs: {str(e)}")
             raise
 
     def _restore_logs(self, backup_dir):
@@ -238,6 +310,12 @@ class BackupManager:
             db_backup_file = os.path.join(backup_path, metadata['database_file'])
             if not os.path.exists(db_backup_file):
                 return False
+
+            # Verify schema backup if it exists in metadata
+            if 'schema_file' in metadata:
+                schema_backup_file = os.path.join(backup_path, metadata['schema_file'])
+                if not os.path.exists(schema_backup_file):
+                    return False
 
             return True
 

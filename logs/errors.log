@@ -30855,3 +30855,28 @@ Level: ERROR
 Module: health_checks
 Message: Error getting connection info: dictionary update sequence element #0 has length 97; 2 is required
 
+2024-11-15 02:35:07,483 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error checking schema status: comment
+
+2024-11-15 02:35:30,459 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
+
+2024-11-15 02:35:31,635 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
+
+2024-11-15 02:35:32,693 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
+
+2024-11-15 02:35:33,305 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
+

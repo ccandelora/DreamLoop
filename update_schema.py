@@ -2,6 +2,7 @@ from app import app, db
 from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply, UserActivity
 from sqlalchemy import text
 import logging
+from backup_manager import BackupManager
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -9,7 +10,17 @@ logger = logging.getLogger(__name__)
 def update_schema():
     with app.app_context():
         try:
-            # Start transaction
+            # Create backup before schema update
+            backup_manager = BackupManager()
+            success, result = backup_manager.create_backup(include_logs=True)
+            
+            if not success:
+                logger.error(f"Failed to create backup before schema update: {result}")
+                return False
+                
+            logger.info(f"Backup created successfully at: {result}")
+            
+            # Start transaction for schema update
             db.session.begin()
             
             # First create all tables using SQLAlchemy models
