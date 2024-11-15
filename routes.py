@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, flash, request, abort, jso
 from flask_login import login_user, logout_user, login_required, current_user
 from extensions import db, session_manager
 from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply
-from datetime import datetime, timedelta  # Added import for timedelta
+from datetime import datetime, timedelta
 import logging
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import desc, text, or_, func
@@ -499,5 +499,65 @@ def register_routes(app):
     @login_required
     def subscription():
         return render_template('subscription.html')
+
+    @app.route('/public', methods=['GET'])
+    def public_dreams():
+        """Public dreams feed with pagination."""
+        try:
+            page = request.args.get('page', 1, type=int)
+            per_page = request.args.get('per_page', 10, type=int)
+            
+            # Validate pagination parameters
+            if page < 1:
+                page = 1
+            if per_page < 1 or per_page > 50:  # Limit max items per page
+                per_page = 10
+
+            with session_manager.session_scope() as session:
+                # Query public dreams with pagination
+                query = session.query(Dream)\
+                    .filter(Dream.is_public.is_(True))\
+                    .order_by(Dream.created_at.desc())
+                
+                # Get total count for pagination
+                total = query.count()
+                
+                # Apply pagination
+                dreams = query.offset((page - 1) * per_page)\
+                    .limit(per_page)\
+                    .all()
+
+                # Calculate pagination metadata
+                total_pages = (total + per_page - 1) // per_page
+                has_next = page < total_pages
+                has_prev = page > 1
+
+                # Track activity for authenticated users
+                if current_user.is_authenticated:
+                    track_user_activity(
+                        current_user.id,
+                        ACTIVITY_TYPES['COMMUNITY_DREAMS_VIEW'],
+                        description=f"Viewed public dreams page {page}"
+                    )
+
+                return render_template(
+                    'public_dreams.html',
+                    dreams=dreams,
+                    page=page,
+                    per_page=per_page,
+                    total=total,
+                    total_pages=total_pages,
+                    has_next=has_next,
+                    has_prev=has_prev
+                )
+
+        except SQLAlchemyError as e:
+            logger.error(f"Database error in public dreams feed: {str(e)}")
+            flash('Unable to load public dreams. Please try again later.', 'error')
+            return render_template('public_dreams.html', dreams=[]), 500
+        except Exception as e:
+            logger.error(f"Unexpected error in public dreams feed: {str(e)}")
+            flash('An unexpected error occurred.', 'error')
+            return render_template('public_dreams.html', dreams=[]), 500
 
     return app

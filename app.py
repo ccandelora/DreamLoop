@@ -9,17 +9,19 @@ from transaction_debugger import init_transaction_debugger
 from flask_migrate import Migrate
 from health_checks import health_checker
 from middleware import setup_request_logging
+from routes import register_routes
 import atexit
 import logging
-from routes import register_routes
 
 logger = logging.getLogger(__name__)
+
 
 def should_show_premium_ads():
     """Determine if premium ads should be shown to the current user."""
     if not current_user or not current_user.is_authenticated:
         return True
     return current_user.subscription_type == 'free'
+
 
 def create_app():
     """Create and configure the Flask application with enhanced security and error handling."""
@@ -134,7 +136,6 @@ def create_app():
     
     # Initialize health checker
     health_checker.init_app(app)
-    health_checker.start_monitoring()
     
     @atexit.register
     def cleanup():
