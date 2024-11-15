@@ -6,11 +6,9 @@ from sqlalchemy import event
 from sqlalchemy.exc import DisconnectionError, SQLAlchemyError
 from sqlalchemy.orm import scoped_session, sessionmaker
 import time
-from flask import current_app, abort, request, has_request_context
+from flask import current_app
 import psycopg2
 from contextlib import contextmanager
-from flask_wtf.csrf import CSRFProtect
-from datetime import datetime, timedelta
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -25,79 +23,32 @@ POOL_PRE_PING = True
 MAX_RETRIES = 3
 RETRY_INTERVAL = 1
 
-# Initialize extensions
+# Initialize SQLAlchemy without immediate engine binding
 db = SQLAlchemy()
-csrf = CSRFProtect()
+
+# Initialize LoginManager
 login_manager = LoginManager()
-login_manager.login_view = 'auth.login'
+login_manager.login_view = 'login'
 login_manager.login_message = 'Please log in to access this page.'
 login_manager.login_message_category = 'info'
 login_manager.session_protection = 'strong'
 
-class RateLimiter:
-    def __init__(self):
-        self.requests = {}
-        
-    def is_rate_limited(self, key, limit=60, per=60):
-        """Check if a key is rate limited."""
-        now = datetime.utcnow()
-        self.cleanup_old_requests(now)
-        
-        if key not in self.requests:
-            self.requests[key] = []
-            
-        self.requests[key].append(now)
-        
-        return len(self.requests[key]) > limit
-        
-    def cleanup_old_requests(self, now):
-        """Remove requests older than the time window."""
-        for key in list(self.requests.keys()):
-            self.requests[key] = [
-                req_time for req_time in self.requests[key]
-                if now - req_time < timedelta(minutes=1)
-            ]
-            if not self.requests[key]:
-                del self.requests[key]
-
-rate_limiter = RateLimiter()
-
 class SessionManager:
     def __init__(self):
         self._session = None
-        self.rate_limiter = rate_limiter
 
     @contextmanager
     def session_scope(self):
         """Provide a transactional scope around a series of operations."""
         session = db.session
         try:
-            # Only check rate limiting if we're in a request context
-            if has_request_context():
-                if self.rate_limiter.is_rate_limited(request.remote_addr):
-                    logger.warning(f"Rate limit exceeded for IP: {request.remote_addr}")
-                    abort(429, "Too many requests. Please try again later.")
-            
             yield session
             session.commit()
-        except SQLAlchemyError as e:
+        except Exception:
             session.rollback()
-            logger.error(f"Database error in session: {str(e)}")
-            raise
-        except Exception as e:
-            session.rollback()
-            logger.error(f"Unexpected error in session: {str(e)}")
             raise
         finally:
             session.close()
-
-    def cleanup_sessions(self):
-        """Clean up expired sessions."""
-        try:
-            if hasattr(db.session, 'remove'):
-                db.session.remove()
-        except Exception as e:
-            logger.error(f"Error cleaning up sessions: {str(e)}")
 
 session_manager = SessionManager()
 
@@ -110,9 +61,8 @@ def configure_connection_settings(dbapi_connection):
     try:
         cursor = dbapi_connection.cursor()
         try:
+            # Configure only timezone
             cursor.execute("SET timezone = 'UTC'")
-            cursor.execute("SET statement_timeout = '30s'")
-            cursor.execute("SET idle_in_transaction_session_timeout = '60s'")
             logger.info("Connection parameters configured successfully")
             return True
         except Exception as e:
