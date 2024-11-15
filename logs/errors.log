@@ -30506,3 +30506,352 @@ This typically means that you attempted to use functionality that needed
 the current application. To solve this, set up an application context
 with app.app_context(). See the documentation for more information.
 
+2024-11-15 02:14:47,683 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:14:55,456 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:03,480 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:08,382 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:08,547 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:08,619 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:08,678 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:09,176 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:09,233 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:10,218 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:10,279 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:10,413 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:11,322 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:12,555 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:13,256 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:15,089 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:15,909 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:16,151 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:16,157 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:17,882 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:18,247 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:18,351 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:16:44,352 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:17:44,353 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Health check failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:18:35,144 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error in health check monitoring loop: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:18:40,148 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error in health check monitoring loop: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:18:45,148 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error in health check monitoring loop: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:18:50,149 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error in health check monitoring loop: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:18:55,149 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error in health check monitoring loop: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:19:00,150 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error in health check monitoring loop: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:19:05,150 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error in health check monitoring loop: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:19:10,151 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error in health check monitoring loop: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:19:15,152 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error in health check monitoring loop: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:19:20,152 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error in health check monitoring loop: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:19:25,153 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error in health check monitoring loop: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:19:30,153 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error in health check monitoring loop: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+2024-11-15 02:21:54,865 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error checking schema status: No inspection system is available for object of type <class 'NoneType'>
+
+2024-11-15 02:23:54,150 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error checking schema status: No inspection system is available for object of type <class 'NoneType'>
+
+2024-11-15 02:23:54,173 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error checking pool status: <Flask 'app'>
+
+2024-11-15 02:23:54,290 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error getting database size: cannot convert dictionary update sequence element #0 to a sequence
+
+2024-11-15 02:23:54,311 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error getting connection info: dictionary update sequence element #0 has length 97; 2 is required
+

@@ -3,7 +3,8 @@ import os
 import logging
 from flask_migrate import Migrate
 from extensions import db
-from sqlalchemy import text
+from sqlalchemy import text, event
+from sqlalchemy.engine import Engine
 import shutil
 from pathlib import Path
 
@@ -51,18 +52,30 @@ def setup_migrations():
             # Import models to ensure they are registered with SQLAlchemy
             from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply, UserActivity
             
-            # Drop existing tables if they exist
+            # Drop existing tables and alembic version if they exist
             logger.info("Dropping existing tables")
             tables = [
                 'forum_reply', 'forum_post', 'comment', 'user_activity',
                 'group_membership', 'dream', 'dream_group', 'user', 'alembic_version'
             ]
-            for table in tables:
-                try:
-                    db.session.execute(text(f'DROP TABLE IF EXISTS {table} CASCADE'))
-                except Exception as e:
-                    logger.warning(f"Error dropping table {table}: {str(e)}")
-            db.session.commit()
+            
+            # Use raw connection for schema operations
+            connection = db.engine.raw_connection()
+            try:
+                connection.autocommit = True
+                cursor = connection.cursor()
+                
+                # Drop tables in reverse order to handle dependencies
+                for table in tables:
+                    try:
+                        cursor.execute(f'DROP TABLE IF EXISTS {table} CASCADE')
+                        logger.info(f"Dropped table {table}")
+                    except Exception as e:
+                        logger.warning(f"Error dropping table {table}: {str(e)}")
+                
+            finally:
+                cursor.close()
+                connection.close()
             
             # Initialize Flask-Migrate
             migrate = Migrate(app, db)
@@ -84,13 +97,20 @@ def setup_migrations():
                 os.system('flask db upgrade')
                 
                 # Verify migration was applied
-                result = db.session.execute(text('SELECT version_num FROM alembic_version')).fetchone()
-                if result:
-                    logger.info(f"Migration version {result[0]} applied successfully")
-                    return True
-                    
-                logger.error("No migration version found after upgrade")
-                return False
+                connection = db.engine.raw_connection()
+                try:
+                    connection.autocommit = True
+                    cursor = connection.cursor()
+                    cursor.execute('SELECT version_num FROM alembic_version')
+                    result = cursor.fetchone()
+                    if result:
+                        logger.info(f"Migration version {result[0]} applied successfully")
+                        return True
+                    logger.error("No migration version found after upgrade")
+                    return False
+                finally:
+                    cursor.close()
+                    connection.close()
                 
             except Exception as e:
                 logger.error(f"Error during migration process: {str(e)}")

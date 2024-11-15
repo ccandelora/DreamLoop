@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 import os
 from extensions import db, login_manager, init_db_pool
 from sqlalchemy.exc import SQLAlchemyError
@@ -7,6 +7,8 @@ from flask_login import current_user
 from models import User
 from transaction_debugger import init_transaction_debugger
 from flask_migrate import Migrate
+from health_checks import health_checker
+import atexit
 
 def should_show_premium_ads():
     """Determine if premium ads should be shown to the current user."""
@@ -52,6 +54,20 @@ def create_app():
     # Initialize transaction debugger
     init_transaction_debugger(app)
     
+    # Register the health check endpoint
+    @app.route('/health')
+    def health_check():
+        """Endpoint to check application and database health."""
+        try:
+            health_status = health_checker.get_health_status()
+            return jsonify(health_status)
+        except Exception as e:
+            app.logger.error(f"Error in health check endpoint: {str(e)}")
+            return jsonify({
+                'status': 'error',
+                'error': str(e)
+            }), 500
+    
     @login_manager.user_loader
     def load_user(user_id):
         if not user_id:
@@ -75,6 +91,16 @@ def create_app():
             from routes import register_routes
             app = register_routes(app)
             app.logger.info("Routes registered successfully")
+            
+            # Initialize health checker after all routes are registered
+            health_checker.init_app(app)
+            # Start health checks
+            health_checker.start_monitoring()
+            
+            @atexit.register
+            def cleanup():
+                health_checker.stop_monitoring()
+                
         except Exception as e:
             app.logger.error(f"Error registering routes: {str(e)}")
             raise
