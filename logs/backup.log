@@ -43,3 +43,47 @@ LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
                               ^
 HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
 
+2024-11-15 03:22:40,388 - backup_manager - INFO - Schema backup created at backups/backup_20241115_032236/schema.sql.gz
+2024-11-15 03:22:40,738 - backup_manager - ERROR - Database backup failed: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+2024-11-15 03:22:40,738 - backup_manager - ERROR - Error creating backup: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+2024-11-15 03:29:02,710 - backup_manager - INFO - Schema backup created at backups/backup_20241115_032858/schema.sql.gz
+2024-11-15 03:29:03,084 - backup_manager - ERROR - Database backup failed: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+2024-11-15 03:29:03,085 - backup_manager - ERROR - Error creating backup: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+2024-11-15 03:32:47,376 - backup_manager - INFO - Schema backup created at backups/backup_20241115_033242/schema.sql.gz
+2024-11-15 03:32:47,729 - backup_manager - ERROR - Database backup failed: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+2024-11-15 03:32:47,730 - backup_manager - ERROR - Error creating backup: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+2024-11-15 03:39:56,782 - backup_manager - INFO - Schema backup created at backups/backup_20241115_033952/schema.sql.gz
+2024-11-15 03:39:57,189 - backup_manager - ERROR - Database backup failed: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+2024-11-15 03:39:57,191 - backup_manager - ERROR - Error creating backup: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+

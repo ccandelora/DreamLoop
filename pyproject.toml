@@ -37,4 +37,5 @@ dependencies = [
     "freezegun",
     "flask-migrate>=4.0.7",
     "alembic",
+    "pandas",
 ]

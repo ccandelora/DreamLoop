@@ -1,7 +1,7 @@
 from flask import request, current_app
 from models import UserActivity, db
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy.exc import SQLAlchemyError
 
 logger = logging.getLogger(__name__)
@@ -18,6 +18,10 @@ def track_user_activity(user_id, activity_type, description=None, target_type=No
         target_id: ID of the target object
         extra_data: Optional dictionary containing additional activity data
     """
+    if not user_id or not activity_type:
+        logger.error("Missing required parameters: user_id or activity_type")
+        return False, "Missing required parameters"
+
     try:
         # Prepare activity data
         activity_data = {
@@ -39,21 +43,23 @@ def track_user_activity(user_id, activity_type, description=None, target_type=No
 
         # Create and save activity
         activity = UserActivity(**activity_data)
-        db.session.add(activity)
-        db.session.commit()
-
-        logger.info(f"Activity tracked successfully: {activity_type} for user {user_id}")
-        return True, None
         
-    except SQLAlchemyError as e:
-        error_msg = f"Database error tracking activity: {str(e)}"
-        logger.error(error_msg)
-        db.session.rollback()
-        return False, error_msg
+        try:
+            db.session.add(activity)
+            db.session.commit()
+            logger.info(f"Activity tracked successfully: {activity_type} for user {user_id}")
+            return True, None
+        except SQLAlchemyError as dbe:
+            db.session.rollback()
+            error_msg = f"Database error tracking activity: {str(dbe)}"
+            logger.error(error_msg)
+            return False, error_msg
+            
     except Exception as e:
         error_msg = f"Error tracking activity: {str(e)}"
         logger.error(error_msg)
-        db.session.rollback()
+        if 'db' in locals() and db.session.is_active:
+            db.session.rollback()
         return False, error_msg
 
 def track_premium_feature_usage(user_id, feature_type, success=True):
@@ -84,6 +90,10 @@ def get_user_activity_summary(user_id, days=30):
         user_id: ID of the user
         days: Number of days to look back
     """
+    if not user_id:
+        logger.error("Missing required parameter: user_id")
+        return None, "Missing user_id parameter"
+
     try:
         cutoff_date = datetime.utcnow() - timedelta(days=days)
         activities = UserActivity.query.filter(
@@ -92,12 +102,16 @@ def get_user_activity_summary(user_id, days=30):
         ).order_by(UserActivity.created_at.desc()).all()
         
         return activities, None
+    except SQLAlchemyError as e:
+        error_msg = f"Database error fetching activity summary: {str(e)}"
+        logger.error(error_msg)
+        return None, error_msg
     except Exception as e:
         error_msg = f"Error fetching activity summary: {str(e)}"
         logger.error(error_msg)
         return None, error_msg
 
-# Expanded Activity Types
+# Activity Types Dictionary
 ACTIVITY_TYPES = {
     # Authentication activities
     'LOGIN': 'login',

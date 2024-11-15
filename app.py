@@ -38,10 +38,15 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
         'pool_pre_ping': True,
-        'pool_size': 10,
+        'pool_size': 8,
         'max_overflow': 20,
         'pool_recycle': 300
     }
+    
+    # Session configuration
+    app.config['SESSION_TYPE'] = 'sqlalchemy'
+    app.config['PERMANENT_SESSION_LIFETIME'] = 86400  # 24 hours
+    app.config['SESSION_SQLALCHEMY'] = db
     
     # Initialize database and other extensions
     db.init_app(app)
@@ -89,7 +94,7 @@ def create_app():
     with app.app_context():
         try:
             from routes import register_routes
-            app = register_routes(app)
+            register_routes(app)
             app.logger.info("Routes registered successfully")
             
             # Initialize health checker after all routes are registered
@@ -109,5 +114,5 @@ def create_app():
 
 if __name__ == '__main__':
     app = create_app()
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 8080))  # Updated default port to 8080
     app.run(host='0.0.0.0', port=port)

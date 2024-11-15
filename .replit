@@ -226,7 +226,7 @@ task = "packager.installForAll"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python3 app.py"
-waitForPort = 5000
+waitForPort = 8080
 
 [[workflows.workflow]]
 name = "Reset DB"
@@ -492,3 +492,7 @@ externalPort = 3000
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 8080
+externalPort = 8080
