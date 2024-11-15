@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Public Dreams Feed{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-slate-900 mb-6">Public Dreams</h1>
+
+    {% if dreams %}
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {% for dream in dreams %}
+            <div class="dream-card hover:shadow-xl transition-all duration-300">
+                <div class="p-6">
+                    <h2 class="text-xl font-semibold text-slate-900 mb-2">
+                        <a href="{{ url_for('dreams.view_dream', dream_id=dream.id) }}" 
+                           class="hover:text-purple-600 transition-colors">
+                            {{ dream.title }}
+                        </a>
+                    </h2>
+                    <div class="text-sm text-slate-600 mb-4">
+                        <span class="flex items-center gap-2">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            {{ dream.created_at.strftime('%B %d, %Y') }}
+                        </span>
+                        {% if not dream.is_anonymous %}
+                        <span class="flex items-center gap-2 mt-1">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M16 7a4 4 0 11-8 0 4 4 0 016 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            {{ dream.user.username }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <p class="text-slate-700 mb-4 line-clamp-3">{{ dream.content[:200] }}...</p>
+                    {% if dream.tags %}
+                    <div class="flex flex-wrap gap-2">
+                        {% for tag in dream.tags.split(',') %}
+                        <span class="dream-tag dream-tag-regular">{{ tag.strip() }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="flex justify-center items-center space-x-4 mt-8">
+            {% if has_prev %}
+            <a href="{{ url_for('dreams.public_dreams', page=page-1, per_page=per_page) }}" 
+               class="dream-button">Previous</a>
+            {% endif %}
+            
+            <span class="text-slate-600">
+                Page {{ page }} of {{ total_pages }}
+            </span>
+            
+            {% if has_next %}
+            <a href="{{ url_for('dreams.public_dreams', page=page+1, per_page=per_page) }}" 
+               class="dream-button">Next</a>
+            {% endif %}
+        </div>
+
+        <div class="text-center text-sm text-slate-600 mt-4">
+            Showing {{ dreams|length }} of {{ total }} dreams
+        </div>
+    {% else %}
+        <div class="text-center py-8">
+            <p class="text-slate-600">No public dreams available at the moment.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

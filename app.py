@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 import os
 from extensions import db, login_manager, init_db_pool, csrf
 from sqlalchemy.exc import SQLAlchemyError
@@ -10,7 +10,11 @@ from flask_migrate import Migrate
 from health_checks import health_checker
 from middleware import setup_request_logging
 from blueprints import all_blueprints
+from blueprints.dreams import dreams_bp
 import atexit
+import logging
+
+logger = logging.getLogger(__name__)
 
 def should_show_premium_ads():
     """Determine if premium ads should be shown to the current user."""
@@ -68,20 +72,32 @@ def create_app():
     # Register error handlers
     @app.errorhandler(404)
     def not_found_error(error):
-        return jsonify({'error': 'Resource not found'}), 404
+        logger.warning(f"404 Error: {request.url}")
+        if request.is_json:
+            return jsonify({'error': 'Resource not found'}), 404
+        return render_template('errors/404.html'), 404
 
     @app.errorhandler(500)
     def internal_error(error):
+        logger.error(f"500 Error: {str(error)}")
         db.session.rollback()
-        return jsonify({'error': 'Internal server error'}), 500
+        if request.is_json:
+            return jsonify({'error': 'Internal server error'}), 500
+        return render_template('errors/500.html'), 500
 
     @app.errorhandler(403)
     def forbidden_error(error):
-        return jsonify({'error': 'Forbidden'}), 403
+        logger.warning(f"403 Error: {request.url}")
+        if request.is_json:
+            return jsonify({'error': 'Forbidden'}), 403
+        return render_template('errors/403.html'), 403
 
     @app.errorhandler(429)
     def ratelimit_error(error):
-        return jsonify({'error': 'Too many requests'}), 429
+        logger.warning(f"429 Error: {request.url}")
+        if request.is_json:
+            return jsonify({'error': 'Too many requests'}), 429
+        return render_template('errors/429.html'), 429
     
     # Register health check endpoint
     @app.route('/health')
@@ -91,7 +107,7 @@ def create_app():
             health_status = health_checker.get_health_status()
             return jsonify(health_status)
         except Exception as e:
-            app.logger.error(f"Error in health check endpoint: {str(e)}")
+            logger.error(f"Error in health check endpoint: {str(e)}")
             return jsonify({
                 'status': 'error',
                 'error': str(e)
@@ -114,28 +130,28 @@ def create_app():
             'should_show_premium_ads': should_show_premium_ads
         }
     
-    # Register blueprints
-    with app.app_context():
-        try:
-            for blueprint in all_blueprints:
-                app.register_blueprint(blueprint)
-            app.logger.info("Blueprints registered successfully")
+    # Register dreams blueprint first (contains root route)
+    app.register_blueprint(dreams_bp)
+    
+    # Register other blueprints
+    for blueprint in all_blueprints:
+        if blueprint != dreams_bp:  # Skip dreams_bp since it's already registered
+            app.register_blueprint(blueprint)
             
-            # Initialize health checker
-            health_checker.init_app(app)
-            health_checker.start_monitoring()
-            
-            @atexit.register
-            def cleanup():
-                health_checker.stop_monitoring()
-                
-        except Exception as e:
-            app.logger.error(f"Error registering blueprints: {str(e)}")
-            raise
+    app.logger.info("Blueprints registered successfully")
+    
+    # Initialize health checker
+    health_checker.init_app(app)
+    health_checker.start_monitoring()
+    
+    @atexit.register
+    def cleanup():
+        health_checker.stop_monitoring()
     
     return app
 
+app = create_app()
+
 if __name__ == '__main__':
-    app = create_app()
     port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port)

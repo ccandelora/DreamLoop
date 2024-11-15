@@ -115,6 +115,10 @@ args = "Generate Migration"
 task = "workflow.run"
 args = "Test Backup"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Sample Dreams"
+
 [[workflows.workflow]]
 name = "Flask Dream Journal"
 author = "agent"
@@ -136,6 +140,9 @@ author = "agent"
 
 [workflows.workflow.metadata]
 agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
@@ -480,6 +487,20 @@ task = "packager.installForAll"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python3 backup_cli.py create"
+
+[[workflows.workflow]]
+name = "Sample Dreams"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 add_sample_dreams.py"
 
 [deployment]
 run = ["sh", "-c", "python3 app.py"]

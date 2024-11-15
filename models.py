@@ -60,6 +60,7 @@ class Dream(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Added created_at column
     date = db.Column(db.DateTime, default=datetime.utcnow)
     mood = db.Column(db.String(50))
     sentiment_score = db.Column(db.Float, nullable=True)
@@ -87,6 +88,7 @@ class Dream(db.Model):
         self.title = title
         self.content = content
         self.date = datetime.utcnow()
+        self.created_at = datetime.utcnow()
         self.is_public = is_public
 
 class Comment(db.Model):

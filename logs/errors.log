@@ -33973,3 +33973,338 @@ Traceback (most recent call last):
   File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/werkzeug/routing/map.py", line 924, in build
     raise BuildError(endpoint, values, method, self)
 werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'index'. Did you mean 'dreams.index' instead?
+2024-11-15 17:28:33,382 - - - 172.31.196.51 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: ERROR
+Module: dreams
+Message: Unexpected error in index route: Could not build url for endpoint 'register'. Did you mean 'auth.register' instead?
+
+2024-11-15 17:28:33,384 - - - 172.31.196.51 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: ERROR
+Module: app
+Message: Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/blueprints/dreams.py", line 95, in index
+    return render_template('index.html')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/runner/DreamShare/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/runner/DreamShare/templates/base.html", line 279, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/templates/index.html", line 135, in block 'content'
+    <a href="{{ url_for('register') }}" class="dream-button">Get Started</a>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/werkzeug/routing/map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'register'. Did you mean 'auth.register' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/blueprints/dreams.py", line 102, in index
+    return render_template('index.html', dreams=[]), 500
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/runner/DreamShare/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/runner/DreamShare/templates/base.html", line 279, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/templates/index.html", line 135, in block 'content'
+    <a href="{{ url_for('register') }}" class="dream-button">Get Started</a>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/werkzeug/routing/map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'register'. Did you mean 'auth.register' instead?
+2024-11-15 17:28:33,384 - - - 172.31.196.51 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/
+Level: ERROR
+Module: app
+Message: Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/blueprints/dreams.py", line 95, in index
+    return render_template('index.html')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/runner/DreamShare/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/runner/DreamShare/templates/base.html", line 279, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/templates/index.html", line 135, in block 'content'
+    <a href="{{ url_for('register') }}" class="dream-button">Get Started</a>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/werkzeug/routing/map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'register'. Did you mean 'auth.register' instead?
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/blueprints/dreams.py", line 102, in index
+    return render_template('index.html', dreams=[]), 500
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/runner/DreamShare/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/runner/DreamShare/templates/base.html", line 279, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/templates/index.html", line 135, in block 'content'
+    <a href="{{ url_for('register') }}" class="dream-button">Get Started</a>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/werkzeug/routing/map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'register'. Did you mean 'auth.register' instead?
+2024-11-15 17:35:46,597 - None - None - None None
+Level: ERROR
+Module: backup_manager
+Message: Database backup failed: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+
+2024-11-15 17:35:46,602 - None - None - None None
+Level: ERROR
+Module: backup_manager
+Message: Error creating backup: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+
+2024-11-15 17:35:46,602 - None - None - None None
+Level: ERROR
+Module: update_schema
+Message: Failed to create backup before schema update: Error creating backup: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+
+2024-11-15 17:36:41,577 - None - None - None None
+Level: ERROR
+Module: backup_manager
+Message: Database backup failed: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+
+2024-11-15 17:36:41,577 - None - None - None None
+Level: ERROR
+Module: backup_manager
+Message: Error creating backup: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+
+2024-11-15 17:36:41,578 - None - None - None None
+Level: ERROR
+Module: update_schema
+Message: Failed to create backup before schema update: Error creating backup: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+
+2024-11-15 17:46:03,801 - None - None - None None
+Level: ERROR
+Module: add_sample_dreams
+Message: Error creating test user: (psycopg2.errors.UniqueViolation) duplicate key value violates unique constraint "user_email_key"
+DETAIL:  Key (email)=(test@example.com) already exists.
+
+[SQL: INSERT INTO "user" (username, email, password_hash, subscription_type, subscription_end_date, monthly_ai_analysis_count, last_analysis_reset) VALUES (%(username)s, %(email)s, %(password_hash)s, %(subscription_type)s, %(subscription_end_date)s, %(monthly_ai_analysis_count)s, %(last_analysis_reset)s) RETURNING "user".id]
+[parameters: {'username': 'test_user', 'email': 'test@example.com', 'password_hash': 'scrypt:32768:8:1$GhEDZXYy90E08Qot$1d117e3de374e232cb386b8b07c93bc24e8e25a39ef395100ff314341f017c5a363fd16f5c731bcc20ae8a1287bd1f759ff6e08c5b665896df3490da9e593e29', 'subscription_type': 'free', 'subscription_end_date': None, 'monthly_ai_analysis_count': 0, 'last_analysis_reset': datetime.datetime(2024, 11, 15, 17, 46, 3, 671865)}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+2024-11-15 17:46:43,086 - None - None - None None
+Level: ERROR
+Module: add_sample_dreams
+Message: Error creating test user: (psycopg2.errors.UniqueViolation) duplicate key value violates unique constraint "user_email_key"
+DETAIL:  Key (email)=(test@example.com) already exists.
+
+[SQL: INSERT INTO "user" (username, email, password_hash, subscription_type, subscription_end_date, monthly_ai_analysis_count, last_analysis_reset) VALUES (%(username)s, %(email)s, %(password_hash)s, %(subscription_type)s, %(subscription_end_date)s, %(monthly_ai_analysis_count)s, %(last_analysis_reset)s) RETURNING "user".id]
+[parameters: {'username': 'test_user', 'email': 'test@example.com', 'password_hash': 'scrypt:32768:8:1$wnDBsxkL7n9aDX4P$261fad8b01b4349b34c0faa32dcb5cd1612c2ad2a86dcf18c79569c6a89eb11bde625f17da2d56220c13543309c1de3725108f51979bac25ce7133c8476a621d', 'subscription_type': 'free', 'subscription_end_date': None, 'monthly_ai_analysis_count': 0, 'last_analysis_reset': datetime.datetime(2024, 11, 15, 17, 46, 42, 941219)}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+2024-11-15 17:48:36,594 - None - None - None None
+Level: ERROR
+Module: backup_manager
+Message: Database backup failed: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+
+2024-11-15 17:48:36,595 - None - None - None None
+Level: ERROR
+Module: backup_manager
+Message: Error creating backup: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+
+2024-11-15 17:48:36,599 - None - None - None None
+Level: ERROR
+Module: update_schema
+Message: Failed to create backup before schema update: Error creating backup: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+
+2024-11-15 17:52:27,352 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error checking schema status: user_activity
+
+2024-11-15 17:52:27,553 - None - None - None None
+Level: ERROR
+Module: health_checks
+Message: Error checking schema status: dream_group
+
+2024-11-15 17:52:28,747 - None - None - None None
+Level: ERROR
+Module: backup_manager
+Message: Database backup failed: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+
+2024-11-15 17:52:28,748 - None - None - None None
+Level: ERROR
+Module: backup_manager
+Message: Error creating backup: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+
+2024-11-15 17:52:28,750 - None - None - None None
+Level: ERROR
+Module: update_schema
+Message: Failed to create backup before schema update: Error creating backup: Database dump failed: ERROR:  function pg_catalog.pg_dump_all_tables(boolean) does not exist
+LINE 1: COPY  ( SELECT * FROM pg_catalog.pg_dump_all_tables ( true )...
+                              ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+
+2024-11-15 17:52:47,249 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Path doesn't exist: '/home/runner/DreamShare/migrations'.  Please use the 'init' command to create a new scripts folder.
+
+2024-11-15 17:52:48,006 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
+
+2024-11-15 17:52:49,939 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
+
+2024-11-15 17:52:50,454 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
+
+2024-11-15 17:52:52,104 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-15 17:52:52,104 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
