@@ -232,8 +232,11 @@ def dream_view(dream_id):
         flash('Dream not found.')
         return redirect(url_for('index'))
 
-    # Fetch all comments for this dream
-    comments = Comment.query.filter_by(dream_id=dream_id).all()
+    # Fetch all comments for this dream with eager loading of authors
+    comments = Comment.query.options(
+        db.joinedload(Comment.author),
+        db.joinedload(Comment.moderator)
+    ).filter_by(dream_id=dream_id).all()
     
     # Organize comments into a threaded structure
     threaded_comments = []
@@ -553,12 +556,12 @@ def moderate_comment(comment_id):
         flash('Unauthorized access.')
         return redirect(url_for('index'))
     
-    comment = Comment.query.get_or_404(comment_id)
-    action = request.form.get('action')
-    reason = request.form.get('reason')
-    
     try:
+        comment = Comment.query.get_or_404(comment_id)
+        action = request.form.get('action')
+        
         if action == 'hide':
+            reason = request.form.get('reason')
             if not reason:
                 flash('Moderation reason is required.')
                 return redirect(url_for('dream_view', dream_id=comment.dream_id))
@@ -577,7 +580,7 @@ def moderate_comment(comment_id):
     except Exception as e:
         logger.error(f"Error moderating comment: {str(e)}")
         db.session.rollback()
-        flash('An error occurred during moderation.')
+        flash('An error occurred while moderating the comment.')
     
     return redirect(url_for('dream_view', dream_id=comment.dream_id))
 
