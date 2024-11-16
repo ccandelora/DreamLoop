@@ -20,7 +20,7 @@
                             {% if dream.is_anonymous and dream.user_id != current_user.id %}
                                 Posted anonymously
                             {% else %}
-                                By {{ dream.author.username }}
+                                By {{ dream.user.username }}
                             {% endif %}
                         </span>
                         <span>•</span>
@@ -61,7 +61,38 @@
         <div class="lg:col-span-5 order-2 lg:order-3">
             {% if dream.ai_analysis %}
             <div class="dream-card sticky lg:top-20 hover:shadow-xl transition-all duration-300 mb-8 lg:mb-0">
-                <!-- AI Analysis content... (unchanged) -->
+                <div class="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-b border-slate-200 p-8">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xl font-semibold text-slate-900 flex items-center gap-2">
+                            <svg class="h-6 w-6 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            Dream Analysis
+                        </h3>
+                        {% if dream.user_id == current_user.id %}
+                        <form method="POST" action="{{ url_for('reanalyze_dream', dream_id=dream.id) }}" class="inline">
+                            <button type="submit" class="dream-button text-sm px-4 py-2" {% if current_user.subscription_type == 'free' and current_user.monthly_ai_analysis_count >= 3 %}disabled{% endif %}>
+                                <span class="flex items-center gap-2">
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                    Re-analyze
+                                </span>
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    <p class="mt-2 text-sm text-slate-600">
+                        Powered by AI insights and pattern recognition
+                    </p>
+                </div>
+                <div class="p-8 space-y-6">
+                    <div class="ai-analysis prose prose-slate max-w-none prose-headings:text-purple-900 prose-h3:text-lg prose-h3:font-semibold prose-p:text-slate-700 prose-strong:text-slate-900 prose-em:text-purple-700">
+                        {{ dream.ai_analysis|markdown|safe }}
+                    </div>
+                </div>
             </div>
             {% endif %}
         </div>
@@ -351,7 +382,9 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block scripts %}
 <script>
 function toggleReplyForm(commentId) {
     const formElement = document.getElementById(`reply-form-${commentId}`);

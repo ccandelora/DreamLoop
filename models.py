@@ -15,15 +15,15 @@ class User(UserMixin, db.Model):
     is_moderator = db.Column(db.Boolean, default=False)
     
     # Relationships
-    dreams = db.relationship('Dream', backref='user', lazy='dynamic')
-    comments = db.relationship('Comment', 
+    dreams = db.relationship('Dream', backref='author', lazy='dynamic')
+    authored_comments = db.relationship('Comment', 
                              foreign_keys='Comment.user_id',
                              backref='author',
                              lazy='dynamic')
     moderated_comments = db.relationship('Comment',
-                                       foreign_keys='Comment.moderated_by',
-                                       backref='moderator',
-                                       lazy='dynamic')
+                                     foreign_keys='Comment.moderated_by',
+                                     backref='moderator',
+                                     lazy='dynamic')
     forum_posts = db.relationship('ForumPost', backref='user', lazy='dynamic')
     forum_replies = db.relationship('ForumReply', backref='user', lazy='dynamic')
     groups = db.relationship('DreamGroup', secondary='group_membership', backref=db.backref('members', lazy='dynamic'))
@@ -118,7 +118,6 @@ class Comment(db.Model):
                     reply.moderated_at = datetime.utcnow()
                     reply.moderated_by = moderator.id
                     
-                    # Create notification for reply author
                     reply_notification = Notification(
                         user_id=reply.user_id,
                         title="Your reply has been hidden",
@@ -138,7 +137,6 @@ class Comment(db.Model):
         self.moderated_at = None
         self.moderated_by = None
         
-        # Create a notification for the comment author
         notification = Notification(
             user_id=self.user_id,
             title="Your comment has been restored",
@@ -157,7 +155,6 @@ class Comment(db.Model):
                     reply.moderated_at = None
                     reply.moderated_by = None
                     
-                    # Create notification for reply author
                     reply_notification = Notification(
                         user_id=reply.user_id,
                         title="Your reply has been restored",
