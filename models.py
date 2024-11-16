@@ -61,6 +61,15 @@ class Comment(db.Model):
     dream_id = db.Column(db.Integer, db.ForeignKey('dream.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     edited_at = db.Column(db.DateTime, nullable=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('comment.id'), nullable=True)
+    
+    # Add relationship for replies
+    replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[id]),
+                            cascade='all, delete-orphan', lazy='dynamic')
+    
+    def get_replies(self):
+        """Get all replies for this comment ordered by creation date."""
+        return Comment.query.filter_by(parent_id=self.id).order_by(Comment.created_at.asc()).all()
 
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -222,8 +222,18 @@ def dream_new():
 def dream_view(dream_id):
     """View a dream entry and its comments."""
     dream = Dream.query.get_or_404(dream_id)
+    # Fetch comments and order them, then build a tree structure for threaded comments
     comments = Comment.query.filter_by(dream_id=dream_id).order_by(Comment.created_at.desc()).all()
-    return render_template('dream_view.html', dream=dream, comments=comments)
+    threaded_comments = {}
+    for comment in comments:
+        if comment.parent_id:
+            if comment.parent_id not in threaded_comments:
+                threaded_comments[comment.parent_id] = []
+            threaded_comments[comment.parent_id].append(comment)
+        else:
+            threaded_comments[comment.id] = []  # Top-level comments
+
+    return render_template('dream_view.html', dream=dream, threaded_comments=threaded_comments)
 
 @app.route('/dream/<int:dream_id>/comment', methods=['POST'])
 @login_required
@@ -231,6 +241,7 @@ def add_comment(dream_id):
     """Add a comment to a dream."""
     dream = Dream.query.get_or_404(dream_id)
     content = request.form.get('content')
+    parent_id = request.form.get('parent_id')
     
     if not content:
         flash('Comment cannot be empty.')
@@ -242,7 +253,8 @@ def add_comment(dream_id):
             content=content,
             user_id=current_user.id,
             dream_id=dream_id,
-            created_at=datetime.utcnow()
+            created_at=datetime.utcnow(),
+            parent_id=parent_id if parent_id else None
         )
         db.session.add(comment)
         
@@ -250,13 +262,27 @@ def add_comment(dream_id):
         if dream.user_id != current_user.id:
             notification = Notification(
                 user_id=dream.user_id,
-                title=f"New comment on your dream: {dream.title}",
-                content=f"{current_user.username} commented: {content[:100]}{'...' if len(content) > 100 else ''}",
+                title=f"New {'reply' if parent_id else 'comment'} on your dream: {dream.title}",
+                content=f"{current_user.username} {'replied' if parent_id else 'commented'}: {content[:100]}{'...' if len(content) > 100 else ''}",
                 type='comment',
                 reference_id=dream_id,
                 created_at=datetime.utcnow()
             )
             db.session.add(notification)
+            
+            # If this is a reply, also notify the parent comment author
+            if parent_id:
+                parent_comment = Comment.query.get(parent_id)
+                if parent_comment and parent_comment.user_id != current_user.id:
+                    reply_notification = Notification(
+                        user_id=parent_comment.user_id,
+                        title=f"New reply to your comment on: {dream.title}",
+                        content=f"{current_user.username} replied to your comment: {content[:100]}{'...' if len(content) > 100 else ''}",
+                        type='reply',
+                        reference_id=dream_id,
+                        created_at=datetime.utcnow()
+                    )
+                    db.session.add(reply_notification)
         
         db.session.commit()
         flash('Comment added successfully!')
@@ -264,6 +290,33 @@ def add_comment(dream_id):
         logger.error(f"Error adding comment: {str(e)}")
         db.session.rollback()
         flash('An error occurred while adding your comment.')
+    
+    return redirect(url_for('dream_view', dream_id=dream_id))
+
+@app.route('/dream/<int:dream_id>/comment/<int:comment_id>/edit', methods=['POST'])
+@login_required
+def edit_comment(dream_id, comment_id):
+    """Edit a comment."""
+    comment = Comment.query.get_or_404(comment_id)
+    
+    if comment.user_id != current_user.id:
+        flash('You can only edit your own comments.')
+        return redirect(url_for('dream_view', dream_id=dream_id))
+    
+    content = request.form.get('content')
+    if not content:
+        flash('Comment cannot be empty.')
+        return redirect(url_for('dream_view', dream_id=dream_id))
+    
+    try:
+        comment.content = content
+        comment.edited_at = datetime.utcnow()
+        db.session.commit()
+        flash('Comment updated successfully!')
+    except Exception as e:
+        logger.error(f"Error updating comment: {str(e)}")
+        db.session.rollback()
+        flash('An error occurred while updating your comment.')
     
     return redirect(url_for('dream_view', dream_id=dream_id))
 
@@ -289,7 +342,7 @@ def delete_comment(dream_id, comment_id):
         flash('An error occurred while deleting the comment.')
     
     return redirect(url_for('dream_view', dream_id=dream_id))
-    
+
 @app.route('/group/<int:group_id>/forum/new', methods=['GET', 'POST'])
 @login_required
 def create_forum_post(group_id):
@@ -373,24 +426,17 @@ def create_checkout_session():
             line_items=[{
                 'price_data': {
                     'currency': 'usd',
+                    'unit_amount': 499,  # $4.99
                     'product_data': {
                         'name': 'DreamLoop Premium Subscription',
-                        'description': 'Unlock unlimited AI analysis and advanced features',
-                    },
-                    'unit_amount': 499,  # $4.99
-                    'recurring': {
-                        'interval': 'month'
+                        'description': 'Monthly subscription for premium features',
                     },
                 },
                 'quantity': 1,
             }],
             mode='subscription',
-            success_url=request.host_url + 'subscription?success=true',
-            cancel_url=request.host_url + 'subscription?canceled=true',
-            metadata={
-                'user_id': str(current_user.id),
-                'user_email': current_user.email
-            }
+            success_url=url_for('subscription', success='true', _external=True),
+            cancel_url=url_for('subscription', canceled='true', _external=True),
         )
         return jsonify({'url': checkout_session.url})
     except Exception as e:
@@ -400,82 +446,36 @@ def create_checkout_session():
 @app.route('/webhook', methods=['POST'])
 def stripe_webhook():
     """Handle Stripe webhook events."""
+    if request.content_length > 65535:
+        return jsonify({'error': 'Payload too large'}), 400
+        
     payload = request.get_data()
     sig_header = request.headers.get('Stripe-Signature')
-
-    success, message = handle_stripe_webhook(payload, sig_header)
-    if success:
-        return jsonify({'status': 'success', 'message': message}), 200
-    return jsonify({'status': 'error', 'message': message}), 400
+    
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, os.getenv('STRIPE_WEBHOOK_SECRET')
+        )
+        handle_stripe_webhook(event)
+        return jsonify({'status': 'success'})
+    except stripe.error.SignatureVerificationError:
+        return jsonify({'error': 'Invalid signature'}), 400
+    except Exception as e:
+        logger.error(f"Error handling webhook: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/cancel-subscription', methods=['POST'])
 @login_required
 def cancel_subscription():
-    """Cancel user's premium subscription."""
+    """Cancel premium subscription."""
     try:
-        # Find the subscription in Stripe
-        subscriptions = stripe.Subscription.list(
-            customer_email=current_user.email,
-            status='active',
-            limit=1
-        )
-        
-        if not subscriptions.data:
-            flash('No active subscription found.')
-            return redirect(url_for('subscription'))
-            
-        subscription = subscriptions.data[0]
-        stripe.Subscription.modify(
-            subscription.id,
-            cancel_at_period_end=True
-        )
-        
-        flash('Your subscription will be canceled at the end of the billing period.')
+        # Reset subscription status
+        current_user.subscription_type = 'free'
+        current_user.subscription_end_date = None
+        db.session.commit()
+        flash('Your subscription has been canceled.')
     except Exception as e:
         logger.error(f"Error canceling subscription: {str(e)}")
         flash('An error occurred while canceling your subscription.')
     
     return redirect(url_for('subscription'))
-
-@app.route('/dream/<int:dream_id>/comment/<int:comment_id>/edit', methods=['POST'])
-@login_required
-def edit_comment(dream_id, comment_id):
-    """Edit a comment on a dream."""
-    comment = Comment.query.get_or_404(comment_id)
-    dream = Dream.query.get_or_404(dream_id)
-    
-    # Only allow comment author to edit
-    if comment.user_id != current_user.id:
-        flash('You do not have permission to edit this comment.')
-        return redirect(url_for('dream_view', dream_id=dream_id))
-    
-    content = request.form.get('content')
-    if not content:
-        flash('Comment cannot be empty.')
-        return redirect(url_for('dream_view', dream_id=dream_id))
-    
-    try:
-        comment.content = content
-        comment.edited_at = datetime.utcnow()
-        db.session.commit()
-        flash('Comment updated successfully!')
-    except Exception as e:
-        logger.error(f"Error updating comment: {str(e)}")
-        db.session.rollback()
-        flash('An error occurred while updating the comment.')
-    
-    return redirect(url_for('dream_view', dream_id=dream_id))
-
-@app.route('/dream/<int:dream_id>/comment/<int:comment_id>')
-@login_required
-def edit_comment_form(dream_id, comment_id):
-    """Render the edit comment form."""
-    comment = Comment.query.get_or_404(comment_id)
-    dream = Dream.query.get_or_404(dream_id)
-    
-    # Only allow comment author to edit
-    if comment.user_id != current_user.id:
-        flash('You do not have permission to edit this comment.')
-        return redirect(url_for('dream_view', dream_id=dream_id))
-    
-    return render_template('edit_comment.html', comment=comment, dream=dream)
