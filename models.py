@@ -16,11 +16,20 @@ class User(UserMixin, db.Model):
     
     # Relationships
     dreams = db.relationship('Dream', backref='user', lazy='dynamic')
-    comments = db.relationship('Comment', backref='user', lazy='dynamic')
+    comments = db.relationship('Comment', 
+        backref='user', 
+        lazy='dynamic',
+        foreign_keys='Comment.user_id'
+    )
     forum_posts = db.relationship('ForumPost', backref='user', lazy='dynamic')
     forum_replies = db.relationship('ForumReply', backref='user', lazy='dynamic')
     groups = db.relationship('DreamGroup', secondary='group_membership', backref=db.backref('members', lazy='dynamic'))
     notifications = db.relationship('Notification', backref='user', lazy='dynamic')
+    moderated_comments = db.relationship('Comment',
+        backref='moderator',
+        lazy='dynamic',
+        foreign_keys='Comment.moderated_by'
+    )
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -76,9 +85,6 @@ class Comment(db.Model):
     # Add relationship for replies
     replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[id]),
                             cascade='all, delete-orphan', lazy='dynamic')
-    
-    # Add relationship for moderator
-    moderator = db.relationship('User', foreign_keys=[moderated_by], backref='moderated_comments')
     
     def get_replies(self):
         """Get all replies for this comment ordered by creation date."""
