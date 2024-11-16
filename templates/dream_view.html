@@ -59,7 +59,6 @@
 
         <!-- Right column (AI Analysis) -->
         <div class="lg:col-span-5 order-2 lg:order-3">
-            {% if dream.ai_analysis %}
             <div class="dream-card sticky lg:top-20 hover:shadow-xl transition-all duration-300 mb-8 lg:mb-0">
                 <div class="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-b border-slate-200 p-8">
                     <div class="flex justify-between items-center">
@@ -71,7 +70,7 @@
                             Dream Analysis
                         </h3>
                         {% if dream.user_id == current_user.id %}
-                        <form method="POST" action="{{ url_for('reanalyze_dream', dream_id=dream.id) }}" class="inline">
+                        <form method="POST" action="{{ url_for('reanalyze_dream', dream_id=dream.id) }}" class="inline" id="reanalyze-form">
                             <button type="submit" class="dream-button text-sm px-4 py-2" 
                                     {% if current_user.subscription_type == 'free' and current_user.monthly_ai_analysis_count >= 3 %}disabled{% endif %}>
                                 <span class="flex items-center gap-2">
@@ -90,38 +89,61 @@
                     </p>
                 </div>
                 <div class="p-8 space-y-6">
-                    <!-- Sentiment Indicators -->
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        <div class="text-center p-4 bg-white/50 rounded-lg border border-slate-200">
-                            <div class="text-sm text-slate-600">Sentiment</div>
-                            <div class="text-xl font-semibold text-slate-900">
-                                {{ "%.2f"|format(dream.sentiment_score|float) }}
+                    {% if dream.ai_analysis and not dream.ai_analysis.startswith('Error') %}
+                        <!-- Sentiment Indicators -->
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="text-center p-4 bg-white/50 rounded-lg border border-slate-200">
+                                <div class="text-sm text-slate-600">Sentiment</div>
+                                <div class="text-xl font-semibold text-slate-900">
+                                    {{ "%.2f"|format(dream.sentiment_score|float) }}
+                                </div>
+                            </div>
+                            <div class="text-center p-4 bg-white/50 rounded-lg border border-slate-200">
+                                <div class="text-sm text-slate-600">Lucidity</div>
+                                <div class="text-xl font-semibold text-slate-900">
+                                    {{ dream.lucidity_level }}/5
+                                </div>
                             </div>
                         </div>
-                        <div class="text-center p-4 bg-white/50 rounded-lg border border-slate-200">
-                            <div class="text-sm text-slate-600">Lucidity</div>
-                            <div class="text-xl font-semibold text-slate-900">
-                                {{ dream.lucidity_level }}/5
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Dominant Emotions -->
-                    {% if dream.dominant_emotions %}
-                    <div class="mb-6">
-                        <h4 class="text-sm font-medium text-slate-900 mb-2">Dominant Emotions</h4>
-                        <div class="flex flex-wrap gap-2">
-                            {% for emotion in dream.dominant_emotions.split(',') %}
-                            <span class="dream-tag dream-tag-emotion">{{ emotion.strip() }}</span>
-                            {% endfor %}
+                        <!-- Dominant Emotions -->
+                        {% if dream.dominant_emotions %}
+                        <div class="mb-6">
+                            <h4 class="text-sm font-medium text-slate-900 mb-2">Dominant Emotions</h4>
+                            <div class="flex flex-wrap gap-2">
+                                {% for emotion in dream.dominant_emotions.split(',') %}
+                                <span class="dream-tag dream-tag-emotion">{{ emotion.strip() }}</span>
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>
+                        {% endif %}
+
+                        <!-- AI Analysis Content -->
+                        <div class="ai-analysis prose prose-slate max-w-none prose-headings:text-purple-900 prose-h3:text-lg prose-h3:font-semibold prose-p:text-slate-700 prose-strong:text-slate-900 prose-em:text-purple-700">
+                            {{ dream.ai_analysis|markdown|safe }}
+                        </div>
+                    {% else %}
+                        <!-- Error State -->
+                        <div class="text-center py-8">
+                            <svg class="h-12 w-12 mx-auto text-red-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                            <h4 class="text-lg font-semibold text-slate-900 mb-2">Analysis Unavailable</h4>
+                            <p class="text-slate-600 mb-4">
+                                {% if dream.ai_analysis %}
+                                    {{ dream.ai_analysis[7:] }}  {# Remove "Error: " prefix #}
+                                {% else %}
+                                    Unable to generate dream analysis at this time.
+                                {% endif %}
+                            </p>
+                            {% if dream.user_id == current_user.id %}
+                            <button type="submit" form="reanalyze-form" class="dream-button">
+                                Try Again
+                            </button>
+                            {% endif %}
+                        </div>
                     {% endif %}
-
-                    <!-- AI Analysis Content -->
-                    <div class="ai-analysis prose prose-slate max-w-none prose-headings:text-purple-900 prose-h3:text-lg prose-h3:font-semibold prose-p:text-slate-700 prose-strong:text-slate-900 prose-em:text-purple-700">
-                        {{ dream.ai_analysis|markdown|safe }}
-                    </div>
 
                     {% if current_user.subscription_type == 'free' %}
                     <div class="section-divider"></div>

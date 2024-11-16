@@ -7,12 +7,40 @@ from datetime import datetime
 # Setup logging
 logger = logging.getLogger(__name__)
 
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
-genai.configure(api_key=GEMINI_API_KEY)
+def validate_api_key():
+    """Validate the Gemini API key and test connection."""
+    api_key = os.getenv('GEMINI_API_KEY')
+    if not api_key:
+        logger.error("GEMINI_API_KEY environment variable not found")
+        return False, "API key not found in environment variables"
+
+    try:
+        # Configure the API
+        genai.configure(api_key=api_key)
+        
+        # Test connection with a simple prompt
+        logger.info("Testing Gemini API connection")
+        model = genai.GenerativeModel('gemini-pro')
+        response = model.generate_content("Test connection")
+        if response and response.text:
+            logger.info("Successfully connected to Gemini API")
+            return True, None
+    except Exception as e:
+        error_msg = str(e)
+        logger.error(f"Failed to validate Gemini API key: {error_msg}")
+        return False, error_msg
+
+    return False, "Failed to validate API connection"
 
 def analyze_dream(content, is_premium=False):
     """Analyze dream content using Gemini AI."""
     try:
+        # Validate API key before proceeding
+        is_valid, error_message = validate_api_key()
+        if not is_valid:
+            logger.error(f"API key validation failed: {error_message}")
+            return f"Error: Unable to analyze dream. {error_message}", None
+
         logger.info("Starting dream analysis with Gemini AI")
         model = genai.GenerativeModel('gemini-pro')
         
@@ -92,8 +120,9 @@ Format the response in markdown with appropriate headers."""
         
         return analysis, sentiment_info
     except Exception as e:
-        logger.error(f"Error analyzing dream: {str(e)}")
-        return f"Error analyzing dream: {str(e)}", None
+        error_msg = str(e)
+        logger.error(f"Error analyzing dream: {error_msg}")
+        return f"Error analyzing dream: {error_msg}", None
 
 def extract_sentiment_info(analysis):
     """Extract sentiment information from the AI analysis."""
@@ -129,7 +158,7 @@ def extract_sentiment_info(analysis):
         logger.info("Successfully extracted sentiment information")
         return sentiment_info
     except Exception as e:
-        logger.error(f"Error extracting sentiment info: {str(e)}")
+        logger.error(f"Error extracting sentiment info: {error_msg}")
         return None
 
 def analyze_dream_patterns(dreams, is_premium=False):

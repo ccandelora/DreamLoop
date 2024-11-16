@@ -31945,3 +31945,47 @@ Level: ERROR
 Module: __init__
 Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
 
+2024-11-16 16:23:55,053 - - - 172.31.196.51 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: ERROR
+Module: ai_helper
+Message: Error analyzing dream: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+]
+
+2024-11-16 16:25:19,680 - - - 172.31.196.51 - POST http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/new
+Level: ERROR
+Module: ai_helper
+Message: Error analyzing dream: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+]
+
+2024-11-16 16:25:20,180 - - - 172.31.196.51 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/2
+Level: ERROR
+Module: ai_helper
+Message: Error analyzing dream: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+]
+
+2024-11-16 16:25:44,955 - - - 172.31.196.51 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/2
+Level: ERROR
+Module: ai_helper
+Message: Error analyzing dream: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+]
+
