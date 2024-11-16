@@ -129,11 +129,11 @@
                         </div>
                     </div>
 
-                    {% if user.subscription_type == 'free' %}
+                    {% if current_user.subscription_type == 'free' %}
                     <div class="mb-6 bg-white/80 backdrop-blur-sm border border-purple-500/30 rounded-lg p-4">
                         <p class="text-sm text-slate-700">
-                            AI Analysis Available: {{ 3 - user.monthly_ai_analysis_count }} of 3
-                            {% if user.monthly_ai_analysis_count >= 3 %}
+                            AI Analysis Available: {{ 3 - current_user.monthly_ai_analysis_count }} of 3
+                            {% if current_user.monthly_ai_analysis_count >= 3 %}
                             <br>
                             <a href="{{ url_for('subscription') }}" class="text-purple-600 hover:text-purple-700 transition-colors">
                                 Upgrade to Premium
