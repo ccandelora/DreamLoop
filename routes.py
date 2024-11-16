@@ -188,12 +188,14 @@ def register_routes(app):
     @app.route('/dream/new', methods=['GET', 'POST'])
     @login_required
     def dream_new():
-        """Create a new dream entry."""
-        if request.method == 'POST':
-            try:
-                with session_manager.session_scope() as session:
+        try:
+            with session_manager.session_scope() as session:
+                # Ensure current_user is attached to session
+                user = session.merge(current_user)
+                
+                if request.method == 'POST':
                     dream = Dream(
-                        user_id=current_user.id,
+                        user_id=user.id,
                         title=request.form['title'],
                         content=request.form['content'],
                         mood=request.form.get('mood'),
@@ -203,25 +205,22 @@ def register_routes(app):
                         lucidity_level=int(request.form.get('lucidity_level', 0)),
                         sleep_quality=int(request.form.get('sleep_quality', 0)),
                         sleep_position=request.form.get('sleep_position'),
-                        sleep_interruptions=int(request.form.get('sleep_interruptions', 0))
+                        sleep_interruptions=int(request.form.get('sleep_interruptions', 0)),
+                        bed_time=datetime.fromisoformat(request.form.get('bed_time')) if request.form.get('bed_time') else None,
+                        wake_time=datetime.fromisoformat(request.form.get('wake_time')) if request.form.get('wake_time') else None
                     )
                     session.add(dream)
-                    session.flush()
-
-                    track_user_activity(
-                        current_user.id,
-                        ACTIVITY_TYPES['DREAM_CREATE'],
-                        target_id=dream.id,
-                        description=f"Created new dream: {dream.title}"
-                    )
-
+                    session.commit()
+                    
                     flash('Dream logged successfully!')
                     return redirect(url_for('index'))
-            except Exception as e:
-                logger.error(f"Error creating dream: {str(e)}")
-                flash('An error occurred while saving your dream')
-                
-        return render_template('dream_new.html')
+                    
+                # For GET requests, pass the bound user object to template
+                return render_template('dream_new.html', user=user)
+        except Exception as e:
+            logger.error(f"Error in dream_new route: {str(e)}")
+            flash('An error occurred while processing your request')
+            return redirect(url_for('index'))
 
     @app.route('/dream/<int:dream_id>')
     @login_required

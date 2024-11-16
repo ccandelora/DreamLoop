@@ -82,12 +82,30 @@ class Dream(db.Model):
     # Relationships
     comments = db.relationship('Comment', backref='dream', lazy='dynamic', cascade='all, delete-orphan')
 
-    def __init__(self, user_id=None, title=None, content=None, is_public=False):
+    def __init__(self, user_id=None, title=None, content=None, date=None, mood=None, 
+                 tags=None, is_public=False, is_anonymous=False, lucidity_level=None,
+                 sleep_quality=None, sleep_position=None, sleep_interruptions=0,
+                 sentiment_score=None, sentiment_magnitude=None, dominant_emotions=None,
+                 sleep_duration=None, bed_time=None, wake_time=None, ai_analysis=None):
         self.user_id = user_id
         self.title = title
         self.content = content
-        self.date = datetime.utcnow()
+        self.date = date or datetime.utcnow()
+        self.mood = mood
+        self.tags = tags
         self.is_public = is_public
+        self.is_anonymous = is_anonymous
+        self.lucidity_level = lucidity_level
+        self.sleep_quality = sleep_quality
+        self.sleep_position = sleep_position
+        self.sleep_interruptions = sleep_interruptions
+        self.sentiment_score = sentiment_score
+        self.sentiment_magnitude = sentiment_magnitude
+        self.dominant_emotions = dominant_emotions
+        self.sleep_duration = sleep_duration
+        self.bed_time = bed_time
+        self.wake_time = wake_time
+        self.ai_analysis = ai_analysis
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
