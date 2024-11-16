@@ -31860,3 +31860,8 @@ Traceback (most recent call last):
   File "/home/runner/DreamShare/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/orm/loading.py", line 1603, in load_scalar_attributes
     raise orm_exc.DetachedInstanceError(
 sqlalchemy.orm.exc.DetachedInstanceError: Instance <User at 0x7f1597f64490> is not bound to a Session; attribute refresh operation cannot proceed (Background on this error at: https://sqlalche.me/e/20/bhk3)
+2024-11-16 04:32:06,140 - - - 172.31.196.61 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: ERROR
+Module: routes
+Message: Error viewing dream 1: expected token 'end of statement block', got '='
+
