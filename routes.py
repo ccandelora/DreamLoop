@@ -518,45 +518,62 @@ def cancel_subscription():
 
 # Add these routes to the end of routes.py (keeping all existing routes)
 
+@app.route('/admin/assign_moderator/<int:user_id>', methods=['POST'])
+@login_required
+def assign_moderator(user_id):
+    """Assign moderator role to a user."""
+    if not current_user.is_moderator:
+        flash('Unauthorized access.')
+        return redirect(url_for('index'))
+        
+    user = User.query.get_or_404(user_id)
+    action = request.form.get('action')
+    
+    try:
+        if action == 'assign':
+            user.is_moderator = True
+            flash(f'Moderator role assigned to {user.username}')
+        elif action == 'remove':
+            user.is_moderator = False
+            flash(f'Moderator role removed from {user.username}')
+        
+        db.session.commit()
+    except Exception as e:
+        logger.error(f"Error modifying moderator status: {str(e)}")
+        db.session.rollback()
+        flash('An error occurred while updating moderator status.')
+    
+    return redirect(url_for('index'))
+
 @app.route('/comment/<int:comment_id>/moderate', methods=['POST'])
 @login_required
 def moderate_comment(comment_id):
     """Moderate a comment (hide/unhide)."""
-    if not current_user.can_moderate():
-        flash('You do not have permission to moderate comments.')
+    if not current_user.is_moderator:
+        flash('Unauthorized access.')
         return redirect(url_for('index'))
-        
+    
     comment = Comment.query.get_or_404(comment_id)
     action = request.form.get('action')
     reason = request.form.get('reason')
     
     try:
         if action == 'hide':
+            if not reason:
+                flash('Moderation reason is required.')
+                return redirect(url_for('dream_view', dream_id=comment.dream_id))
+                
             comment.hide(current_user, reason)
             
             # Create notification for comment author
             notification = Notification(
                 user_id=comment.user_id,
                 title="Your comment has been hidden",
-                content=f"Your comment has been hidden by a moderator. Reason: {reason}",
+                content=f"A moderator has hidden your comment. Reason: {reason}",
                 type='moderation',
                 reference_id=comment.dream_id
             )
             db.session.add(notification)
-            
-            # If this is a parent comment, also hide all replies
-            if comment.parent_id is None:
-                for reply in comment.replies:
-                    if not reply.is_hidden:
-                        reply.hide(current_user, f"Parent comment hidden: {reason}")
-                        reply_notification = Notification(
-                            user_id=reply.user_id,
-                            title="Your reply has been hidden",
-                            content=f"Your reply has been hidden because the parent comment was hidden. Reason: {reason}",
-                            type='moderation',
-                            reference_id=comment.dream_id
-                        )
-                        db.session.add(reply_notification)
             
         elif action == 'unhide':
             comment.is_hidden = False
@@ -568,37 +585,19 @@ def moderate_comment(comment_id):
             notification = Notification(
                 user_id=comment.user_id,
                 title="Your comment has been restored",
-                content="Your comment has been restored by a moderator.",
+                content="A moderator has restored your previously hidden comment.",
                 type='moderation',
                 reference_id=comment.dream_id
             )
             db.session.add(notification)
-            
-            # If this is a parent comment, also restore all replies that were hidden with it
-            if comment.parent_id is None:
-                for reply in comment.replies:
-                    if reply.is_hidden and reply.moderation_reason and reply.moderation_reason.startswith("Parent comment hidden:"):
-                        reply.is_hidden = False
-                        reply.moderation_reason = None
-                        reply.moderated_at = None
-                        reply.moderated_by = None
-                        
-                        reply_notification = Notification(
-                            user_id=reply.user_id,
-                            title="Your reply has been restored",
-                            content="Your reply has been restored because the parent comment was restored.",
-                            type='moderation',
-                            reference_id=comment.dream_id
-                        )
-                        db.session.add(reply_notification)
             
         db.session.commit()
         flash('Comment moderation action completed successfully.')
     except Exception as e:
         logger.error(f"Error moderating comment: {str(e)}")
         db.session.rollback()
-        flash('An error occurred while moderating the comment.')
-        
+        flash('An error occurred during moderation.')
+    
     return redirect(url_for('dream_view', dream_id=comment.dream_id))
 
 @app.route('/admin/toggle_moderator/<int:user_id>', methods=['POST'])

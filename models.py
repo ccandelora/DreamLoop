@@ -92,10 +92,18 @@ class Comment(db.Model):
     
     def hide(self, moderator, reason):
         """Hide a comment with moderation reason."""
+        if not moderator.can_moderate():
+            raise ValueError("User does not have moderator privileges")
+            
         self.is_hidden = True
         self.moderation_reason = reason
         self.moderated_at = datetime.utcnow()
         self.moderated_by = moderator.id
+        
+        # Cascade hide to all replies
+        for reply in self.replies:
+            if not reply.is_hidden:
+                reply.hide(moderator, f"Parent comment hidden: {reason}")
 
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
