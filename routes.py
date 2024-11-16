@@ -221,17 +221,34 @@ def dream_new():
 @login_required
 def dream_view(dream_id):
     """View a dream entry and its comments."""
-    dream = Dream.query.get_or_404(dream_id)
-    # Fetch comments and order them, then build a tree structure for threaded comments
-    comments = Comment.query.filter_by(dream_id=dream_id).order_by(Comment.created_at.desc()).all()
-    threaded_comments = {}
+    dream = db.session.get(Dream, dream_id)
+    if not dream:
+        flash('Dream not found.')
+        return redirect(url_for('index'))
+
+    # Fetch all comments for this dream
+    comments = Comment.query.filter_by(dream_id=dream_id).all()
+    
+    # Organize comments into a threaded structure
+    threaded_comments = []
+    comment_dict = {}
+    
+    # First pass: create a dictionary of comments
     for comment in comments:
-        if comment.parent_id:
-            if comment.parent_id not in threaded_comments:
-                threaded_comments[comment.parent_id] = []
-            threaded_comments[comment.parent_id].append(comment)
+        comment_dict[comment.id] = {
+            'comment': comment,
+            'replies': []
+        }
+    
+    # Second pass: organize into threads
+    for comment in comments:
+        if comment.parent_id is None:
+            # This is a top-level comment
+            threaded_comments.append(comment_dict[comment.id])
         else:
-            threaded_comments[comment.id] = []  # Top-level comments
+            # This is a reply
+            if comment.parent_id in comment_dict:
+                comment_dict[comment.parent_id]['replies'].append(comment_dict[comment.id])
 
     return render_template('dream_view.html', dream=dream, threaded_comments=threaded_comments)
 
@@ -239,7 +256,11 @@ def dream_view(dream_id):
 @login_required
 def add_comment(dream_id):
     """Add a comment to a dream."""
-    dream = Dream.query.get_or_404(dream_id)
+    dream = db.session.get(Dream, dream_id)
+    if not dream:
+        flash('Dream not found.')
+        return redirect(url_for('index'))
+        
     content = request.form.get('content')
     parent_id = request.form.get('parent_id')
     
@@ -254,7 +275,7 @@ def add_comment(dream_id):
             user_id=current_user.id,
             dream_id=dream_id,
             created_at=datetime.utcnow(),
-            parent_id=parent_id if parent_id else None
+            parent_id=int(parent_id) if parent_id else None
         )
         db.session.add(comment)
         
@@ -272,7 +293,7 @@ def add_comment(dream_id):
             
             # If this is a reply, also notify the parent comment author
             if parent_id:
-                parent_comment = Comment.query.get(parent_id)
+                parent_comment = db.session.get(Comment, int(parent_id))
                 if parent_comment and parent_comment.user_id != current_user.id:
                     reply_notification = Notification(
                         user_id=parent_comment.user_id,
