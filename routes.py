@@ -516,7 +516,7 @@ def cancel_subscription():
     
     return redirect(url_for('subscription'))
 
-# Add the following routes to the end of routes.py (keeping all existing routes)
+# Add these routes to the end of routes.py (keeping all existing routes)
 
 @app.route('/comment/<int:comment_id>/moderate', methods=['POST'])
 @login_required
@@ -544,6 +544,20 @@ def moderate_comment(comment_id):
             )
             db.session.add(notification)
             
+            # If this is a parent comment, also hide all replies
+            if comment.parent_id is None:
+                for reply in comment.replies:
+                    if not reply.is_hidden:
+                        reply.hide(current_user, f"Parent comment hidden: {reason}")
+                        reply_notification = Notification(
+                            user_id=reply.user_id,
+                            title="Your reply has been hidden",
+                            content=f"Your reply has been hidden because the parent comment was hidden. Reason: {reason}",
+                            type='moderation',
+                            reference_id=comment.dream_id
+                        )
+                        db.session.add(reply_notification)
+            
         elif action == 'unhide':
             comment.is_hidden = False
             comment.moderation_reason = None
@@ -559,6 +573,24 @@ def moderate_comment(comment_id):
                 reference_id=comment.dream_id
             )
             db.session.add(notification)
+            
+            # If this is a parent comment, also restore all replies that were hidden with it
+            if comment.parent_id is None:
+                for reply in comment.replies:
+                    if reply.is_hidden and reply.moderation_reason and reply.moderation_reason.startswith("Parent comment hidden:"):
+                        reply.is_hidden = False
+                        reply.moderation_reason = None
+                        reply.moderated_at = None
+                        reply.moderated_by = None
+                        
+                        reply_notification = Notification(
+                            user_id=reply.user_id,
+                            title="Your reply has been restored",
+                            content="Your reply has been restored because the parent comment was restored.",
+                            type='moderation',
+                            reference_id=comment.dream_id
+                        )
+                        db.session.add(reply_notification)
             
         db.session.commit()
         flash('Comment moderation action completed successfully.')
