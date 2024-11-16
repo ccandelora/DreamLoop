@@ -67,6 +67,21 @@ def update_schema():
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
 
+                    -- Add moderator flag to user table
+                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                                 WHERE table_name = 'user' AND column_name = 'is_moderator') THEN
+                        ALTER TABLE "user" ADD COLUMN is_moderator BOOLEAN DEFAULT FALSE;
+                    END IF;
+
+                    -- Add moderation columns to comment table
+                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                                 WHERE table_name = 'comment' AND column_name = 'is_hidden') THEN
+                        ALTER TABLE comment ADD COLUMN is_hidden BOOLEAN DEFAULT FALSE;
+                        ALTER TABLE comment ADD COLUMN moderation_reason VARCHAR(200);
+                        ALTER TABLE comment ADD COLUMN moderated_at TIMESTAMP;
+                        ALTER TABLE comment ADD COLUMN moderated_by INTEGER REFERENCES "user"(id);
+                    END IF;
+
                 END $$;
             '''))
             

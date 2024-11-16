@@ -515,3 +515,77 @@ def cancel_subscription():
         flash('An error occurred while canceling your subscription.')
     
     return redirect(url_for('subscription'))
+
+# Add the following routes to the end of routes.py (keeping all existing routes)
+
+@app.route('/comment/<int:comment_id>/moderate', methods=['POST'])
+@login_required
+def moderate_comment(comment_id):
+    """Moderate a comment (hide/unhide)."""
+    if not current_user.can_moderate():
+        flash('You do not have permission to moderate comments.')
+        return redirect(url_for('index'))
+        
+    comment = Comment.query.get_or_404(comment_id)
+    action = request.form.get('action')
+    reason = request.form.get('reason')
+    
+    try:
+        if action == 'hide':
+            comment.hide(current_user, reason)
+            
+            # Create notification for comment author
+            notification = Notification(
+                user_id=comment.user_id,
+                title="Your comment has been hidden",
+                content=f"Your comment has been hidden by a moderator. Reason: {reason}",
+                type='moderation',
+                reference_id=comment.dream_id
+            )
+            db.session.add(notification)
+            
+        elif action == 'unhide':
+            comment.is_hidden = False
+            comment.moderation_reason = None
+            comment.moderated_at = None
+            comment.moderated_by = None
+            
+            # Create notification for comment author
+            notification = Notification(
+                user_id=comment.user_id,
+                title="Your comment has been restored",
+                content="Your comment has been restored by a moderator.",
+                type='moderation',
+                reference_id=comment.dream_id
+            )
+            db.session.add(notification)
+            
+        db.session.commit()
+        flash('Comment moderation action completed successfully.')
+    except Exception as e:
+        logger.error(f"Error moderating comment: {str(e)}")
+        db.session.rollback()
+        flash('An error occurred while moderating the comment.')
+        
+    return redirect(url_for('dream_view', dream_id=comment.dream_id))
+
+@app.route('/admin/toggle_moderator/<int:user_id>', methods=['POST'])
+@login_required
+def toggle_moderator(user_id):
+    """Toggle moderator status for a user."""
+    if not current_user.can_moderate():
+        flash('You do not have permission to manage moderators.')
+        return redirect(url_for('index'))
+        
+    user = User.query.get_or_404(user_id)
+    
+    try:
+        user.is_moderator = not user.is_moderator
+        db.session.commit()
+        flash(f'Moderator status {"granted to" if user.is_moderator else "removed from"} {user.username}.')
+    except Exception as e:
+        logger.error(f"Error toggling moderator status: {str(e)}")
+        db.session.rollback()
+        flash('An error occurred while updating moderator status.')
+        
+    return redirect(url_for('index'))

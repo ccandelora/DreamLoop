@@ -12,6 +12,7 @@ class User(UserMixin, db.Model):
     subscription_end_date = db.Column(db.DateTime)
     monthly_ai_analysis_count = db.Column(db.Integer, default=0)
     last_analysis_reset = db.Column(db.DateTime, default=datetime.utcnow)
+    is_moderator = db.Column(db.Boolean, default=False)  # New field for moderators
     
     # Relationships
     dreams = db.relationship('Dream', backref='user', lazy='dynamic')
@@ -26,6 +27,9 @@ class User(UserMixin, db.Model):
         
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def can_moderate(self):
+        return self.is_moderator
 
 class Dream(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -63,13 +67,29 @@ class Comment(db.Model):
     edited_at = db.Column(db.DateTime, nullable=True)
     parent_id = db.Column(db.Integer, db.ForeignKey('comment.id'), nullable=True)
     
+    # Moderation fields
+    is_hidden = db.Column(db.Boolean, default=False)
+    moderation_reason = db.Column(db.String(200), nullable=True)
+    moderated_at = db.Column(db.DateTime, nullable=True)
+    moderated_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    
     # Add relationship for replies
     replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[id]),
                             cascade='all, delete-orphan', lazy='dynamic')
     
+    # Add relationship for moderator
+    moderator = db.relationship('User', foreign_keys=[moderated_by], backref='moderated_comments')
+    
     def get_replies(self):
         """Get all replies for this comment ordered by creation date."""
         return Comment.query.filter_by(parent_id=self.id).order_by(Comment.created_at.asc()).all()
+    
+    def hide(self, moderator, reason):
+        """Hide a comment with moderation reason."""
+        self.is_hidden = True
+        self.moderation_reason = reason
+        self.moderated_at = datetime.utcnow()
+        self.moderated_by = moderator.id
 
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
