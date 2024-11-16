@@ -31989,3 +31989,57 @@ metadata {
 }
 ]
 
+2024-11-16 16:28:22,191 - - - 172.31.196.51 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: ERROR
+Module: ai_helper
+Message: Failed to validate Gemini API key: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+]
+
+2024-11-16 16:28:22,192 - - - 172.31.196.51 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: ERROR
+Module: ai_helper
+Message: API key validation failed: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+]
+
+2024-11-16 16:28:22,244 - - - 172.31.196.51 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/1
+Level: ERROR
+Module: routes
+Message: Error viewing dream 1: Encountered unknown tag 'endif'. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+
+2024-11-16 16:28:27,853 - - - 172.31.196.51 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/2
+Level: ERROR
+Module: ai_helper
+Message: Failed to validate Gemini API key: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+]
+
+2024-11-16 16:28:27,854 - - - 172.31.196.51 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/2
+Level: ERROR
+Module: ai_helper
+Message: API key validation failed: 400 API key not valid. Please pass a valid API key. [reason: "API_KEY_INVALID"
+domain: "googleapis.com"
+metadata {
+  key: "service"
+  value: "generativelanguage.googleapis.com"
+}
+]
+
+2024-11-16 16:28:27,900 - - - 172.31.196.51 - GET http://b32b1022-79d3-4136-8932-6be41b2bb124-00-37otgv6q0gsca.picard.replit.dev/dream/2
+Level: ERROR
+Module: routes
+Message: Error viewing dream 2: Encountered unknown tag 'endif'. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+
