@@ -386,3 +386,46 @@ def cancel_subscription():
         flash('An error occurred while canceling your subscription.')
     
     return redirect(url_for('subscription'))
+
+@app.route('/dream/<int:dream_id>/comment/<int:comment_id>/edit', methods=['POST'])
+@login_required
+def edit_comment(dream_id, comment_id):
+    """Edit a comment on a dream."""
+    comment = Comment.query.get_or_404(comment_id)
+    dream = Dream.query.get_or_404(dream_id)
+    
+    # Only allow comment author to edit
+    if comment.user_id != current_user.id:
+        flash('You do not have permission to edit this comment.')
+        return redirect(url_for('dream_view', dream_id=dream_id))
+    
+    content = request.form.get('content')
+    if not content:
+        flash('Comment cannot be empty.')
+        return redirect(url_for('dream_view', dream_id=dream_id))
+    
+    try:
+        comment.content = content
+        comment.edited_at = datetime.utcnow()
+        db.session.commit()
+        flash('Comment updated successfully!')
+    except Exception as e:
+        logger.error(f"Error updating comment: {str(e)}")
+        db.session.rollback()
+        flash('An error occurred while updating the comment.')
+    
+    return redirect(url_for('dream_view', dream_id=dream_id))
+
+@app.route('/dream/<int:dream_id>/comment/<int:comment_id>')
+@login_required
+def edit_comment_form(dream_id, comment_id):
+    """Render the edit comment form."""
+    comment = Comment.query.get_or_404(comment_id)
+    dream = Dream.query.get_or_404(dream_id)
+    
+    # Only allow comment author to edit
+    if comment.user_id != current_user.id:
+        flash('You do not have permission to edit this comment.')
+        return redirect(url_for('dream_view', dream_id=dream_id))
+    
+    return render_template('edit_comment.html', comment=comment, dream=dream)

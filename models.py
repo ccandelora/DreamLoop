@@ -59,6 +59,7 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     dream_id = db.Column(db.Integer, db.ForeignKey('dream.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    edited_at = db.Column(db.DateTime, nullable=True)
 
 class DreamGroup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
