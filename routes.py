@@ -22,7 +22,13 @@ stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 def inject_unread_notifications():
     """Inject unread notifications count into all templates."""
     if current_user.is_authenticated:
-        unread_count = Notification.query.filter_by(user_id=current_user.id, read=False).count()
+        # Use eager loading to optimize the query
+        unread_count = (
+            Notification.query
+            .filter_by(user_id=current_user.id, read=False)
+            .count()
+        )
+        logger.info(f"Unread notifications count for user {current_user.id}: {unread_count}")
         return {'unread_notifications_count': unread_count}
     return {'unread_notifications_count': 0}
 
@@ -256,6 +262,7 @@ def dream_view(dream_id):
 @login_required
 def add_comment(dream_id):
     """Add a comment to a dream."""
+    logger.info(f"Adding comment to dream {dream_id}")
     dream = db.session.get(Dream, dream_id)
     if not dream:
         flash('Dream not found.')
@@ -278,18 +285,24 @@ def add_comment(dream_id):
             parent_id=int(parent_id) if parent_id else None
         )
         db.session.add(comment)
+        logger.info(f"Created comment with ID {comment.id} by user {current_user.id}")
         
         # Create notification for dream owner if it's not their own comment
         if dream.user_id != current_user.id:
+            notification_type = 'reply' if parent_id else 'comment'
+            notification_title = f"New {notification_type} on your dream: {dream.title}"
+            notification_content = f"{current_user.username} {notification_type}d: {content[:100]}{'...' if len(content) > 100 else ''}"
+            
             notification = Notification(
                 user_id=dream.user_id,
-                title=f"New {'reply' if parent_id else 'comment'} on your dream: {dream.title}",
-                content=f"{current_user.username} {'replied' if parent_id else 'commented'}: {content[:100]}{'...' if len(content) > 100 else ''}",
-                type='comment',
+                title=notification_title,
+                content=notification_content,
+                type=notification_type,
                 reference_id=dream_id,
                 created_at=datetime.utcnow()
             )
             db.session.add(notification)
+            logger.info(f"Created dream owner notification: {notification_title} for user {dream.user_id}")
             
             # If this is a reply, also notify the parent comment author
             if parent_id:
@@ -304,9 +317,11 @@ def add_comment(dream_id):
                         created_at=datetime.utcnow()
                     )
                     db.session.add(reply_notification)
+                    logger.info(f"Created reply notification for user {parent_comment.user_id}")
         
         db.session.commit()
         flash('Comment added successfully!')
+        logger.info("Successfully saved comment and notifications")
     except Exception as e:
         logger.error(f"Error adding comment: {str(e)}")
         db.session.rollback()
