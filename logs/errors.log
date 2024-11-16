@@ -31865,3 +31865,83 @@ Level: ERROR
 Module: routes
 Message: Error viewing dream 1: expected token 'end of statement block', got '='
 
+2024-11-16 16:09:44,778 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Path doesn't exist: '/home/runner/DreamShare/migrations'.  Please use the 'init' command to create a new scripts folder.
+
+2024-11-16 16:09:44,897 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Path doesn't exist: '/home/runner/DreamShare/migrations'.  Please use the 'init' command to create a new scripts folder.
+
+2024-11-16 16:09:45,436 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-16 16:09:46,117 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
+
+2024-11-16 16:09:46,500 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
+
+2024-11-16 16:09:46,592 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
+
+2024-11-16 16:10:49,580 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory migrations already exists and is not empty
+
+2024-11-16 16:10:50,052 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
+
+2024-11-16 16:10:51,285 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
+
+2024-11-16 16:10:51,529 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
+
+2024-11-16 16:16:15,671 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Path doesn't exist: '/home/runner/DreamShare/migrations'.  Please use the 'init' command to create a new scripts folder.
+
+2024-11-16 16:16:15,745 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Path doesn't exist: '/home/runner/DreamShare/migrations'.  Please use the 'init' command to create a new scripts folder.
+
+2024-11-16 16:16:16,327 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
+
+2024-11-16 16:16:16,423 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
+
+2024-11-16 16:16:17,781 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
+
+2024-11-16 16:16:17,890 - None - None - None None
+Level: ERROR
+Module: __init__
+Message: Error: Directory /home/runner/DreamShare/migrations already exists and is not empty
+
