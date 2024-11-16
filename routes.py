@@ -188,6 +188,57 @@ def dream_view(dream_id):
     dream = Dream.query.get_or_404(dream_id)
     comments = Comment.query.filter_by(dream_id=dream_id).order_by(Comment.created_at.desc()).all()
     return render_template('dream_view.html', dream=dream, comments=comments)
+
+@app.route('/dream/<int:dream_id>/comment', methods=['POST'])
+@login_required
+def add_comment(dream_id):
+    """Add a comment to a dream."""
+    dream = Dream.query.get_or_404(dream_id)
+    content = request.form.get('content')
+    
+    if not content:
+        flash('Comment cannot be empty.')
+        return redirect(url_for('dream_view', dream_id=dream_id))
+    
+    try:
+        comment = Comment(
+            content=content,
+            user_id=current_user.id,
+            dream_id=dream_id,
+            created_at=datetime.utcnow()
+        )
+        db.session.add(comment)
+        db.session.commit()
+        flash('Comment added successfully!')
+    except Exception as e:
+        logger.error(f"Error adding comment: {str(e)}")
+        db.session.rollback()
+        flash('An error occurred while adding your comment.')
+    
+    return redirect(url_for('dream_view', dream_id=dream_id))
+
+@app.route('/dream/<int:dream_id>/comment/<int:comment_id>/delete', methods=['POST'])
+@login_required
+def delete_comment(dream_id, comment_id):
+    """Delete a comment from a dream."""
+    comment = Comment.query.get_or_404(comment_id)
+    dream = Dream.query.get_or_404(dream_id)
+    
+    # Only allow comment author or dream owner to delete comments
+    if comment.user_id != current_user.id and dream.user_id != current_user.id:
+        flash('You do not have permission to delete this comment.')
+        return redirect(url_for('dream_view', dream_id=dream_id))
+    
+    try:
+        db.session.delete(comment)
+        db.session.commit()
+        flash('Comment deleted successfully!')
+    except Exception as e:
+        logger.error(f"Error deleting comment: {str(e)}")
+        db.session.rollback()
+        flash('An error occurred while deleting the comment.')
+    
+    return redirect(url_for('dream_view', dream_id=dream_id))
     
 @app.route('/group/<int:group_id>/forum/new', methods=['GET', 'POST'])
 @login_required
