@@ -1,7 +1,11 @@
 import os
 import google.generativeai as genai
 import re
+import logging
 from datetime import datetime
+
+# Setup logging
+logger = logging.getLogger(__name__)
 
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 genai.configure(api_key=GEMINI_API_KEY)
@@ -9,6 +13,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 def analyze_dream(content, is_premium=False):
     """Analyze dream content using Gemini AI."""
     try:
+        logger.info("Starting dream analysis with Gemini AI")
         model = genai.GenerativeModel('gemini-pro')
         
         # Enhanced base prompt for all users with better pattern recognition
@@ -43,12 +48,10 @@ Please provide a comprehensive analysis including:
    - Personal growth indicators
    - Subconscious patterns revealed
 
-Format the response in markdown with appropriate headers. For the emotional analysis, strictly use this format:
-Sentiment Score: [number between -1 and 1]
-Sentiment Magnitude: [number between 0 and 5]
-Dominant Emotions: [comma-separated list]"""
+Format the response in markdown with appropriate headers."""
 
         if is_premium:
+            logger.info("Adding premium analysis sections")
             prompt += """
 
 6. Advanced Pattern Recognition:
@@ -79,42 +82,54 @@ Dominant Emotions: [comma-separated list]"""
     - Integration techniques
     - Journal prompts for deeper exploration"""
 
+        logger.info("Sending request to Gemini AI")
         response = model.generate_content(prompt)
         analysis = response.text
+        logger.info("Successfully received analysis from Gemini AI")
 
         # Extract sentiment information
         sentiment_info = extract_sentiment_info(analysis)
         
         return analysis, sentiment_info
     except Exception as e:
+        logger.error(f"Error analyzing dream: {str(e)}")
         return f"Error analyzing dream: {str(e)}", None
 
 def extract_sentiment_info(analysis):
     """Extract sentiment information from the AI analysis."""
     try:
+        logger.info("Extracting sentiment information from analysis")
+        sentiment_info = {
+            'sentiment_score': 0.0,
+            'sentiment_magnitude': 0.0,
+            'dominant_emotions': '',
+            'lucidity_level': 1
+        }
+
         # Extract sentiment score (-1 to 1)
         score_match = re.search(r'Sentiment Score:\s*([-+]?\d*\.?\d+)', analysis)
-        sentiment_score = float(score_match.group(1)) if score_match else 0.0
+        if score_match:
+            sentiment_info['sentiment_score'] = float(score_match.group(1))
 
         # Extract sentiment magnitude (0 to 5)
         magnitude_match = re.search(r'Sentiment Magnitude:\s*(\d*\.?\d+)', analysis)
-        sentiment_magnitude = float(magnitude_match.group(1)) if magnitude_match else 0.0
+        if magnitude_match:
+            sentiment_info['sentiment_magnitude'] = float(magnitude_match.group(1))
 
-        # Extract dominant emotions with improved pattern matching
-        emotions_match = re.search(r'Dominant Emotions:\s*([^#\n]+)', analysis)
-        dominant_emotions = emotions_match.group(1).strip() if emotions_match else ''
+        # Extract dominant emotions
+        emotions_match = re.search(r'(?:Dominant|Most prominent) Emotions:\s*([^#\n]+)', analysis, re.IGNORECASE)
+        if emotions_match:
+            sentiment_info['dominant_emotions'] = emotions_match.group(1).strip()
 
-        # Extract lucidity level (1-5) with improved pattern matching
+        # Extract lucidity level (1-5)
         lucidity_match = re.search(r'(?:Dream lucidity level|Lucidity level).*?(\d+)', analysis, re.IGNORECASE)
-        lucidity_level = int(lucidity_match.group(1)) if lucidity_match else 1
+        if lucidity_match:
+            sentiment_info['lucidity_level'] = int(lucidity_match.group(1))
 
-        return {
-            'sentiment_score': sentiment_score,
-            'sentiment_magnitude': sentiment_magnitude,
-            'dominant_emotions': dominant_emotions,
-            'lucidity_level': lucidity_level
-        }
+        logger.info("Successfully extracted sentiment information")
+        return sentiment_info
     except Exception as e:
+        logger.error(f"Error extracting sentiment info: {str(e)}")
         return None
 
 def analyze_dream_patterns(dreams, is_premium=False):

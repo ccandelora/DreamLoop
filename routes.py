@@ -190,7 +190,6 @@ def register_routes(app):
     def dream_new():
         try:
             with session_manager.session_scope() as session:
-                # Ensure current_user is attached to session
                 user = session.merge(current_user)
                 
                 if request.method == 'POST':
@@ -209,18 +208,70 @@ def register_routes(app):
                         bed_time=datetime.fromisoformat(request.form.get('bed_time')) if request.form.get('bed_time') else None,
                         wake_time=datetime.fromisoformat(request.form.get('wake_time')) if request.form.get('wake_time') else None
                     )
+                    
+                    # Generate AI analysis for the dream
+                    is_premium = user.subscription_type == 'premium'
+                    analysis_text, sentiment_info = analyze_dream(dream.content, is_premium)
+                    if analysis_text and not analysis_text.startswith('Error'):
+                        dream.ai_analysis = analysis_text
+                        if sentiment_info:
+                            dream.sentiment_score = sentiment_info['sentiment_score']
+                            dream.sentiment_magnitude = sentiment_info['sentiment_magnitude']
+                            dream.dominant_emotions = sentiment_info['dominant_emotions']
+                            dream.lucidity_level = sentiment_info['lucidity_level']
+                    
                     session.add(dream)
                     session.commit()
                     
-                    flash('Dream logged successfully!')
-                    return redirect(url_for('index'))
+                    track_user_activity(
+                        user.id,
+                        ACTIVITY_TYPES['DREAM_CREATE'],
+                        target_id=dream.id,
+                        description=f"Created dream: {dream.title}"
+                    )
                     
-                # For GET requests, pass the bound user object to template
+                    flash('Dream logged successfully!')
+                    return redirect(url_for('dream_view', dream_id=dream.id))
+                    
                 return render_template('dream_new.html', user=user)
         except Exception as e:
             logger.error(f"Error in dream_new route: {str(e)}")
             flash('An error occurred while processing your request')
             return redirect(url_for('index'))
+
+    @app.route('/dream/<int:dream_id>/reanalyze', methods=['POST'])
+    @login_required
+    def reanalyze_dream(dream_id):
+        """Re-analyze a dream using the latest AI model."""
+        try:
+            with session_manager.session_scope() as session:
+                dream = session.query(Dream).get_or_404(dream_id)
+                
+                # Check if user owns this dream
+                if dream.user_id != current_user.id:
+                    abort(403)
+                
+                # Re-analyze the dream
+                is_premium = current_user.subscription_type == 'premium'
+                analysis_text, sentiment_info = analyze_dream(dream.content, is_premium)
+                
+                if analysis_text and not analysis_text.startswith('Error'):
+                    dream.ai_analysis = analysis_text
+                    if sentiment_info:
+                        dream.sentiment_score = sentiment_info['sentiment_score']
+                        dream.sentiment_magnitude = sentiment_info['sentiment_magnitude']
+                        dream.dominant_emotions = sentiment_info['dominant_emotions']
+                        dream.lucidity_level = sentiment_info['lucidity_level']
+                    session.commit()
+                    flash('Dream analysis updated successfully!')
+                else:
+                    flash('Error updating dream analysis. Please try again later.')
+                
+                return redirect(url_for('dream_view', dream_id=dream_id))
+        except Exception as e:
+            logger.error(f"Error re-analyzing dream {dream_id}: {str(e)}")
+            flash('An error occurred while re-analyzing the dream')
+            return redirect(url_for('dream_view', dream_id=dream_id))
 
     @app.route('/dream/<int:dream_id>')
     @login_required
@@ -233,6 +284,19 @@ def register_routes(app):
                 # Check if user has permission to view this dream
                 if dream.user_id != current_user.id and not dream.is_public:
                     abort(403)
+                
+                # If dream has no AI analysis, generate it
+                if not dream.ai_analysis:
+                    is_premium = current_user.subscription_type == 'premium'
+                    analysis_text, sentiment_info = analyze_dream(dream.content, is_premium)
+                    if analysis_text and not analysis_text.startswith('Error'):
+                        dream.ai_analysis = analysis_text
+                        if sentiment_info:
+                            dream.sentiment_score = sentiment_info['sentiment_score']
+                            dream.sentiment_magnitude = sentiment_info['sentiment_magnitude']
+                            dream.dominant_emotions = sentiment_info['dominant_emotions']
+                            dream.lucidity_level = sentiment_info['lucidity_level']
+                        session.commit()
                 
                 track_user_activity(
                     current_user.id,

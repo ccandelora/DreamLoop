@@ -90,8 +90,37 @@
                     </p>
                 </div>
                 <div class="p-8 space-y-6">
+                    <!-- Sentiment Indicators -->
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="text-center p-4 bg-white/50 rounded-lg border border-slate-200">
+                            <div class="text-sm text-slate-600">Sentiment</div>
+                            <div class="text-xl font-semibold text-slate-900">
+                                {{ "%.2f"|format(dream.sentiment_score|float) }}
+                            </div>
+                        </div>
+                        <div class="text-center p-4 bg-white/50 rounded-lg border border-slate-200">
+                            <div class="text-sm text-slate-600">Lucidity</div>
+                            <div class="text-xl font-semibold text-slate-900">
+                                {{ dream.lucidity_level }}/5
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dominant Emotions -->
+                    {% if dream.dominant_emotions %}
+                    <div class="mb-6">
+                        <h4 class="text-sm font-medium text-slate-900 mb-2">Dominant Emotions</h4>
+                        <div class="flex flex-wrap gap-2">
+                            {% for emotion in dream.dominant_emotions.split(',') %}
+                            <span class="dream-tag dream-tag-emotion">{{ emotion.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- AI Analysis Content -->
                     <div class="ai-analysis prose prose-slate max-w-none prose-headings:text-purple-900 prose-h3:text-lg prose-h3:font-semibold prose-p:text-slate-700 prose-strong:text-slate-900 prose-em:text-purple-700">
-                        {{ dream.ai_analysis }}
+                        {{ dream.ai_analysis|markdown|safe }}
                     </div>
 
                     {% if current_user.subscription_type == 'free' %}
@@ -106,19 +135,19 @@
                                 <svg class="h-4 w-4 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                 </svg>
-                                Detailed symbolism analysis
+                                Advanced Pattern Recognition
                             </li>
                             <li class="flex items-center gap-2">
                                 <svg class="h-4 w-4 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                 </svg>
-                                Personal growth recommendations
+                                Deep Symbolism Analysis
                             </li>
                             <li class="flex items-center gap-2">
                                 <svg class="h-4 w-4 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                 </svg>
-                                Pattern recognition across dreams
+                                Personal Growth Insights
                             </li>
                         </ul>
                         <a href="{{ url_for('subscription') }}" 
