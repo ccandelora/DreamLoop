@@ -1,7 +1,7 @@
-from flask import render_template, redirect, url_for, flash, request, jsonify
+from flask import render_template, redirect, url_for, flash, request, jsonify, g
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db
-from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply
+from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply, Notification
 from datetime import datetime
 import logging
 import os
@@ -17,6 +17,14 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
+
+@app.context_processor
+def inject_unread_notifications():
+    """Inject unread notifications count into all templates."""
+    if current_user.is_authenticated:
+        unread_count = Notification.query.filter_by(user_id=current_user.id, read=False).count()
+        return {'unread_notifications_count': unread_count}
+    return {'unread_notifications_count': 0}
 
 @app.route('/')
 def index():
@@ -97,6 +105,34 @@ def register():
             flash('An error occurred during registration')
     
     return render_template('register.html')
+
+@app.route('/notifications')
+@login_required
+def notifications():
+    """View all notifications."""
+    notifications = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.created_at.desc()).all()
+    return render_template('notifications.html', notifications=notifications)
+
+@app.route('/notifications/mark_read/<int:notification_id>')
+@login_required
+def mark_notification_read(notification_id):
+    """Mark a notification as read."""
+    notification = Notification.query.get_or_404(notification_id)
+    if notification.user_id != current_user.id:
+        flash('Unauthorized access.')
+        return redirect(url_for('notifications'))
+    
+    notification.read = True
+    db.session.commit()
+    return redirect(url_for('notifications'))
+
+@app.route('/notifications/mark_all_read')
+@login_required
+def mark_all_notifications_read():
+    """Mark all notifications as read."""
+    Notification.query.filter_by(user_id=current_user.id).update({'read': True})
+    db.session.commit()
+    return redirect(url_for('notifications'))
 
 @app.route('/dream/patterns')
 @login_required
@@ -201,6 +237,7 @@ def add_comment(dream_id):
         return redirect(url_for('dream_view', dream_id=dream_id))
     
     try:
+        # Create the comment
         comment = Comment(
             content=content,
             user_id=current_user.id,
@@ -208,6 +245,19 @@ def add_comment(dream_id):
             created_at=datetime.utcnow()
         )
         db.session.add(comment)
+        
+        # Create notification for dream owner if it's not their own comment
+        if dream.user_id != current_user.id:
+            notification = Notification(
+                user_id=dream.user_id,
+                title=f"New comment on your dream: {dream.title}",
+                content=f"{current_user.username} commented: {content[:100]}{'...' if len(content) > 100 else ''}",
+                type='comment',
+                reference_id=dream_id,
+                created_at=datetime.utcnow()
+            )
+            db.session.add(notification)
+        
         db.session.commit()
         flash('Comment added successfully!')
     except Exception as e:

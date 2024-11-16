@@ -19,6 +19,7 @@ class User(UserMixin, db.Model):
     forum_posts = db.relationship('ForumPost', backref='user', lazy='dynamic')
     forum_replies = db.relationship('ForumReply', backref='user', lazy='dynamic')
     groups = db.relationship('DreamGroup', secondary='group_membership', backref=db.backref('members', lazy='dynamic'))
+    notifications = db.relationship('Notification', backref='user', lazy='dynamic')
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -60,6 +61,16 @@ class Comment(db.Model):
     dream_id = db.Column(db.Integer, db.ForeignKey('dream.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     edited_at = db.Column(db.DateTime, nullable=True)
+
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    title = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    type = db.Column(db.String(50), nullable=False)  # 'comment', 'reply', etc.
+    reference_id = db.Column(db.Integer)  # ID of the related item (dream, comment, etc.)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    read = db.Column(db.Boolean, default=False)
 
 class DreamGroup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
