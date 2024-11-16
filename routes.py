@@ -549,7 +549,7 @@ def assign_moderator(user_id):
 @login_required
 def moderate_comment(comment_id):
     """Moderate a comment (hide/unhide)."""
-    if not current_user.is_moderator:
+    if not current_user.can_moderate():
         flash('Unauthorized access.')
         return redirect(url_for('index'))
     
@@ -562,37 +562,18 @@ def moderate_comment(comment_id):
             if not reason:
                 flash('Moderation reason is required.')
                 return redirect(url_for('dream_view', dream_id=comment.dream_id))
-                
-            comment.hide(current_user, reason)
             
-            # Create notification for comment author
-            notification = Notification(
-                user_id=comment.user_id,
-                title="Your comment has been hidden",
-                content=f"A moderator has hidden your comment. Reason: {reason}",
-                type='moderation',
-                reference_id=comment.dream_id
-            )
-            db.session.add(notification)
+            comment.hide(current_user, reason)
+            flash('Comment hidden successfully.')
             
         elif action == 'unhide':
-            comment.is_hidden = False
-            comment.moderation_reason = None
-            comment.moderated_at = None
-            comment.moderated_by = None
-            
-            # Create notification for comment author
-            notification = Notification(
-                user_id=comment.user_id,
-                title="Your comment has been restored",
-                content="A moderator has restored your previously hidden comment.",
-                type='moderation',
-                reference_id=comment.dream_id
-            )
-            db.session.add(notification)
+            comment.unhide(current_user)
+            flash('Comment restored successfully.')
             
         db.session.commit()
-        flash('Comment moderation action completed successfully.')
+    except ValueError as e:
+        logger.error(f"Moderation error: {str(e)}")
+        flash(str(e))
     except Exception as e:
         logger.error(f"Error moderating comment: {str(e)}")
         db.session.rollback()

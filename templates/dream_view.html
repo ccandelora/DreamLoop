@@ -261,22 +261,17 @@
                                     <div id="reply-form-{{ thread.comment.id }}" class="hidden mt-4">
                                         <form method="POST" action="{{ url_for('add_comment', dream_id=dream.id) }}" class="space-y-4">
                                             <input type="hidden" name="parent_id" value="{{ thread.comment.id }}">
-                                            <textarea
-                                                class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
-                                                name="content"
-                                                rows="2"
-                                                required
-                                                placeholder="Write your reply..."
-                                            ></textarea>
-                                            <div class="flex justify-end gap-2">
-                                                <button type="button" 
-                                                        onclick="toggleReplyForm('{{ thread.comment.id }}')" 
-                                                        class="px-4 py-2 text-sm text-slate-600 hover:text-slate-700 transition-colors">
-                                                    Cancel
-                                                </button>
-                                                <button type="submit" class="dream-button text-sm">
-                                                    Post Reply
-                                                </button>
+                                            <div class="space-y-3">
+                                                <textarea
+                                                    class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
+                                                    name="content"
+                                                    rows="3"
+                                                    required
+                                                    placeholder="Write your reply..."
+                                                ></textarea>
+                                            </div>
+                                            <div>
+                                                <button type="submit" class="dream-button">Post Reply</button>
                                             </div>
                                         </form>
                                     </div>
@@ -286,21 +281,16 @@
                                         <form method="POST" 
                                               action="{{ url_for('edit_comment', dream_id=dream.id, comment_id=thread.comment.id) }}" 
                                               class="space-y-4">
-                                            <textarea
-                                                class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
-                                                name="content"
-                                                rows="2"
-                                                required
-                                            >{{ thread.comment.content }}</textarea>
-                                            <div class="flex justify-end gap-2">
-                                                <button type="button" 
-                                                        onclick="toggleEditForm('{{ thread.comment.id }}')" 
-                                                        class="px-4 py-2 text-sm text-slate-600 hover:text-slate-700 transition-colors">
-                                                    Cancel
-                                                </button>
-                                                <button type="submit" class="dream-button text-sm">
-                                                    Save Changes
-                                                </button>
+                                            <div class="space-y-3">
+                                                <textarea
+                                                    class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
+                                                    name="content"
+                                                    rows="3"
+                                                    required
+                                                >{{ thread.comment.content }}</textarea>
+                                            </div>
+                                            <div>
+                                                <button type="submit" class="dream-button">Save Changes</button>
                                             </div>
                                         </form>
                                     </div>
@@ -355,21 +345,16 @@
                                                         <form method="POST" 
                                                               action="{{ url_for('edit_comment', dream_id=dream.id, comment_id=reply.comment.id) }}" 
                                                               class="space-y-4">
-                                                            <textarea
-                                                                class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
-                                                                name="content"
-                                                                rows="2"
-                                                                required
-                                                            >{{ reply.comment.content }}</textarea>
-                                                            <div class="flex justify-end gap-2">
-                                                                <button type="button" 
-                                                                        onclick="toggleEditForm('{{ reply.comment.id }}')" 
-                                                                        class="px-4 py-2 text-sm text-slate-600 hover:text-slate-700 transition-colors">
-                                                                    Cancel
-                                                                </button>
-                                                                <button type="submit" class="dream-button text-sm">
-                                                                    Save Changes
-                                                                </button>
+                                                            <div class="space-y-3">
+                                                                <textarea
+                                                                    class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
+                                                                    name="content"
+                                                                    rows="3"
+                                                                    required
+                                                                >{{ reply.comment.content }}</textarea>
+                                                            </div>
+                                                            <div>
+                                                                <button type="submit" class="dream-button">Save Changes</button>
                                                             </div>
                                                         </form>
                                                     </div>
