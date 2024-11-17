@@ -51,6 +51,174 @@ def index():
         dreams = Dream.query.filter_by(is_public=True).order_by(Dream.date.desc()).limit(5).all()
     return render_template('index.html', dreams=dreams)
 
+# Comment routes
+@app.route('/dream/<int:dream_id>/comment', methods=['POST'])
+@login_required
+def add_comment(dream_id):
+    dream = Dream.query.get_or_404(dream_id)
+    content = request.form.get('content')
+    parent_id = request.form.get('parent_id', None, type=int)
+    
+    if not content:
+        flash('Comment cannot be empty')
+        return redirect(url_for('dream_view', dream_id=dream_id))
+        
+    comment = Comment(
+        content=content,
+        user_id=current_user.id,
+        dream_id=dream_id,
+        parent_id=parent_id
+    )
+    
+    try:
+        db.session.add(comment)
+        
+        # Create notification for dream author if not self-commenting
+        if dream.user_id != current_user.id:
+            notification = Notification(
+                user_id=dream.user_id,
+                title='New comment on your dream',
+                content=f'{current_user.username} commented on your dream "{dream.title}"',
+                type='comment',
+                reference_id=dream_id
+            )
+            db.session.add(notification)
+            
+        # Create notification for parent comment author if this is a reply
+        if parent_id:
+            parent_comment = Comment.query.get(parent_id)
+            if parent_comment and parent_comment.user_id != current_user.id:
+                notification = Notification(
+                    user_id=parent_comment.user_id,
+                    title='New reply to your comment',
+                    content=f'{current_user.username} replied to your comment',
+                    type='reply',
+                    reference_id=dream_id
+                )
+                db.session.add(notification)
+                
+        db.session.commit()
+        flash('Comment added successfully')
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error adding comment: {str(e)}")
+        flash('An error occurred while adding your comment')
+        
+    return redirect(url_for('dream_view', dream_id=dream_id))
+
+@app.route('/dream/<int:dream_id>/comment/<int:comment_id>/delete', methods=['POST'])
+@login_required
+def delete_comment(dream_id, comment_id):
+    """Delete a comment."""
+    comment = Comment.query.get_or_404(comment_id)
+    dream = Dream.query.get_or_404(dream_id)
+    
+    # Only allow comment author or dream owner to delete comments
+    if comment.user_id != current_user.id and dream.user_id != current_user.id:
+        flash('You do not have permission to delete this comment')
+        return redirect(url_for('dream_view', dream_id=dream_id))
+        
+    try:
+        db.session.delete(comment)
+        db.session.commit()
+        flash('Comment deleted successfully')
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error deleting comment: {str(e)}")
+        flash('An error occurred while deleting the comment')
+        
+    return redirect(url_for('dream_view', dream_id=dream_id))
+
+@app.route('/dream/<int:dream_id>/comment/<int:comment_id>/edit', methods=['POST'])
+@login_required
+def edit_comment(dream_id, comment_id):
+    """Edit a comment."""
+    comment = Comment.query.get_or_404(comment_id)
+    
+    if comment.user_id != current_user.id:
+        flash('You do not have permission to edit this comment')
+        return redirect(url_for('dream_view', dream_id=dream_id))
+        
+    content = request.form.get('content')
+    if not content:
+        flash('Comment cannot be empty')
+        return redirect(url_for('dream_view', dream_id=dream_id))
+        
+    try:
+        comment.content = content
+        comment.edited_at = datetime.utcnow()
+        db.session.commit()
+        flash('Comment updated successfully')
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error updating comment: {str(e)}")
+        flash('An error occurred while updating the comment')
+        
+    return redirect(url_for('dream_view', dream_id=dream_id))
+
+@app.route('/comment/<int:comment_id>/moderate', methods=['POST'])
+@login_required
+def moderate_comment(comment_id):
+    """Moderate a comment (hide/unhide)."""
+    if not current_user.can_moderate():
+        flash('Unauthorized access.')
+        return redirect(url_for('index'))
+    
+    comment = Comment.query.get_or_404(comment_id)
+    
+    try:
+        action = request.form.get('action')
+        
+        if action == 'hide':
+            reason = request.form.get('reason')
+            if not reason:
+                flash('Moderation reason is required.')
+                return redirect(url_for('dream_view', dream_id=comment.dream_id))
+                
+            comment.hide(current_user, reason)
+            flash('Comment hidden successfully.')
+            
+        elif action == 'unhide':
+            comment.unhide(current_user)
+            flash('Comment restored successfully.')
+            
+        else:
+            flash('Invalid moderation action.')
+            return redirect(url_for('dream_view', dream_id=comment.dream_id))
+            
+        db.session.commit()
+        
+    except ValueError as e:
+        logger.error(f"Moderation error: {str(e)}")
+        flash(str(e))
+    except Exception as e:
+        logger.error(f"Error moderating comment: {str(e)}")
+        db.session.rollback()
+        flash('An error occurred while moderating the comment.')
+    
+    return redirect(url_for('dream_view', dream_id=comment.dream_id))
+
+@app.route('/admin/toggle_moderator/<int:user_id>', methods=['POST'])
+@login_required
+def toggle_moderator(user_id):
+    """Toggle moderator status for a user."""
+    if not current_user.can_moderate():
+        flash('You do not have permission to manage moderators.')
+        return redirect(url_for('index'))
+        
+    user = User.query.get_or_404(user_id)
+    
+    try:
+        user.is_moderator = not user.is_moderator
+        db.session.commit()
+        flash(f'Moderator status {"granted to" if user.is_moderator else "removed from"} {user.username}.')
+    except Exception as e:
+        logger.error(f"Error toggling moderator status: {str(e)}")
+        db.session.rollback()
+        flash('An error occurred while updating moderator status.')
+        
+    return redirect(url_for('index'))
+
 @app.route('/dream/new', methods=['GET', 'POST'])
 @login_required
 def dream_new():
@@ -160,69 +328,6 @@ def dream_patterns():
     patterns = analyze_dream_patterns(user_dreams)
     return render_template('dream_patterns.html', patterns=patterns)
 
-@app.route('/comment/<int:comment_id>/moderate', methods=['POST'])
-@login_required
-def moderate_comment(comment_id):
-    """Moderate a comment (hide/unhide)."""
-    if not current_user.can_moderate():
-        flash('Unauthorized access.')
-        return redirect(url_for('index'))
-    
-    comment = Comment.query.get_or_404(comment_id)
-    
-    try:
-        action = request.form.get('action')
-        
-        if action == 'hide':
-            reason = request.form.get('reason')
-            if not reason:
-                flash('Moderation reason is required.')
-                return redirect(url_for('dream_view', dream_id=comment.dream_id))
-                
-            comment.hide(current_user, reason)
-            flash('Comment hidden successfully.')
-            
-        elif action == 'unhide':
-            comment.unhide(current_user)
-            flash('Comment restored successfully.')
-            
-        else:
-            flash('Invalid moderation action.')
-            return redirect(url_for('dream_view', dream_id=comment.dream_id))
-            
-        db.session.commit()
-        
-    except ValueError as e:
-        logger.error(f"Moderation error: {str(e)}")
-        flash(str(e))
-    except Exception as e:
-        logger.error(f"Error moderating comment: {str(e)}")
-        db.session.rollback()
-        flash('An error occurred while moderating the comment.')
-    
-    return redirect(url_for('dream_view', dream_id=comment.dream_id))
-
-@app.route('/admin/toggle_moderator/<int:user_id>', methods=['POST'])
-@login_required
-def toggle_moderator(user_id):
-    """Toggle moderator status for a user."""
-    if not current_user.can_moderate():
-        flash('You do not have permission to manage moderators.')
-        return redirect(url_for('index'))
-        
-    user = User.query.get_or_404(user_id)
-    
-    try:
-        user.is_moderator = not user.is_moderator
-        db.session.commit()
-        flash(f'Moderator status {"granted to" if user.is_moderator else "removed from"} {user.username}.')
-    except Exception as e:
-        logger.error(f"Error toggling moderator status: {str(e)}")
-        db.session.rollback()
-        flash('An error occurred while updating moderator status.')
-        
-    return redirect(url_for('index'))
-
 @app.route('/community')
 @login_required
 def community_dreams():
@@ -260,6 +365,17 @@ def dream_groups():
     """View all dream groups."""
     groups = DreamGroup.query.all()
     return render_template('dream_groups.html', groups=groups)
+
+@app.route('/admin/moderators')
+@login_required
+def manage_moderators():
+    """View and manage moderators."""
+    if not current_user.can_moderate():
+        flash('You do not have permission to access this page.')
+        return redirect(url_for('index'))
+        
+    users = User.query.all()
+    return render_template('admin/moderators.html', users=users)
 
 # Add template context processor for moderation UI
 @app.context_processor
