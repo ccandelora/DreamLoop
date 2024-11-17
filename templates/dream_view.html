@@ -242,17 +242,19 @@
                                                 placeholder="Write your reply..."
                                             ></textarea>
                                         </div>
-                                        <div>
-                                            <button type="submit" class="dream-button">Post Reply</button>
+                                        <div class="flex justify-end gap-2">
+                                            <button type="button" onclick="toggleReplyForm('{{ thread.comment.id }}')" 
+                                                    class="text-slate-600 hover:text-slate-700 transition-colors">
+                                                Cancel
+                                            </button>
+                                            <button type="submit" class="dream-button">Reply</button>
                                         </div>
                                     </form>
                                 </div>
 
                                 <!-- Edit Form -->
                                 <div id="edit-form-{{ thread.comment.id }}" class="hidden mt-4">
-                                    <form method="POST" 
-                                          action="{{ url_for('edit_comment', dream_id=dream.id, comment_id=thread.comment.id) }}" 
-                                          class="space-y-4">
+                                    <form method="POST" action="{{ url_for('edit_comment', comment_id=thread.comment.id) }}" class="space-y-4">
                                         <div class="space-y-3">
                                             <textarea
                                                 class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
@@ -261,7 +263,11 @@
                                                 required
                                             >{{ thread.comment.content }}</textarea>
                                         </div>
-                                        <div>
+                                        <div class="flex justify-end gap-2">
+                                            <button type="button" onclick="toggleEditForm('{{ thread.comment.id }}')" 
+                                                    class="text-slate-600 hover:text-slate-700 transition-colors">
+                                                Cancel
+                                            </button>
                                             <button type="submit" class="dream-button">Save Changes</button>
                                         </div>
                                     </form>
@@ -271,30 +277,34 @@
                                 {% if thread.replies %}
                                 <div class="ml-8 space-y-4">
                                     {% for reply in thread.replies %}
-                                    <div class="comment-card reply {% if reply.comment.is_hidden %}bg-red-50/50 border-red-100{% endif %}" 
-                                         id="comment-{{ reply.comment.id }}">
-                                        {% if reply.comment.is_hidden %}
+                                    <div class="comment-card {% if reply.is_hidden %}bg-red-50/50 border-red-100{% endif %}" 
+                                         id="comment-{{ reply.id }}">
+                                        {% if reply.is_hidden %}
                                         <div class="text-red-600 text-sm mb-2 flex items-center gap-2">
                                             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                                       d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                                             </svg>
                                             <span class="font-medium">Hidden by moderator:</span> 
-                                            {{ reply.comment.moderation_reason }}
-                                            {% if reply.comment.moderator %}
-                                            (by {{ reply.comment.moderator.username }})
+                                            {{ reply.moderation_reason }}
+                                            {% if reply.moderator %}
+                                            (by {{ reply.moderator.username }})
                                             {% endif %}
                                         </div>
                                         {% endif %}
                                         
-                                        <div class="text-slate-800 {% if reply.comment.is_hidden %}opacity-50{% endif %}">
-                                            {{ reply.comment.content }}
+                                        <div class="text-slate-800 {% if reply.is_hidden %}opacity-50{% endif %}">
+                                            {{ reply.content }}
                                         </div>
 
                                         <div class="flex justify-between items-center text-sm mt-2">
-                                            <div class="text-slate-600">
-                                                {{ reply.comment.author.username }} • {{ reply.comment.created_at.strftime('%B %d at %I:%M %p') }}
-                                                {% if reply.comment.edited_at %}
+                                            <div class="text-slate-600 flex items-center gap-1">
+                                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                          d="M16 7a4 4 0 11-8 0 4 4 0 016 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                                </svg>
+                                                {{ reply.author.username }} • {{ reply.created_at.strftime('%B %d at %I:%M %p') }}
+                                                {% if reply.edited_at %}
                                                 <span class="text-slate-500">(edited)</span>
                                                 {% endif %}
                                             </div>
@@ -302,8 +312,8 @@
                                             <div class="flex items-center gap-2">
                                                 {% if current_user.can_moderate() %}
                                                 <div class="border-r border-slate-200 pr-2 mr-2">
-                                                    {% if not reply.comment.is_hidden %}
-                                                    <form method="POST" action="{{ url_for('moderate_comment', comment_id=reply.comment.id) }}" 
+                                                    {% if not reply.is_hidden %}
+                                                    <form method="POST" action="{{ url_for('moderate_comment', comment_id=reply.id) }}" 
                                                           class="inline-flex items-center gap-2">
                                                         <input type="hidden" name="action" value="hide">
                                                         <input type="text" name="reason" 
@@ -314,7 +324,7 @@
                                                         </button>
                                                     </form>
                                                     {% else %}
-                                                    <form method="POST" action="{{ url_for('moderate_comment', comment_id=reply.comment.id) }}" class="inline">
+                                                    <form method="POST" action="{{ url_for('moderate_comment', comment_id=reply.id) }}" class="inline">
                                                         <input type="hidden" name="action" value="unhide">
                                                         <button type="submit" class="text-green-600 hover:text-green-700 transition-colors text-sm">
                                                             Restore
@@ -323,9 +333,9 @@
                                                     {% endif %}
                                                 </div>
                                                 {% endif %}
-
-                                                {% if reply.comment.author.id == current_user.id %}
-                                                <button onclick="toggleEditForm('{{ reply.comment.id }}')" 
+                                                
+                                                {% if reply.author.id == current_user.id %}
+                                                <button onclick="toggleEditForm('{{ reply.id }}')" 
                                                         class="text-purple-600 hover:text-purple-700 transition-colors flex items-center gap-1">
                                                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -335,7 +345,7 @@
                                                 </button>
 
                                                 <form method="POST" 
-                                                      action="{{ url_for('delete_comment', dream_id=dream.id, comment_id=reply.comment.id) }}" 
+                                                      action="{{ url_for('delete_comment', dream_id=dream.id, comment_id=reply.id) }}" 
                                                       class="inline">
                                                     <button type="submit" 
                                                             class="text-red-600 hover:text-red-700 transition-colors flex items-center gap-1">
@@ -349,25 +359,27 @@
                                                 {% endif %}
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <!-- Edit Form for Reply -->
-                                        <div id="edit-form-{{ reply.comment.id }}" class="hidden mt-4">
-                                            <form method="POST" 
-                                                  action="{{ url_for('edit_comment', dream_id=dream.id, comment_id=reply.comment.id) }}" 
-                                                  class="space-y-4">
-                                                <div class="space-y-3">
-                                                    <textarea
-                                                        class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
-                                                        name="content"
-                                                        rows="3"
-                                                        required
-                                                    >{{ reply.comment.content }}</textarea>
-                                                </div>
-                                                <div>
-                                                    <button type="submit" class="dream-button">Save Changes</button>
-                                                </div>
-                                            </form>
-                                        </div>
+                                    <!-- Edit Form for Reply -->
+                                    <div id="edit-form-{{ reply.id }}" class="hidden mt-4">
+                                        <form method="POST" action="{{ url_for('edit_comment', comment_id=reply.id) }}" class="space-y-4">
+                                            <div class="space-y-3">
+                                                <textarea
+                                                    class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
+                                                    name="content"
+                                                    rows="3"
+                                                    required
+                                                >{{ reply.content }}</textarea>
+                                            </div>
+                                            <div class="flex justify-end gap-2">
+                                                <button type="button" onclick="toggleEditForm('{{ reply.id }}')" 
+                                                        class="text-slate-600 hover:text-slate-700 transition-colors">
+                                                    Cancel
+                                                </button>
+                                                <button type="submit" class="dream-button">Save Changes</button>
+                                            </div>
+                                        </form>
                                     </div>
                                     {% endfor %}
                                 </div>
@@ -375,7 +387,9 @@
                             </div>
                         {% endfor %}
                     {% else %}
-                        <p class="text-slate-600 text-center">No comments yet. Be the first to share your thoughts!</p>
+                        <div class="text-center text-slate-600">
+                            No comments yet. Be the first to share your thoughts!
+                        </div>
                     {% endif %}
                 </div>
             </div>
@@ -387,13 +401,27 @@
 {% block scripts %}
 <script>
 function toggleReplyForm(commentId) {
-    const formElement = document.getElementById(`reply-form-${commentId}`);
-    formElement.classList.toggle('hidden');
+    const replyForm = document.getElementById(`reply-form-${commentId}`);
+    if (replyForm) {
+        replyForm.classList.toggle('hidden');
+        if (!replyForm.classList.contains('hidden')) {
+            const textarea = replyForm.querySelector('textarea');
+            textarea.focus();
+        }
+    }
 }
 
 function toggleEditForm(commentId) {
-    const formElement = document.getElementById(`edit-form-${commentId}`);
-    formElement.classList.toggle('hidden');
+    const editForm = document.getElementById(`edit-form-${commentId}`);
+    if (editForm) {
+        editForm.classList.toggle('hidden');
+        if (!editForm.classList.contains('hidden')) {
+            const textarea = editForm.querySelector('textarea');
+            textarea.focus();
+            // Place cursor at the end of the text
+            textarea.selectionStart = textarea.selectionEnd = textarea.value.length;
+        }
+    }
 }
 </script>
 {% endblock %}

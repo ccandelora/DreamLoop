@@ -1,10 +1,10 @@
+import os
 from flask import render_template, redirect, url_for, flash, request, jsonify, g
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db
 from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply, Notification
 from datetime import datetime
 import logging
-import os
 import hashlib
 from google_ads_helper import track_premium_conversion, show_premium_ads, validate_google_ads_credentials
 from ai_helper import analyze_dream, analyze_dream_patterns
@@ -12,7 +12,6 @@ from stripe_webhook_handler import handle_stripe_webhook
 import stripe
 import markdown
 from sqlalchemy import desc, func
-from werkzeug.security import generate_password_hash
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -45,7 +44,9 @@ def register():
             flash('Email already registered')
             return redirect(url_for('register'))
             
-        user = User(username=username, email=email)
+        user = User()
+        user.username = username
+        user.email = email
         user.set_password(password)
         
         try:
@@ -96,8 +97,9 @@ def moderate_comment(comment_id):
         flash('Unauthorized access.')
         return redirect(url_for('index'))
     
+    comment = Comment.query.get_or_404(comment_id)
+    
     try:
-        comment = Comment.query.get_or_404(comment_id)
         action = request.form.get('action')
         
         if action == 'hide':
@@ -150,6 +152,31 @@ def toggle_moderator(user_id):
         
     return redirect(url_for('index'))
 
+@app.route('/notifications')
+@login_required
+def notifications():
+    """View all notifications."""
+    notifications = current_user.notifications.order_by(Notification.created_at.desc()).all()
+    return render_template('notifications.html', notifications=notifications)
+
+@app.route('/notification/<int:notification_id>/read')
+@login_required
+def mark_notification_read(notification_id):
+    """Mark a notification as read."""
+    notification = Notification.query.get_or_404(notification_id)
+    if notification.user_id == current_user.id:
+        notification.read = True
+        db.session.commit()
+    return redirect(url_for('notifications'))
+
+@app.route('/notifications/read-all')
+@login_required
+def mark_all_notifications_read():
+    """Mark all notifications as read."""
+    current_user.notifications.update({Notification.read: True})
+    db.session.commit()
+    return redirect(url_for('notifications'))
+
 @app.route('/community')
 @login_required
 def community_dreams():
@@ -196,3 +223,12 @@ def inject_dream_utils():
     def is_dream_author(dream):
         return current_user.is_authenticated and dream.user_id == current_user.id
     return {'is_dream_author': is_dream_author}
+
+# Add template context processor for unread notifications count
+@app.context_processor
+def inject_unread_notifications_count():
+    """Inject unread notifications count into all templates."""
+    if current_user.is_authenticated:
+        count = Notification.query.filter_by(user_id=current_user.id, read=False).count()
+        return {'unread_notifications_count': count}
+    return {'unread_notifications_count': 0}
