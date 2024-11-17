@@ -15,7 +15,7 @@ class User(UserMixin, db.Model):
     is_moderator = db.Column(db.Boolean, default=False)
     
     # Relationships
-    dreams = db.relationship('Dream', backref='author', lazy='dynamic')
+    dreams = db.relationship('Dream', backref='user', lazy='dynamic')
     authored_comments = db.relationship('Comment', 
                              foreign_keys='Comment.user_id',
                              backref='author',
