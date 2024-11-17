@@ -25,6 +25,43 @@ def index():
         dreams = Dream.query.filter_by(is_public=True).order_by(Dream.date.desc()).limit(5).all()
     return render_template('index.html', dreams=dreams)
 
+@app.route('/dream/new', methods=['GET', 'POST'])
+@login_required
+def dream_new():
+    """Create a new dream entry."""
+    if request.method == 'POST':
+        dream = Dream()
+        dream.user_id = current_user.id
+        dream.title = request.form.get('title')
+        dream.content = request.form.get('content')
+        dream.mood = request.form.get('mood')
+        dream.tags = request.form.get('tags')
+        dream.is_public = bool(request.form.get('is_public'))
+        dream.is_anonymous = bool(request.form.get('is_anonymous'))
+        dream.lucidity_level = int(request.form.get('lucidity_level', 1))
+        
+        # Handle sleep metrics
+        dream.bed_time = datetime.strptime(request.form.get('bed_time'), '%Y-%m-%dT%H:%M') if request.form.get('bed_time') else None
+        dream.wake_time = datetime.strptime(request.form.get('wake_time'), '%Y-%m-%dT%H:%M') if request.form.get('wake_time') else None
+        dream.sleep_quality = int(request.form.get('sleep_quality')) if request.form.get('sleep_quality') else None
+        dream.sleep_interruptions = int(request.form.get('sleep_interruptions', 0))
+        dream.sleep_position = request.form.get('sleep_position')
+        
+        if dream.bed_time and dream.wake_time:
+            dream.sleep_duration = (dream.wake_time - dream.bed_time).total_seconds() / 3600
+        
+        try:
+            db.session.add(dream)
+            db.session.commit()
+            flash('Dream logged successfully!')
+            return redirect(url_for('dream_view', dream_id=dream.id))
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Error creating dream: {str(e)}")
+            flash('An error occurred while saving your dream')
+            
+    return render_template('dream_new.html')
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """User registration."""
@@ -89,6 +126,31 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+@app.route('/notifications')
+@login_required
+def notifications():
+    """View all notifications."""
+    notifications = current_user.notifications.order_by(Notification.created_at.desc()).all()
+    return render_template('notifications.html', notifications=notifications)
+
+@app.route('/notification/<int:notification_id>/read')
+@login_required
+def mark_notification_read(notification_id):
+    """Mark a notification as read."""
+    notification = Notification.query.get_or_404(notification_id)
+    if notification.user_id == current_user.id:
+        notification.read = True
+        db.session.commit()
+    return redirect(url_for('notifications'))
+
+@app.route('/notifications/read-all')
+@login_required
+def mark_all_notifications_read():
+    """Mark all notifications as read."""
+    current_user.notifications.update({Notification.read: True})
+    db.session.commit()
+    return redirect(url_for('notifications'))
+
 @app.route('/comment/<int:comment_id>/moderate', methods=['POST'])
 @login_required
 def moderate_comment(comment_id):
@@ -151,31 +213,6 @@ def toggle_moderator(user_id):
         flash('An error occurred while updating moderator status.')
         
     return redirect(url_for('index'))
-
-@app.route('/notifications')
-@login_required
-def notifications():
-    """View all notifications."""
-    notifications = current_user.notifications.order_by(Notification.created_at.desc()).all()
-    return render_template('notifications.html', notifications=notifications)
-
-@app.route('/notification/<int:notification_id>/read')
-@login_required
-def mark_notification_read(notification_id):
-    """Mark a notification as read."""
-    notification = Notification.query.get_or_404(notification_id)
-    if notification.user_id == current_user.id:
-        notification.read = True
-        db.session.commit()
-    return redirect(url_for('notifications'))
-
-@app.route('/notifications/read-all')
-@login_required
-def mark_all_notifications_read():
-    """Mark all notifications as read."""
-    current_user.notifications.update({Notification.read: True})
-    db.session.commit()
-    return redirect(url_for('notifications'))
 
 @app.route('/community')
 @login_required
