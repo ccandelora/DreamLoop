@@ -1,5 +1,5 @@
 import os
-from flask import render_template, redirect, url_for, flash, request, jsonify, g
+from flask import render_template, redirect, url_for, flash, request, jsonify, g, current_app
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db
 from models import User, Dream, Comment, DreamGroup, GroupMembership, ForumPost, ForumReply, Notification
@@ -15,6 +15,32 @@ from sqlalchemy import desc, func
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Notification routes
+@app.route('/notifications')
+@login_required
+def notifications():
+    """View all notifications."""
+    notifications = current_user.notifications.order_by(Notification.created_at.desc()).all()
+    return render_template('notifications.html', notifications=notifications)
+
+@app.route('/notification/<int:notification_id>/read')
+@login_required
+def mark_notification_read(notification_id):
+    """Mark a notification as read."""
+    notification = Notification.query.get_or_404(notification_id)
+    if notification.user_id == current_user.id:
+        notification.read = True
+        db.session.commit()
+    return redirect(url_for('notifications'))
+
+@app.route('/notifications/read-all')
+@login_required
+def mark_all_notifications_read():
+    """Mark all notifications as read."""
+    current_user.notifications.update({Notification.read: True})
+    db.session.commit()
+    return redirect(url_for('notifications'))
 
 @app.route('/')
 def index():
@@ -125,31 +151,6 @@ def logout():
     """User logout."""
     logout_user()
     return redirect(url_for('index'))
-
-@app.route('/notifications')
-@login_required
-def notifications():
-    """View all notifications."""
-    notifications = current_user.notifications.order_by(Notification.created_at.desc()).all()
-    return render_template('notifications.html', notifications=notifications)
-
-@app.route('/notification/<int:notification_id>/read')
-@login_required
-def mark_notification_read(notification_id):
-    """Mark a notification as read."""
-    notification = Notification.query.get_or_404(notification_id)
-    if notification.user_id == current_user.id:
-        notification.read = True
-        db.session.commit()
-    return redirect(url_for('notifications'))
-
-@app.route('/notifications/read-all')
-@login_required
-def mark_all_notifications_read():
-    """Mark all notifications as read."""
-    current_user.notifications.update({Notification.read: True})
-    db.session.commit()
-    return redirect(url_for('notifications'))
 
 @app.route('/dream/patterns')
 @login_required
