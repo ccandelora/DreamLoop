@@ -20,7 +20,7 @@
                             {% if dream.is_anonymous and dream.user_id != current_user.id %}
                                 Posted anonymously
                             {% else %}
-                                By {{ dream.user.username }}
+                                By {{ dream.author.username }}
                             {% endif %}
                         </span>
                         <span>•</span>
@@ -112,7 +112,7 @@
 
                 <!-- Comment Form -->
                 <div class="p-8 space-y-6 border-b border-slate-200">
-                    <form method="POST" action="{{ url_for('add_comment', dream_id=dream.id) }}" class="space-y-4">
+                    <form method="POST" action="/dream/{{ dream.id }}/comment" class="space-y-4">
                         <div class="space-y-3">
                             <label for="content" class="block text-sm font-medium text-slate-900">Add a Comment</label>
                             <textarea
@@ -231,44 +231,21 @@
 
                                 <!-- Reply Form -->
                                 <div id="reply-form-{{ thread.comment.id }}" class="hidden mt-4">
-                                    <form method="POST" action="{{ url_for('add_comment', dream_id=dream.id) }}" class="space-y-4">
+                                    <form method="POST" action="/dream/{{ dream.id }}/comment" class="space-y-4">
                                         <input type="hidden" name="parent_id" value="{{ thread.comment.id }}">
                                         <div class="space-y-3">
+                                            <label for="content" class="block text-sm font-medium text-slate-900">Reply to comment</label>
                                             <textarea
                                                 class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
+                                                id="content"
                                                 name="content"
                                                 rows="3"
                                                 required
                                                 placeholder="Write your reply..."
                                             ></textarea>
                                         </div>
-                                        <div class="flex justify-end gap-2">
-                                            <button type="button" onclick="toggleReplyForm('{{ thread.comment.id }}')" 
-                                                    class="text-slate-600 hover:text-slate-700 transition-colors">
-                                                Cancel
-                                            </button>
-                                            <button type="submit" class="dream-button">Reply</button>
-                                        </div>
-                                    </form>
-                                </div>
-
-                                <!-- Edit Form -->
-                                <div id="edit-form-{{ thread.comment.id }}" class="hidden mt-4">
-                                    <form method="POST" action="{{ url_for('edit_comment', comment_id=thread.comment.id) }}" class="space-y-4">
-                                        <div class="space-y-3">
-                                            <textarea
-                                                class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
-                                                name="content"
-                                                rows="3"
-                                                required
-                                            >{{ thread.comment.content }}</textarea>
-                                        </div>
-                                        <div class="flex justify-end gap-2">
-                                            <button type="button" onclick="toggleEditForm('{{ thread.comment.id }}')" 
-                                                    class="text-slate-600 hover:text-slate-700 transition-colors">
-                                                Cancel
-                                            </button>
-                                            <button type="submit" class="dream-button">Save Changes</button>
+                                        <div>
+                                            <button type="submit" class="dream-button">Post Reply</button>
                                         </div>
                                     </form>
                                 </div>
@@ -308,7 +285,7 @@
                                                 <span class="text-slate-500">(edited)</span>
                                                 {% endif %}
                                             </div>
-
+                                            
                                             <div class="flex items-center gap-2">
                                                 {% if current_user.can_moderate() %}
                                                 <div class="border-r border-slate-200 pr-2 mr-2">
@@ -343,7 +320,7 @@
                                                     </svg>
                                                     Edit
                                                 </button>
-
+                                                
                                                 <form method="POST" 
                                                       action="{{ url_for('delete_comment', dream_id=dream.id, comment_id=reply.id) }}" 
                                                       class="inline">
@@ -360,68 +337,59 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <!-- Edit Form for Reply -->
-                                    <div id="edit-form-{{ reply.id }}" class="hidden mt-4">
-                                        <form method="POST" action="{{ url_for('edit_comment', comment_id=reply.id) }}" class="space-y-4">
-                                            <div class="space-y-3">
-                                                <textarea
-                                                    class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
-                                                    name="content"
-                                                    rows="3"
-                                                    required
-                                                >{{ reply.content }}</textarea>
-                                            </div>
-                                            <div class="flex justify-end gap-2">
-                                                <button type="button" onclick="toggleEditForm('{{ reply.id }}')" 
-                                                        class="text-slate-600 hover:text-slate-700 transition-colors">
-                                                    Cancel
-                                                </button>
-                                                <button type="submit" class="dream-button">Save Changes</button>
-                                            </div>
-                                        </form>
-                                    </div>
                                     {% endfor %}
                                 </div>
                                 {% endif %}
                             </div>
                         {% endfor %}
                     {% else %}
-                        <div class="text-center text-slate-600">
-                            No comments yet. Be the first to share your thoughts!
-                        </div>
+                    <div class="text-center py-8">
+                        <p class="text-slate-600">No comments yet. Be the first to share your thoughts!</p>
+                    </div>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
 
-{% block scripts %}
+<!-- JavaScript for toggling forms -->
 <script>
 function toggleReplyForm(commentId) {
-    const replyForm = document.getElementById(`reply-form-${commentId}`);
-    if (replyForm) {
-        replyForm.classList.toggle('hidden');
-        if (!replyForm.classList.contains('hidden')) {
-            const textarea = replyForm.querySelector('textarea');
-            textarea.focus();
-        }
-    }
+    const form = document.getElementById(`reply-form-${commentId}`);
+    form.classList.toggle('hidden');
 }
 
 function toggleEditForm(commentId) {
-    const editForm = document.getElementById(`edit-form-${commentId}`);
-    if (editForm) {
-        editForm.classList.toggle('hidden');
-        if (!editForm.classList.contains('hidden')) {
-            const textarea = editForm.querySelector('textarea');
-            textarea.focus();
-            // Place cursor at the end of the text
-            textarea.selectionStart = textarea.selectionEnd = textarea.value.length;
-        }
-    }
+    const commentElement = document.querySelector(`#comment-${commentId} .text-slate-800`);
+    const currentContent = commentElement.innerText.trim();
+    
+    const formHtml = `
+        <form method="POST" action="{{ url_for('edit_comment', dream_id=dream.id) }}/${commentId}" class="space-y-4">
+            <textarea
+                class="w-full bg-white/80 border border-slate-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
+                name="content"
+                rows="3"
+                required
+            >${currentContent}</textarea>
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="cancelEdit('${commentId}', '${currentContent}')"
+                        class="px-4 py-2 text-sm text-slate-600 hover:text-slate-700 transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" class="dream-button text-sm">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    `;
+    
+    commentElement.innerHTML = formHtml;
+}
+
+function cancelEdit(commentId, content) {
+    const commentElement = document.querySelector(`#comment-${commentId} .text-slate-800`);
+    commentElement.innerText = content;
 }
 </script>
 {% endblock %}
