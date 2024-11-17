@@ -12,29 +12,31 @@ class User(UserMixin, db.Model):
     subscription_end_date = db.Column(db.DateTime)
     monthly_ai_analysis_count = db.Column(db.Integer, default=0)
     last_analysis_reset = db.Column(db.DateTime, default=datetime.utcnow)
-    is_moderator = db.Column(db.Boolean, default=False)
+    is_moderator = db.Column(db.Boolean, default=False)  # New field for moderators
     
     # Relationships
-    dreams = db.relationship('Dream', backref='author', lazy='dynamic')
-    authored_comments = db.relationship('Comment', 
-                             foreign_keys='Comment.user_id',
-                             backref='author',
-                             lazy='dynamic')
-    moderated_comments = db.relationship('Comment',
-                                     foreign_keys='Comment.moderated_by',
-                                     backref='moderator',
-                                     lazy='dynamic')
+    dreams = db.relationship('Dream', backref='user', lazy='dynamic')
+    comments = db.relationship('Comment', 
+        backref='user', 
+        lazy='dynamic',
+        foreign_keys='Comment.user_id'
+    )
     forum_posts = db.relationship('ForumPost', backref='user', lazy='dynamic')
     forum_replies = db.relationship('ForumReply', backref='user', lazy='dynamic')
     groups = db.relationship('DreamGroup', secondary='group_membership', backref=db.backref('members', lazy='dynamic'))
     notifications = db.relationship('Notification', backref='user', lazy='dynamic')
+    moderated_comments = db.relationship('Comment',
+        backref='moderator',
+        lazy='dynamic',
+        foreign_keys='Comment.moderated_by'
+    )
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
         
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-    
+
     def can_moderate(self):
         return self.is_moderator
 
@@ -81,96 +83,27 @@ class Comment(db.Model):
     moderated_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     
     # Add relationship for replies
-    replies = db.relationship(
-        'Comment',
-        backref=db.backref('parent', remote_side=[id]),
-        cascade='all, delete-orphan',
-        lazy='dynamic'
-    )
+    replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[id]),
+                            cascade='all, delete-orphan', lazy='dynamic')
+    
+    def get_replies(self):
+        """Get all replies for this comment ordered by creation date."""
+        return Comment.query.filter_by(parent_id=self.id).order_by(Comment.created_at.asc()).all()
     
     def hide(self, moderator, reason):
         """Hide a comment with moderation reason."""
-        if not moderator.can_moderate():
-            raise ValueError("User does not have moderator privileges")
-            
         self.is_hidden = True
         self.moderation_reason = reason
         self.moderated_at = datetime.utcnow()
         self.moderated_by = moderator.id
-        
-        # Create a notification for the comment author
-        notification = Notification(
-            user_id=self.user_id,
-            title="Your comment has been hidden",
-            content=f"A moderator has hidden your comment. Reason: {reason}",
-            type='moderation',
-            reference_id=self.dream_id
-        )
-        db.session.add(notification)
-        
-        # If this is a parent comment, cascade hide to all replies
-        if self.parent_id is None:
-            for reply in self.replies:
-                if not reply.is_hidden:
-                    cascade_reason = f"Parent comment hidden: {reason}"
-                    reply.is_hidden = True
-                    reply.moderation_reason = cascade_reason
-                    reply.moderated_at = datetime.utcnow()
-                    reply.moderated_by = moderator.id
-                    
-                    reply_notification = Notification(
-                        user_id=reply.user_id,
-                        title="Your reply has been hidden",
-                        content=f"Your reply has been hidden because the parent comment was hidden. Reason: {reason}",
-                        type='moderation',
-                        reference_id=self.dream_id
-                    )
-                    db.session.add(reply_notification)
-
-    def unhide(self, moderator):
-        """Restore a hidden comment."""
-        if not moderator.can_moderate():
-            raise ValueError("User does not have moderator privileges")
-            
-        self.is_hidden = False
-        self.moderation_reason = None
-        self.moderated_at = None
-        self.moderated_by = None
-        
-        notification = Notification(
-            user_id=self.user_id,
-            title="Your comment has been restored",
-            content="A moderator has restored your previously hidden comment.",
-            type='moderation',
-            reference_id=self.dream_id
-        )
-        db.session.add(notification)
-        
-        # If this is a parent comment, restore replies that were hidden due to parent
-        if self.parent_id is None:
-            for reply in self.replies:
-                if reply.is_hidden and reply.moderation_reason and reply.moderation_reason.startswith("Parent comment hidden:"):
-                    reply.is_hidden = False
-                    reply.moderation_reason = None
-                    reply.moderated_at = None
-                    reply.moderated_by = None
-                    
-                    reply_notification = Notification(
-                        user_id=reply.user_id,
-                        title="Your reply has been restored",
-                        content="Your reply has been restored because the parent comment was restored.",
-                        type='moderation',
-                        reference_id=self.dream_id
-                    )
-                    db.session.add(reply_notification)
 
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    type = db.Column(db.String(50), nullable=False)
-    reference_id = db.Column(db.Integer)
+    type = db.Column(db.String(50), nullable=False)  # 'comment', 'reply', etc.
+    reference_id = db.Column(db.Integer)  # ID of the related item (dream, comment, etc.)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     read = db.Column(db.Boolean, default=False)
 

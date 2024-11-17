@@ -57,7 +57,6 @@ def reset_database():
             premium_user.monthly_ai_analysis_count = 0
             premium_user.last_analysis_reset = datetime.utcnow()
             premium_user.set_password("premium123")
-            premium_user.is_moderator = True  # Make premium user a moderator
             
             db.session.add(test_user)
             db.session.add(premium_user)
@@ -68,7 +67,7 @@ def reset_database():
             dream_group = DreamGroup()
             dream_group.name = "Lucid Dreamers"
             dream_group.description = "A group for sharing and discussing lucid dreaming experiences"
-            dream_group.created_by = premium_user.id  # Set the creator
+            dream_group.theme = "Lucid Dreams"
             
             db.session.add(dream_group)
             db.session.flush()

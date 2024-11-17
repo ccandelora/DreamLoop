@@ -28,7 +28,4 @@ def load_user(id):
     return db.session.get(User, int(id))
 
 if __name__ == '__main__':
-    with app.app_context():
-        # Ensure all tables exist
-        db.create_all()
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=5000)
