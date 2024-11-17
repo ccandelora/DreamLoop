@@ -33,78 +33,76 @@
                 </button>
                 <div id="mobileMenu" class="hidden lg:flex lg:items-center lg:space-x-4">
                     {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('notifications') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors relative">
-                        <svg class="h-5 w-5 inline-block align-text-bottom {% if unread_notifications_count > 0 %}text-purple-600 notification-pulse{% else %}text-slate-700{% endif %}" 
-                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                        </svg>
-                        {% if unread_notifications_count > 0 %}
-                        <span class="absolute -top-1 -right-1 bg-purple-600 text-white text-xs px-2 py-1 rounded-full">
-                            {{ unread_notifications_count }}
-                        </span>
-                        {% endif %}
-                    </a>
-                    <a href="{{ url_for('dream_new') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors">
-                        <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                        </svg>
-                        Log Dream
-                    </a>
-                    <a href="{{ url_for('dream_patterns') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors">
-                        <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                        </svg>
-                        Dream Patterns
-                    </a>
-                    <a href="{{ url_for('community_dreams') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors">
-                        <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                        Community Dreams
-                    </a>
-                    <a href="{{ url_for('dream_groups') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors">
-                        <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                        Dream Groups
-                    </a>
-                    <a href="{{ url_for('subscription') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors">
-                        {% if current_user.subscription_type == 'free' %}
-                        <span class="bg-gradient-to-r from-purple-500/80 to-pink-500/80 text-white text-sm px-4 py-2 rounded-full">
-                            <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                        {% if 'notifications' in current_app.view_functions %}
+                        <a href="{{ url_for('notifications') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors relative">
+                            <svg class="h-5 w-5 inline-block align-text-bottom {% if unread_notifications_count > 0 %}text-purple-600 notification-pulse{% else %}text-slate-700{% endif %}" 
+                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                             </svg>
-                            Upgrade to Premium
-                        </span>
-                        {% else %}
-                        <span class="bg-green-600/80 text-white text-sm px-4 py-2 rounded-full">
-                            <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            Premium Active
-                        </span>
+                            {% if unread_notifications_count > 0 %}
+                            <span class="absolute -top-1 -right-1 bg-purple-600 text-white text-xs px-2 py-1 rounded-full">
+                                {{ unread_notifications_count }}
+                            </span>
+                            {% endif %}
+                        </a>
                         {% endif %}
-                    </a>
-                    <a href="{{ url_for('logout') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors">
-                        <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                        </svg>
-                        Logout
-                    </a>
+
+                        {% if 'dream_new' in current_app.view_functions %}
+                        <a href="{{ url_for('dream_new') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors">
+                            <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                            Log Dream
+                        </a>
+                        {% endif %}
+
+                        {% if 'dream_patterns' in current_app.view_functions %}
+                        <a href="{{ url_for('dream_patterns') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors">
+                            <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                            Dream Patterns
+                        </a>
+                        {% endif %}
+
+                        {% if 'community_dreams' in current_app.view_functions %}
+                        <a href="{{ url_for('community_dreams') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors">
+                            <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            Community Dreams
+                        </a>
+                        {% endif %}
+
+                        {% if 'dream_groups' in current_app.view_functions %}
+                        <a href="{{ url_for('dream_groups') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors">
+                            <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            Dream Groups
+                        </a>
+                        {% endif %}
+
+                        <a href="{{ url_for('logout') }}" class="text-slate-700 hover:text-slate-900 px-3 py-2 rounded-md transition-colors">
+                            <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                            </svg>
+                            Logout
+                        </a>
                     {% else %}
-                    <a href="{{ url_for('login') }}" class="text-slate-700 hover:text-slate-900 px-4 py-2 rounded-md transition-colors">
-                        <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
-                        </svg>
-                        Login
-                    </a>
-                    <a href="{{ url_for('register') }}" class="text-slate-700 hover:text-slate-900 px-4 py-2 rounded-md transition-colors">
-                        <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-                        </svg>
-                        Register
-                    </a>
+                        <a href="{{ url_for('login') }}" class="text-slate-700 hover:text-slate-900 px-4 py-2 rounded-md transition-colors">
+                            <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                            </svg>
+                            Login
+                        </a>
+                        <a href="{{ url_for('register') }}" class="text-slate-700 hover:text-slate-900 px-4 py-2 rounded-md transition-colors">
+                            <svg class="h-5 w-5 inline-block align-text-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                            </svg>
+                            Register
+                        </a>
                     {% endif %}
                 </div>
             </div>

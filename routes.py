@@ -151,6 +151,14 @@ def mark_all_notifications_read():
     db.session.commit()
     return redirect(url_for('notifications'))
 
+@app.route('/dream/patterns')
+@login_required
+def dream_patterns():
+    """View dream patterns and analysis."""
+    user_dreams = Dream.query.filter_by(user_id=current_user.id).order_by(Dream.date.desc()).all()
+    patterns = analyze_dream_patterns(user_dreams)
+    return render_template('dream_patterns.html', patterns=patterns)
+
 @app.route('/comment/<int:comment_id>/moderate', methods=['POST'])
 @login_required
 def moderate_comment(comment_id):
@@ -244,6 +252,13 @@ def dream_view(dream_id):
         threaded_comments.append(thread)
         
     return render_template('dream_view.html', dream=dream, threaded_comments=threaded_comments)
+
+@app.route('/dream/groups')
+@login_required
+def dream_groups():
+    """View all dream groups."""
+    groups = DreamGroup.query.all()
+    return render_template('dream_groups.html', groups=groups)
 
 # Add template context processor for moderation UI
 @app.context_processor
