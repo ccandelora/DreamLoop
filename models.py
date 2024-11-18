@@ -66,6 +66,31 @@ class Dream(db.Model):
     
     # Relationships
     comments = db.relationship('Comment', backref='dream', lazy='dynamic', cascade='all, delete-orphan')
+    
+    def to_dict(self):
+        """Convert Dream object to dictionary for JSON serialization."""
+        return {
+            'id': self.id,
+            'title': self.title,
+            'content': self.content,
+            'date': self.date.isoformat() if self.date else None,
+            'mood': self.mood,
+            'tags': self.tags,
+            'is_public': self.is_public,
+            'is_anonymous': self.is_anonymous,
+            'lucidity_level': self.lucidity_level,
+            'ai_analysis': self.ai_analysis,
+            'sentiment_score': self.sentiment_score,
+            'sentiment_magnitude': self.sentiment_magnitude,
+            'dominant_emotions': self.dominant_emotions.split(',') if self.dominant_emotions else [],
+            'sleep_duration': self.sleep_duration,
+            'sleep_quality': self.sleep_quality,
+            'bed_time': self.bed_time.isoformat() if self.bed_time else None,
+            'wake_time': self.wake_time.isoformat() if self.wake_time else None,
+            'sleep_interruptions': self.sleep_interruptions,
+            'sleep_position': self.sleep_position,
+            'user_id': self.user_id
+        }
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -141,3 +166,5 @@ class ForumReply(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('forum_post.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+

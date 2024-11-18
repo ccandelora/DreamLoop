@@ -687,3 +687,59 @@ def toggle_moderator(user_id):
         flash('An error occurred while updating moderator status.')
 
     return redirect(url_for('index'))
+
+
+# Update the API route
+@app.route('/api/dreams', methods=['GET'])
+@login_required
+def get_dreams():
+    """Get all dreams for the current user as JSON."""
+    dreams = current_user.dreams.all()
+    return jsonify([dream.to_dict() for dream in dreams])
+
+# Update the summary endpoint to use the new to_dict method
+@app.route('/api/summary', methods=['GET'])
+@login_required
+def get_summary():
+    dreams = [dream.to_dict() for dream in current_user.dreams.all()]
+
+    if not dreams:
+        return jsonify({
+            'total_dreams': 0,
+            'avg_sentiment': 0,
+            'avg_lucidity': 0,
+            'position_counts': {},
+            'emotion_counts': {}
+        })
+
+    # Calculate summary statistics
+    total_dreams = len(dreams)
+    avg_sentiment = sum(d['sentiment_score'] for d in dreams if d['sentiment_score'] is not None) / total_dreams if total_dreams > 0 else 0
+    avg_lucidity = sum(d['lucidity_level'] for d in dreams if d['lucidity_level'] is not None) / total_dreams if total_dreams > 0 else 0
+
+    # Get most common positions
+    position_counts = {}
+    for dream in dreams:
+        if dream['sleep_position']:
+            position_counts[dream['sleep_position']] = position_counts.get(dream['sleep_position'], 0) + 1
+
+    # Get most common emotions
+    emotion_counts = {}
+    for dream in dreams:
+        if dream['dominant_emotions']:
+            for emotion in dream['dominant_emotions']:
+                emotion_counts[emotion] = emotion_counts.get(emotion, 0) + 1
+
+    return jsonify({
+        'total_dreams': total_dreams,
+        'avg_sentiment': avg_sentiment,
+        'avg_lucidity': avg_lucidity,
+        'position_counts': position_counts,
+        'emotion_counts': emotion_counts
+    })
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    """Show dashbord page."""
+    return render_template('dashboard.html')
