@@ -1,6 +1,6 @@
 {pkgs}: {
   deps = [
-    pkgs.openssl
     pkgs.postgresql
+    pkgs.openssl
   ];
 }
