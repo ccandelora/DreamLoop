@@ -16,8 +16,13 @@ def create_db_dump(connection_string):
     # Check PostgreSQL version
     try:
         import subprocess
-        version_output = subprocess.check_output(['pg_dump', '--version']).decode('utf-8')
-        print(f"PostgreSQL tools version: {version_output.strip()}")
+        # Check PostgreSQL client version
+        version_output = subprocess.check_output(['psql', '--version']).decode('utf-8')
+        print(f"PostgreSQL client version: {version_output.strip()}")
+        
+        # Check pg_dump version
+        pg_dump_output = subprocess.check_output(['pg_dump', '--version']).decode('utf-8')
+        print(f"pg_dump version: {pg_dump_output.strip()}")
     except Exception as e:
         print(f"Warning: Could not determine PostgreSQL version: {str(e)}")
     
