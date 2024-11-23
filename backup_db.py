@@ -9,10 +9,18 @@ from os import environ
 def create_db_dump(connection_string):
     """Create a database dump using psycopg2"""
     print("Starting database dump process...")
-
+    
     # Clean and recreate dumps directory
     os.makedirs('dumps', exist_ok=True)
-
+    
+    # Check PostgreSQL version
+    try:
+        import subprocess
+        version_output = subprocess.check_output(['pg_dump', '--version']).decode('utf-8')
+        print(f"PostgreSQL tools version: {version_output.strip()}")
+    except Exception as e:
+        print(f"Warning: Could not determine PostgreSQL version: {str(e)}")
+    
     # Generate timestamp for the dump file
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     dump_file = f'dumps/dream_journal_dump_{timestamp}.sql'
@@ -110,10 +118,20 @@ def create_db_dump(connection_string):
 
     except Exception as e:
         print(f"Error during backup: {str(e)}")
-        if 'conn' in locals():
-            print("Connection error details:", conn.notices)
-        else:
-            print("Failed to establish database connection")
+        conn = None
+        try:
+            if 'conn' in locals() and conn is not None:
+                print("Connection error details:", conn.notices if hasattr(conn, 'notices') else "No notices available")
+                conn.close()
+            else:
+                print("Failed to establish database connection")
+        except Exception as close_error:
+            print(f"Error while closing connection: {close_error}")
+        
+        # Additional error information
+        import traceback
+        print("Detailed error information:")
+        print(traceback.format_exc())
         return None
 
 
