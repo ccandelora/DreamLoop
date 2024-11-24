@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-3xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-900">Notifications</h1>
+            {% if notifications %}
+            <button onclick="markAllRead()" class="text-blue-600 hover:text-blue-800">
+                Mark all as read
+            </button>
+            {% endif %}
+        </div>
+
+        {% if notifications %}
+        <div class="space-y-4">
+            {% for notification in notifications %}
+            <div id="notification-{{ notification.id }}" class="bg-white p-4 rounded-lg shadow">
+                <div class="flex justify-between items-start">
+                    <div class="flex-grow">
+                        <p class="text-gray-800">{{ notification.message }}</p>
+                        <p class="text-sm text-gray-500 mt-1">
+                            {{ notification.created_at.strftime('%B %d, %Y %I:%M %p') }}
+                        </p>
+                    </div>
+                    <button onclick="markRead('{{notification.id}}')" class="text-blue-600 hover:text-blue-800 text-sm">
+                        Mark as read
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-gray-600 text-center py-8">No new notifications</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function markRead(notificationId) {
+    fetch(`/notifications/mark_read/${notificationId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById(`notification-${notificationId}`).remove();
+            updateNotificationCount();
+        }
+    });
+}
+
+function markAllRead() {
+    fetch('/notifications/mark_all_read', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    });
+}
+
+function updateNotificationCount() {
+    const notifications = document.querySelectorAll('[id^="notification-"]');
+    const count = notifications.length;
+    // Update your notification badge count here
+}
+</script>
+{% endblock %}

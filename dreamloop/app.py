@@ -20,7 +20,7 @@ def markdown_filter(text):
 app.jinja_env.filters['markdown'] = markdown_filter
 
 # Import models and routes after initialization
-from models import User
+from models import Users, Dream, Comment, ForumPost, ForumReply, DreamGroup, GroupMembership, Notification
 from routes import *
 
 @login_manager.user_loader

@@ -3,7 +3,8 @@ import logging
 from datetime import datetime
 from google.ads.googleads.client import GoogleAdsClient
 from google.ads.googleads.errors import GoogleAdsException
-from models import User
+from .models import Users
+from .extensions import db
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -51,8 +52,7 @@ def create_google_ads_client():
 def track_premium_conversion(user_id, conversion_value=4.99):
     """Track a premium subscription conversion in Google Ads."""
     # Get user subscription status first
-    from app import db
-    user = User.query.get(user_id)
+    user = Users.query.get(user_id)
     
     if not user:
         logger.warning(f"Cannot track conversion - User {user_id} not found")
